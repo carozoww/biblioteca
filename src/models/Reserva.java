@@ -44,7 +44,5 @@ public class Reserva {
         System.out.println("Duracion: " + this.duracion);
         System.out.println("ID Sala: " + this.id_sala);
         System.out.println("ID Lector: " + this.id_usuario);
-        System.out.println("###############");
-        return;
     }
 }

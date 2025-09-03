@@ -35,8 +35,6 @@ public class Sala {
         System.out.println("Ubicacion: " + this.ubicacion);
         System.out.println("Personas Max.: " + this.max_personas);
         System.out.println("Estado: " + this.estado);
-        System.out.println("###############");
-        return;
     }
 
 }
