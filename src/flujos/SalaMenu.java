@@ -23,11 +23,9 @@ public class SalaMenu {
     }
 
     public void iniciar() {
-        while (true) {
             mostrarMenu();
             int opcion = leerOpcion();
             ejecutarOpcion(opcion);
-        }
     }
 
     private void mostrarMenu() {
