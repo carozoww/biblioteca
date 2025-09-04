@@ -106,8 +106,6 @@ public class SalaMenu {
             case 2 -> dao.editarSala(idEditar, nuevaUbicacion, nuevaMaxPersonas, "RESERVADO");
             default -> System.out.println("Opción inválida.");
         }
-
-
     }
 
     private void borrarSala(Scanner sc) throws SQLException{
