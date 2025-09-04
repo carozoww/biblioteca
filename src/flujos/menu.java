@@ -19,12 +19,14 @@ public class menu {
     private final generoDAO generodao;
     private final LibroDAO librodao;
     private final EditorialDAO editorialdao;
+    private final SalaMenu salamenu;
 
     public menu() {
         this.autordao = new autorDAO();
         this.generodao = new generoDAO();
         this.librodao = new LibroDAO();
         this.editorialdao = new EditorialDAO();
+        this.salamenu = new SalaMenu();
     }
 
     public void mostrarMenu(){
@@ -49,7 +51,8 @@ public class menu {
                 System.out.println("12. Eliminar editorial");
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
-                System.out.println("15. Salir");
+                System.out.println("15. Gestionar salas y sus reservas");
+                System.out.println("16. Salir");
 
                 System.out.println("Opcion");
 
@@ -94,9 +97,12 @@ public class menu {
                         listarEditoriales();
                         break;
                     case 15:
+                        salamenu.iniciar(scanner);
+                        break;
+                    case 16:
                         break;
                 }
-            }while(opcion != 15);
+            }while(opcion != 16);
 
 
         }catch(Exception e){
