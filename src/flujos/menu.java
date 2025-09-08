@@ -3,10 +3,8 @@ package flujos;
 import java.sql.Date;
 import java.sql.SQLException;
 
-import dao.EditorialDAO;
-import dao.LibroDAO;
-import dao.autorDAO;
-import dao.generoDAO;
+import dao.*;
+import models.Administrador;
 import models.Libro;
 import models.Editorial;
 
@@ -20,8 +18,10 @@ public class menu {
     private final LibroDAO librodao;
     private final EditorialDAO editorialdao;
     private final SalaMenu salamenu;
+    private final AdministradorDAO administradorDAO;
 
     public menu() {
+        this.administradorDAO = new AdministradorDAO();
         this.autordao = new autorDAO();
         this.generodao = new generoDAO();
         this.librodao = new LibroDAO();
@@ -52,7 +52,11 @@ public class menu {
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
                 System.out.println("15. Gestionar salas y sus reservas");
-                System.out.println("16. Salir");
+                System.out.println("16. Crear administrador");
+                System.out.println("17. Eliminar administrador");
+                System.out.println("18. Modificar administrador");
+                System.out.println("19. Listar administradores");
+                System.out.println("20. Salir");
 
                 System.out.println("Opcion");
 
@@ -100,9 +104,21 @@ public class menu {
                         salamenu.iniciar(scanner);
                         break;
                     case 16:
+                        crearAdministrador();
+                        break;
+                    case 17:
+                        eliminarAdministrador();
+                        break;
+                    case 18:
+                        editarAdministrador();
+                        break;
+                    case 19:
+                        listarAdministradores();
+                        break;
+                    case 20:
                         break;
                 }
-            }while(opcion != 16);
+            }while(opcion != 20);
 
 
         }catch(Exception e){
@@ -285,6 +301,60 @@ public class menu {
             }
         }
     }
+    public void crearAdministrador() {
+        System.out.println("Ingrese el cedula del administrador: ");
+        int cedula = scanner.nextInt();
+        scanner.nextLine();
 
+        System.out.println("Ingrese nombre del  administrador: ");
+        String nombre = scanner.nextLine();
+
+        System.out.println("Ingrese telefono del administrador: ");
+        String telefono = scanner.nextLine();
+
+        System.out.println("Ingrese direccion del administrador: ");
+        String direccion = scanner.nextLine();
+
+        administradorDAO.crearAdministradorDAO(cedula,nombre,telefono,direccion);
+    }
+
+
+    public void eliminarAdministrador(){
+        listarAdministradores();
+        System.out.println("Ingrese el cedula del administrador: ");
+        int cedula = scanner.nextInt();
+        scanner.nextLine();
+
+        administradorDAO.eliminarAdministrador(cedula);
+    }
+
+    public void editarAdministrador(){
+
+        listarAdministradores();
+        System.out.println("Ingrese el cedula del administrador a modificar: ");
+        int cedula = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Ingrese nuevo nombre del administrador: ");
+        String nombre = scanner.nextLine();
+        System.out.println("Ingrese nuevo telefono del administrador: ");
+        String telefono = scanner.nextLine();
+        System.out.println("Ingrese nuevo direccion del administrador: ");
+        String direccion = scanner.nextLine();
+
+        administradorDAO.editarAdministrador(cedula,nombre,telefono,direccion);
+    }
+
+    public void listarAdministradores(){
+        List<Administrador> administrador = administradorDAO.listarAdministradores();
+        if (administrador.isEmpty()) {
+            System.out.println("No hay administradores para mostrar");
+        }
+        else {
+            for (Administrador administrador1 : administrador) {
+                administrador1.mostrarInfo();
+            }
+        }
+    }
 
 }
