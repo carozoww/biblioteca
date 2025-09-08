@@ -1,7 +1,7 @@
 package dao;
-import database.DatabaseConnection;
-import models.Administrador;
 
+import models.Administrador;
+import basedatos.conexion;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
