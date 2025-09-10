@@ -117,7 +117,7 @@ public class menu {
         System.out.println("Ingrese el apellido del autor");
         String ape = scanner.next();
 
-        autorDAO.crearAutor(nombre, ape);
+        autordao.crearAutor(nombre, ape);
     }
 
     private void mostrarAutor() throws SQLException {
@@ -141,7 +141,7 @@ public class menu {
         System.out.println("Ingrese el nuevo apellido del autor");
         String ape = scanner.next();
 
-        autorDAO.modificarAutor(id,nombre,ape);
+        autordao.modificarAutor(id,nombre,ape);
 
 
     }
@@ -150,7 +150,7 @@ public class menu {
         mostrarAutor();
         System.out.println("Ingrese el id del autor a eliminar");
         int id = scanner.nextInt();
-        autorDAO.eliminarAutor(id);
+        autordao.eliminarAutor(id);
 
     }
 
@@ -158,7 +158,7 @@ public class menu {
         System.out.println("Ingrese el nombre del nuevo genero");
         String nombre = scanner.next();
 
-        generoDAO.crearGenero(nombre);
+        generodao.crearGenero(nombre);
 
     }
 
@@ -181,7 +181,7 @@ public class menu {
         System.out.println("Ingrese el nuevo nombre del genero");
         String nombre = scanner.next();
 
-        generoDAO.modificarGenero(id,nombre);
+        generodao.modificarGenero(id,nombre);
 
     }
 
@@ -191,7 +191,7 @@ public class menu {
         System.out.println("Ingrese el id del genero a eliminar");
         int id = scanner.nextInt();
 
-        generoDAO.eliminarGenero(id);
+        generodao.eliminarGenero(id);
     }
     public void crearLibro() throws SQLException {
         System.out.println("Ingrese el titulo del libro: ");
@@ -284,6 +284,8 @@ public class menu {
                 editorial.mostrarInformacion();
             }
         }
+
+
     }
 
 
