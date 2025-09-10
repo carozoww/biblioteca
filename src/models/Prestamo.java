@@ -3,76 +3,76 @@ package models;
 import java.time.LocalDate;
 
 public class Prestamo {
-    private int id_prestamo;
-    private LocalDate fecha_prestamo;
-    private LocalDate fecha_devolucion;
+    private int idPrestamo;
+    private int idLector;
+    private int idLibro;
+    private LocalDate fechaPrestamo;
+    private LocalDate fechaDevolucion;
     private String estado;
-    private int id_libro;
-    private int id_lector;
 
     public Prestamo() {}
 
-    public Prestamo(int id_prestamo, LocalDate fecha_prestamo, LocalDate fecha_devolucion, String estado, int id_libro, int id_lector) {
-        this.id_prestamo = id_prestamo;
-        this.fecha_prestamo = fecha_prestamo;
-        this.fecha_devolucion = fecha_devolucion;
+    public Prestamo(int idPrestamo, int idLector, int idLibro, LocalDate fechaPrestamo, LocalDate fechaDevolucion, String estado) {
+        this.idPrestamo = idPrestamo;
+        this.idLector = idLector;
+        this.idLibro = idLibro;
+        this.fechaPrestamo = fechaPrestamo;
+        this.fechaDevolucion = fechaDevolucion;
         this.estado = estado;
-        this.id_libro = id_libro;
-        this.id_lector = id_lector;
     }
 
-    public int getId_prestamo() { 
-    return id_prestamo; 
+    // Getters y setters
+    public int getIdPrestamo() { 
+        return idPrestamo; 
     }
-    public void setId_prestamo(int id_prestamo) { 
-    this.id_prestamo = id_prestamo; 
-    }
-
-    public LocalDate getFecha_prestamo() { 
-    return fecha_prestamo; 
-    }
-    public void setFecha_prestamo(LocalDate fecha_prestamo) { 
-    this.fecha_prestamo = fecha_prestamo; 
+    public void setIdPrestamo(int idPrestamo) { 
+        this.idPrestamo = idPrestamo; 
     }
 
-    public LocalDate getFecha_devolucion() { 
-    return fecha_devolucion; 
+    public int getIdLector() { 
+        return idLector; 
     }
-    public void setFecha_devolucion(LocalDate fecha_devolucion) { 
-    this.fecha_devolucion = fecha_devolucion; 
+    public void setIdLector(int idLector) { 
+        this.idLector = idLector; 
+    }
+
+    public int getIdLibro() { 
+        return idLibro; 
+    }
+    public void setIdLibro(int idLibro) { 
+        this.idLibro = idLibro; 
+    }
+
+    public LocalDate getFechaPrestamo() { 
+        return fechaPrestamo; 
+    }
+    public void setFechaPrestamo(LocalDate fechaPrestamo) { 
+        this.fechaPrestamo = fechaPrestamo; 
+    }
+
+    public LocalDate getFechaDevolucion() { 
+        return fechaDevolucion; 
+    }
+    public void setFechaDevolucion(LocalDate fechaDevolucion) { 
+        this.fechaDevolucion = fechaDevolucion; 
     }
 
     public String getEstado() { 
-    return estado; 
+        return estado; 
     }
-    public void setEstado(String estado) { 
-    this.estado = estado; 
-    }
-
-    public int getId_libro() { 
-    return id_libro; 
-    }
-    public void setId_libro(int id_libro) { 
-    this.id_libro = id_libro; 
-    }
-
-    public int getId_lector() { 
-    return id_lector; 
-    }
-    public void setId_lector(int id_lector) { 
-    this.id_lector = id_lector; 
+    
+    public void setEstado(String estado) {
+         this.estado = estado; 
     }
 
     @Override
     public String toString() {
-        return "Prestamo{" +
-                "id_prestamo=" + id_prestamo +
-                ", fecha_prestamo=" + fecha_prestamo +
-                ", fecha_devolucion=" + fecha_devolucion +
-                ", estado='" + estado + '\'' +
-                ", id_libro=" + id_libro +
-                ", id_lector=" + id_lector +
-                '}';
+        return "Prestamo [id=" + idPrestamo +
+               ", lector=" + idLector +
+               ", libro=" + idLibro +
+               ", fechaPrestamo=" + fechaPrestamo +
+               ", fechaDevolucion=" + fechaDevolucion +
+               ", estado=" + estado + "]";
     }
 }
 
