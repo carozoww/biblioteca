@@ -1,104 +1,55 @@
 package dao;
 
-import basedatos.conexion;
 import models.Prestamo;
-
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class prestamoDAO {
+    private Connection conn;
 
-    private boolean existeLibro(int idLibro) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM libro WHERE id_libro = ?";
-        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
-        ps.setInt(1, idLibro);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        return rs.getInt(1) > 0;
+    public prestamoDAO(Connection conn) {
+        this.conn = conn;
     }
 
-    private boolean existeLector(int idLector) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM lector WHERE ID = ?";
-        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
-        ps.setInt(1, idLector);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        return rs.getInt(1) > 0;
-    }
-
-    public void crearPrestamo(LocalDate fechaPrestamo, LocalDate fechaDevolucion, String estado, int idLibro, int idLector) {
-        try {
-            if (!existeLibro(idLibro)) throw new RuntimeException("El libro no existe");
-            if (!existeLector(idLector)) throw new RuntimeException("El lector no existe");
-
-            String consulta = "INSERT INTO prestamo (fecha_prestamo, fecha_devolucion, estado, id_libro, ID) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setDate(1, Date.valueOf(fechaPrestamo));
-            ps.setDate(2, Date.valueOf(fechaDevolucion));
-            ps.setString(3, estado);
-            ps.setInt(4, idLibro);
-            ps.setInt(5, idLector);
+    public void crearPrestamo(Prestamo p) throws SQLException {
+        String sql = "INSERT INTO prestamo (id_lector, id_libro, fecha_prestamo, fecha_devolucion, estado) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, p.getIdLector());
+            ps.setInt(2, p.getIdLibro());
+            ps.setDate(3, Date.valueOf(p.getFechaPrestamo()));
+            ps.setDate(4, Date.valueOf(p.getFechaDevolucion()));
+            ps.setString(5, p.getEstado());
             ps.executeUpdate();
-            System.out.println("Préstamo creado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("✅ Préstamo creado con éxito");
         }
     }
 
-    public void editarPrestamo(int idPrestamo, LocalDate fechaPrestamo, LocalDate fechaDevolucion, String estado, int idLibro, int idLector) {
-        try {
-            if (!existeLibro(idLibro)) throw new RuntimeException("El libro no existe");
-            if (!existeLector(idLector)) throw new RuntimeException("El lector no existe");
-
-            String consulta = "UPDATE prestamo SET fecha_prestamo = ?, fecha_devolucion = ?, estado = ?, id_libro = ?, ID = ? WHERE id_prestamo = ?";
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setDate(1, Date.valueOf(fechaPrestamo));
-            ps.setDate(2, Date.valueOf(fechaDevolucion));
-            ps.setString(3, estado);
-            ps.setInt(4, idLibro);
-            ps.setInt(5, idLector);
-            ps.setInt(6, idPrestamo);
-            ps.executeUpdate();
-            System.out.println("Préstamo modificado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void eliminarPrestamo(int idPrestamo) {
-        String consulta = "DELETE FROM prestamo WHERE id_prestamo = ?";
-        try {
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setInt(1, idPrestamo);
-            ps.executeUpdate();
-            System.out.println("Préstamo eliminado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<Prestamo> listarPrestamos() {
+    public List<Prestamo> listarPrestamos() throws SQLException {
         List<Prestamo> prestamos = new ArrayList<>();
-        String consulta = "SELECT * FROM prestamo";
-        try {
-            Statement st = conexion.getInstancia().getConnection().createStatement();
-            ResultSet rs = st.executeQuery(consulta);
+        String sql = "SELECT * FROM prestamo";
+        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
-                prestamos.add(new Prestamo(
-                        rs.getInt("id_prestamo"),
-                        rs.getDate("fecha_prestamo").toLocalDate(),
-                        rs.getDate("fecha_devolucion").toLocalDate(),
-                        rs.getString("estado"),
-                        rs.getInt("id_libro"),
-                        rs.getInt("ID")
-                ));
+                Prestamo p = new Prestamo(
+                    rs.getInt("id_prestamo"),
+                    rs.getInt("id_lector"),
+                    rs.getInt("id_libro"),
+                    rs.getDate("fecha_prestamo").toLocalDate(),
+                    rs.getDate("fecha_devolucion").toLocalDate(),
+                    rs.getString("estado")
+                );
+                prestamos.add(p);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
         return prestamos;
     }
-}
 
+    public void eliminarPrestamo(int idPrestamo) throws SQLException {
+        String sql = "DELETE FROM prestamo WHERE id_prestamo = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idPrestamo);
+            ps.executeUpdate();
+            System.out.println("✅ Préstamo eliminado con éxito");
+        }
+    }
+}

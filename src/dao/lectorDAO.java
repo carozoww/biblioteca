@@ -1,85 +1,63 @@
 package dao;
 
-import basedatos.conexion;
 import models.Lector;
-
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class lectorDAO {
+    private Connection conn;
 
-    public void crearLector(String nombre, String correo, LocalDate fechaNac, String telefono, String contrasena, String direccion) {
-        String consulta = "INSERT INTO lector (nombre, correo, fechaNac, telefono, contrasenia, direccion) VALUES (?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setString(1, nombre);
-            ps.setString(2, correo);
-            if (fechaNac != null) ps.setDate(3, Date.valueOf(fechaNac));
-            else ps.setNull(3, Types.DATE);
-            ps.setString(4, telefono);
-            ps.setString(5, contrasena);
-            ps.setString(6, direccion);
+    public lectorDAO(Connection conn) {
+        this.conn = conn;
+    }
+
+    public void crearLector(Lector l) throws SQLException {
+        String sql = "INSERT INTO lector (nombre, direccion, telefono, correo) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, l.getNombre());
+            ps.setString(2, l.getDireccion());
+            ps.setString(3, l.getTelefono());
+            ps.setString(4, l.getCorreo());
             ps.executeUpdate();
-            System.out.println("Lector creado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    public void editarLector(int id, String nombre, String correo, LocalDate fechaNac, String telefono, String contrasena, String direccion) {
-        String consulta = "UPDATE lector SET nombre = ?, correo = ?, fechaNac = ?, telefono = ?, contrasenia = ?, direccion = ? WHERE ID = ?";
-        try {
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setString(1, nombre);
-            ps.setString(2, correo);
-            if (fechaNac != null) ps.setDate(3, Date.valueOf(fechaNac));
-            else ps.setNull(3, Types.DATE);
-            ps.setString(4, telefono);
-            ps.setString(5, contrasena);
-            ps.setString(6, direccion);
-            ps.setInt(7, id);
+    public void editarLector(Lector lector) throws SQLException {
+        String sql = "UPDATE lector SET nombre = ?, direccion = ?, telefono = ?, correo = ? WHERE id_lector = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, lector.getNombre());
+            ps.setString(2, lector.getDireccion());
+            ps.setString(3, lector.getTelefono());
+            ps.setString(4, lector.getCorreo());
+            ps.setInt(5, lector.getIdLector());
             ps.executeUpdate();
-            System.out.println("Lector modificado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    public void eliminarLector(int id) {
-        String consulta = "DELETE FROM lector WHERE ID = ?";
-        try {
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setInt(1, id);
-            ps.executeUpdate();
-            System.out.println("Lector eliminado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<Lector> listarLectores() {
+    public List<Lector> listarLectores() throws SQLException {
         List<Lector> lectores = new ArrayList<>();
-        String consulta = "SELECT * FROM lector";
-        try {
-            Statement st = conexion.getInstancia().getConnection().createStatement();
-            ResultSet rs = st.executeQuery(consulta);
+        String sql = "SELECT * FROM lector";
+        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
-                lectores.add(new Lector(
-                        rs.getInt("ID"),
-                        rs.getString("nombre"),
-                        rs.getString("correo"),
-                        rs.getDate("fechaNac").toLocalDate(),
-                        rs.getString("telefono"),
-                        rs.getString("contrasenia"),
-                        rs.getString("direccion")
-                ));
+                Lector l = new Lector(
+                    rs.getInt("id_lector"),
+                    rs.getString("nombre"),
+                    rs.getString("direccion"),
+                    rs.getString("telefono"),
+                    rs.getString("correo")
+                );
+                lectores.add(l);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
         return lectores;
     }
-}
 
+    public void eliminarLector(int idLector) throws SQLException {
+        String sql = "DELETE FROM lector WHERE id_lector = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idLector);
+            ps.executeUpdate();
+        }
+    }
+}
