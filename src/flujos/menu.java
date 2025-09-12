@@ -60,7 +60,7 @@ public class menu {
                 System.out.println("12. Eliminar editorial");
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
-                System.out.println("15. Gestionar salas y sus reservas");
+                System.out.println("15. Gestionar salas");
                 System.out.println("16. Crear administrador");
                 System.out.println("17. Eliminar administrador");
                 System.out.println("18. Modificar administrador");
@@ -72,7 +72,9 @@ public class menu {
                 System.out.println("24. Crear préstamo");
                 System.out.println("25. Finalizar préstamo");
                 System.out.println("26. Listar préstamos");
-                System.out.println("27. Salir");
+                System.out.println("27. Listar libros reservados");
+                System.out.println("28. Confirmar devolución de un libro");
+                System.out.println("29. Salir");
 
                 System.out.println("Opcion");
 
@@ -131,31 +133,37 @@ public class menu {
                     case 19:
                         listarAdministradores();
                         break;
-                    case 20: 
+                    case 20:
                         crearLector(); 
                         break;
-                    case 21: 
+                    case 21:
                         eliminarLector(); 
                         break;
-                    case 22: 
+                    case 22:
                         editarLector(); 
                         break;
-                    case 23: 
-                        listarLectores(); 
+                    case 23:
+                        listarLectores();
                         break;
-                    case 24: 
-                        crearPrestamo(); 
+                    case 24:
+                        crearPrestamo();
                         break;
-                    case 25: 
-                        eliminarPrestamo(); 
+                    case 25:
+                        eliminarPrestamo();
                         break;
-                    case 26: 
-                        listarPrestamos(); 
+                    case 26:
+                        listarPrestamos();
                         break;
-                    case 27: 
+                    case 27:
+                        listarLibrosReservados();
+                        break;
+                    case 28:
+                        confimarDevolucion();
+                        break;
+                    case 29:
                         break;
                 }
-            }while(opcion != 20);
+            }while(opcion != 29);
 
 
         }catch(Exception e){
@@ -553,6 +561,29 @@ public class menu {
             System.out.println("Préstamo eliminado correctamente.");
         } catch (SQLException e) {
             System.out.println("Error al eliminar préstamo: " + e.getMessage());
+        }
+    }
+
+    public void listarLibrosReservados() {
+        List<Libro> libros = librodao.listarLibrosReservados();
+
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros para mostrar");
+        } else {
+            for (Libro libro : libros) {
+                libro.mostrarInformacion();
+            }
+        }
+    }
+
+    public void confimarDevolucion() {
+        try {
+            System.out.println("Ingrese el id del libro: ");
+            int idLibro = scanner.nextInt();
+
+            prestamoDAO.confirmarDevolucion(idLibro);
+        } catch (SQLException e) {
+            System.out.println("Error en la devolución del libro: " + e.getMessage());
         }
     }
 }
