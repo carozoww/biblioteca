@@ -9,14 +9,16 @@ import java.util.List;
 
 public class ReservaDAO {
 
-    public void agregarReserva (int salaId, int userId, Date fechaInicio, int duracion) throws SQLException {
-        String sql = "INSERT INTO reserva (id_sala, id_lector, fecha_in, duracion) VALUES (?, ?, ?, ?)";
+    public void agregarReserva (int salaId, int userId, Timestamp fechaInicio, int duracion) throws SQLException {
+        String sql = "INSERT INTO reserva (id_sala, id_lector, fecha_in, duracion, estado) VALUES (?, ?, ?, ?, ?)";
+        String estado = "RESERVADO";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
             ps.setInt(1, salaId);
             ps.setInt(2, userId);
-            if (fechaInicio != null) ps.setDate(3, fechaInicio);
+            if (fechaInicio != null) ps.setTimestamp(3, fechaInicio);
             else ps.setNull(3, Types.DATE);
             ps.setInt(4, duracion);
+            ps.setString(5,estado);
             ps.executeUpdate();
             System.out.println("Reserva agregada al usuario " + userId + ".");
         }
@@ -44,8 +46,9 @@ public class ReservaDAO {
                             rs.getDate("fecha_in"),
                             rs.getInt("duracion"),
                             rs.getInt("id_sala"),
-                            rs.getInt("id_lector")
-                    ));
+                            rs.getInt("id_lector"),
+                            rs.getString("estado"))
+                    );
                 }
             }
         }
