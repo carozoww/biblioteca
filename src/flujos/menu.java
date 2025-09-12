@@ -21,6 +21,7 @@ public class menu {
     private final LibroDAO librodao;
     private final EditorialDAO editorialdao;
     private final SalaMenu salamenu;
+    private final AdminMenu adminmenu;
     private final AdministradorDAO administradorDAO;
     private final lectorDAO lectorDAO;
     private final prestamoDAO prestamoDAO;
@@ -33,6 +34,7 @@ public class menu {
         this.librodao = new LibroDAO();
         this.editorialdao = new EditorialDAO();
         this.salamenu = new SalaMenu();
+        this.adminmenu = new AdminMenu();
         this.lectorDAO = new lectorDAO(null);
         this.prestamoDAO = new prestamoDAO(null);
         this.conn = conn;
@@ -61,10 +63,7 @@ public class menu {
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
                 System.out.println("15. Gestionar salas y sus reservas");
-                System.out.println("16. Crear administrador");
-                System.out.println("17. Eliminar administrador");
-                System.out.println("18. Modificar administrador");
-                System.out.println("19. Listar administradores");
+                System.out.println("16. Gestionar administrador");
                 System.out.println("20. Crear lector");
                 System.out.println("21. Eliminar lector");
                 System.out.println("22. Modificar lector");
@@ -120,16 +119,7 @@ public class menu {
                         salamenu.iniciar(scanner);
                         break;
                     case 16:
-                        crearAdministrador();
-                        break;
-                    case 17:
-                        eliminarAdministrador();
-                        break;
-                    case 18:
-                        editarAdministrador();
-                        break;
-                    case 19:
-                        listarAdministradores();
+                        adminmenu.iniciar(scanner);
                         break;
                     case 20: 
                         crearLector(); 
@@ -338,7 +328,7 @@ public class menu {
             }
         }
     }
-    public void crearAdministrador() {
+    /*public void crearAdministrador() {
         System.out.println("Ingrese el cedula del administrador: ");
         int cedula = scanner.nextInt();
         scanner.nextLine();
@@ -394,7 +384,7 @@ public class menu {
         }
     }
 
-  
+*/
      private void crearLector() {
         try {
             System.out.println("Ingrese el id del lector: ");
