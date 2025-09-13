@@ -9,9 +9,9 @@ import java.util.List;
 
 public class AdministradorDAO {
 
-    public void crearAdministradorDAO(String nombre, Date fechaNacimiento , String correo ){
+    public void crearAdministradorDAO(String nombre, Date fechaNacimiento , String correo, String contra ){
 
-        String consulta = "INSERT INTO administrador(nombre,fechaNac,correo) VALUE(?,?,?) ";
+        String consulta = "INSERT INTO administrador(nombre,fechaNac,correo,contrasenia) VALUE(?,?,?,?) ";
 
         try {
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
@@ -20,6 +20,7 @@ public class AdministradorDAO {
             ps.setString(1, nombre);
             ps.setDate(2, fechaNacimiento);
             ps.setString(3, correo);
+            ps.setString(4, contra);
             ps.executeUpdate();
 
             System.out.println("Administrador insertado exitosamente");
@@ -30,16 +31,17 @@ public class AdministradorDAO {
         }
     }
 
-    public void editarAdministrador(int id,String nombre,Date fechaNacimiento ,String correo ){
+    public void editarAdministrador(int id,String nombre,Date fechaNacimiento ,String correo, String contra ){
 
-            String consulta = "UPDATE administrador SET nombre = ?, fechaNac = ?, correo = ? WHERE id = ?" ;
+            String consulta = "UPDATE administrador SET nombre = ?, fechaNac = ?, correo = ?,contrasenia = ? WHERE id = ?" ;
             try {
                 PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
 
                 ps.setString(1, nombre);
                 ps.setDate(2, fechaNacimiento);
                 ps.setString(3, correo);
-                ps.setInt(4, id);
+                ps.setString(4, contra);
+                ps.setInt(5,id);
                 ps.executeUpdate();
 
                 System.out.println("Administrador modificando exitosamente");
@@ -62,8 +64,9 @@ public class AdministradorDAO {
                 listaAdministradores.add(new Administrador(rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getString("correo"),
-                        rs.getDate("fechaNac"))
-                );
+                        rs.getDate("fechaNac"),
+                        rs.getString("contrasenia")
+                ));
             }
 
         }catch (SQLException e){
@@ -88,5 +91,32 @@ public class AdministradorDAO {
             }
 
     }
+
+    public List<Administrador> inicioSesion(String correo,String contra){
+        List<Administrador> listaAdministradores = new ArrayList<>();
+        String consulta = "SELECT * FROM administrador WHERE correo = ? AND contrasenia = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setString(1, correo);
+            ps.setString(2, contra);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                listaAdministradores.add(
+                        new Administrador(
+                                rs.getInt("id"),
+                                rs.getString("nombre"),
+                                rs.getString("correo"),
+                                rs.getDate("fechaNac"),
+                                rs.getString("contrasenia")
+                        ));
+            }
+
+        }catch (Exception e){
+            throw  new RuntimeException(e);
+        }
+        return listaAdministradores;
+    }
+
 
 }

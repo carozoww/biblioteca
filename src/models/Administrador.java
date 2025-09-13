@@ -8,12 +8,14 @@ public class Administrador {
     private String nombre;
     private String correo;
     private Date fechaNacimiento;
+    private String contrasenia;
 
-    public Administrador(int id, String nombre, String correo, Date fechaNacimiento) {
+    public Administrador(int id, String nombre, String correo, Date fechaNacimiento,String contrasenia) {
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
+        this.contrasenia = contrasenia;
     }
 
     public int getId() {
@@ -31,6 +33,7 @@ public class Administrador {
     public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
+    public String getContrasenia() {return contrasenia;}
 
 
     public void setId(int id) {
@@ -43,12 +46,14 @@ public class Administrador {
         this.correo = correo;
     }
     public void setFechaNacimiento(Date fechaNacimiento) {this.fechaNacimiento = fechaNacimiento;}
+    public void setContrasenia(String contrasenia) {this.contrasenia = contrasenia;}
 
     public void mostrarInfo(){
         System.out.println("id: " + this.id);
         System.out.println("nombre: " + this.nombre);
         System.out.println("correo: " + this.correo);
         System.out.println("fechaNacimiento: " + this.fechaNacimiento);
+        System.out.println("contrasenia: " + this.contrasenia);
 
     }
 

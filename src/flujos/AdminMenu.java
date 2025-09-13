@@ -28,6 +28,7 @@ public class AdminMenu {
                 System.out.println("2. Listar Administrador");
                 System.out.println("3. Editar Administrador");
                 System.out.println("4. Borrar Administrador");
+                System.out.println("5. Iniciar Sesion");
                 System.out.println("6. Volver");
                 System.out.print("Opción: ");
 
@@ -38,6 +39,7 @@ public class AdminMenu {
                     case 2: listarAdministradores();break;
                     case 3: editarAdministrador(sc);break;
                     case 4: eliminarAdministrador(sc);break;
+                    case 5: iniciarSesion(sc);break;
                     case 6: {return;}
                     default:System.out.printf("Opcion no valido");
                 }
@@ -70,7 +72,10 @@ public class AdminMenu {
         System.out.println("Ingrese correo del administrador: ");
         String correo = sc.nextLine();
 
-        admindao.crearAdministradorDAO(nombre, fechaNacimiento, correo);
+        System.out.println("Ingrese  contrasenia del administrador: ");
+        String contra = sc.nextLine();
+
+        admindao.crearAdministradorDAO(nombre, fechaNacimiento, correo,contra);
     }
 
 
@@ -94,10 +99,13 @@ public class AdminMenu {
         String nombre = sc.nextLine();
         System.out.println("Ingrese nuevo fecha nacimiento del administrador: ");
         Date fechaNacimiento = Date.valueOf(sc.next());
+        sc.nextLine();
         System.out.println("Ingrese nuevo correo del administrador: ");
         String correo = sc.nextLine();
+        System.out.println("Ingrese nueva contrasenia del administrador: ");
+        String contra = sc.nextLine();
 
-        admindao.editarAdministrador(id, nombre, fechaNacimiento , correo);
+        admindao.editarAdministrador(id, nombre, fechaNacimiento , correo,contra);
     }
 
     public void listarAdministradores() throws SQLException {
@@ -108,6 +116,19 @@ public class AdminMenu {
             for (Administrador administrador1 : administrador) {
                 administrador1.mostrarInfo();
             }
+        }
+    }
+
+    public void iniciarSesion(Scanner sc){
+        System.out.println("Ingrese correo electronico: ");
+        String correo = sc.nextLine();
+        System.out.println("Ingrese contrasenia: ");
+        String contra = sc.nextLine();
+
+        if(!admindao.inicioSesion(correo,contra).isEmpty()){
+            System.out.println("Inicia de sesion satisfactorio");
+        }else{
+            System.out.println("Correo electronico o contrasenia incorrecta");
         }
     }
 }
