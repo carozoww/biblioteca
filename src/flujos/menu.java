@@ -20,20 +20,24 @@ public class menu {
     private final LibroDAO librodao;
     private final EditorialDAO editorialdao;
     private final SalaMenu salamenu;
+    private final AdminMenu adminmenu;
     private final AdministradorDAO administradorDAO;
     private final lectorDAO lectorDAO;
     private final prestamoDAO prestamoDAO;
+    private final ComentarioDAO comentarioDAO;
     private Connection conn;
     private final LibroGeneroDAO librogeneroDAO;
     private final LibroAutorDAO libroautorDAO;
 
     public menu() {
+        this.comentarioDAO = new ComentarioDAO();
         this.administradorDAO = new AdministradorDAO();
         this.autordao = new autorDAO();
         this.generodao = new generoDAO();
         this.librodao = new LibroDAO();
         this.editorialdao = new EditorialDAO();
         this.salamenu = new SalaMenu();
+        this.adminmenu = new AdminMenu();
         this.lectorDAO = new lectorDAO(null);
         this.prestamoDAO = new prestamoDAO(null);
         this.conn = conn;
@@ -41,13 +45,13 @@ public class menu {
         this.libroautorDAO = new LibroAutorDAO();
     }
 
-    public void mostrarMenu(){
-        try{
+    public void mostrarMenu() {
+        try {
 
 
-            int opcion= 0;
+            int opcion = 0;
 
-            do{
+            do {
                 System.out.println("\n === Gestion de biblioteca ===");
                 System.out.println("1. Crear autor");
                 System.out.println("2. Modificar autor");
@@ -63,6 +67,20 @@ public class menu {
                 System.out.println("12. Eliminar editorial");
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
+                System.out.println("15. Gestionar salas");
+
+                System.out.println("16. Gestionar Administrador");
+                System.out.println("17. eliminar Comentario");
+                System.out.println("18. Crear lector");
+                System.out.println("19. Eliminar lector");
+                System.out.println("20. Modificar lector");
+                System.out.println("21. Listar lectores");
+                System.out.println("22. Crear préstamo");
+                System.out.println("23. Finalizar préstamo");
+                System.out.println("24. Listar préstamos");
+                System.out.println("25. Listar libros reservados");
+                System.out.println("26. Confirmar devolución de un libro");
+                System.out.println("27. Salir");
                 System.out.println("15. Gestionar salas y sus reservas");
                 System.out.println("16. Crear administrador");
                 System.out.println("17. Eliminar administrador");
@@ -91,18 +109,24 @@ public class menu {
                 opcion = scanner.nextInt();
                 scanner.nextLine();
 
-                switch(opcion){
-                    case 1: crearAutor();
+                switch (opcion) {
+                    case 1:
+                        crearAutor();
                         break;
-                    case 2: modificarAutor();
+                    case 2:
+                        modificarAutor();
                         break;
-                    case 3: eliminarAutor();
+                    case 3:
+                        eliminarAutor();
                         break;
-                    case 4: crearGenero();
+                    case 4:
+                        crearGenero();
                         break;
-                    case 5: modificarGenero();
+                    case 5:
+                        modificarGenero();
                         break;
-                    case 6: eliminarGenero();
+                    case 6:
+                        eliminarGenero();
                         break;
                     case 7:
                         crearLibro();
@@ -132,37 +156,38 @@ public class menu {
                         salamenu.iniciar(scanner);
                         break;
                     case 16:
-                        crearAdministrador();
+                        adminmenu.iniciar(scanner);
                         break;
                     case 17:
-                        eliminarAdministrador();
+                        eliminarComentario();
                         break;
                     case 18:
-                        editarAdministrador();
+                        crearLector();
                         break;
                     case 19:
-                        listarAdministradores();
+                        eliminarLector();
                         break;
-                    case 20: 
-                        crearLector(); 
+                    case 20:
+
+                        editarLector();
                         break;
-                    case 21: 
-                        eliminarLector(); 
+                    case 21:
+                        listarLectores();
                         break;
-                    case 22: 
-                        editarLector(); 
+                    case 22:
+                        crearPrestamo();
                         break;
-                    case 23: 
-                        listarLectores(); 
+                    case 23:
+                        eliminarPrestamo();
                         break;
-                    case 24: 
-                        crearPrestamo(); 
+                    case 24:
+                        listarPrestamos();
                         break;
-                    case 25: 
-                        eliminarPrestamo(); 
+                    case 25:
+                        listarLibrosReservados();
                         break;
-                    case 26: 
-                        listarPrestamos(); 
+                    case 26:
+                        confimarDevolucion();
                         break;
                     case 27:
                         asignarGeneroLibro();
@@ -189,7 +214,8 @@ public class menu {
                         eliminarAutorDeLibro();
                         break;
                 }
-            }while(opcion != 35);
+            } while (opcion != 35);
+
 
 
         }catch(Exception e){
@@ -204,7 +230,7 @@ public class menu {
         System.out.println("Ingrese el apellido del autor");
         String ape = scanner.next();
 
-        autordao.crearAutor(nombre, ape);
+        autorDAO.crearAutor(nombre, ape);
     }
 
     private void mostrarAutor() throws SQLException {
@@ -239,7 +265,7 @@ public class menu {
         mostrarAutor();
         System.out.println("Ingrese el id del autor a eliminar");
         int id = scanner.nextInt();
-        autordao.eliminarAutor(id);
+        autorDAO.eliminarAutor(id);
 
     }
 
@@ -247,7 +273,7 @@ public class menu {
         System.out.println("Ingrese el nombre del nuevo genero");
         String nombre = scanner.next();
 
-        generodao.crearGenero(nombre);
+        generoDAO.crearGenero(nombre);
 
     }
 
@@ -282,7 +308,7 @@ public class menu {
         System.out.println("Ingrese el id del genero a eliminar");
         int id = scanner.nextInt();
 
-        generodao.eliminarGenero(id);
+        generoDAO.eliminarGenero(id);
     }
     public void crearLibro() throws SQLException {
         System.out.println("Ingrese el titulo del libro: ");
@@ -375,67 +401,9 @@ public class menu {
                 editorial.mostrarInformacion();
             }
         }
-
-
-    }
-    public void crearAdministrador() {
-        System.out.println("Ingrese el cedula del administrador: ");
-        int cedula = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("Ingrese nombre del  administrador: ");
-        String nombre = scanner.nextLine();
-
-        System.out.println("Ingrese telefono del administrador: ");
-        String telefono = scanner.nextLine();
-
-        System.out.println("Ingrese direccion del administrador: ");
-        String direccion = scanner.nextLine();
-
-        administradorDAO.crearAdministradorDAO(cedula,nombre,telefono,direccion);
     }
 
-
-    public void eliminarAdministrador(){
-        listarAdministradores();
-        System.out.println("Ingrese el cedula del administrador: ");
-        int cedula = scanner.nextInt();
-        scanner.nextLine();
-
-        administradorDAO.eliminarAdministrador(cedula);
-    }
-
-    public void editarAdministrador(){
-
-        listarAdministradores();
-        System.out.println("Ingrese el cedula del administrador a modificar: ");
-        int cedula = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("Ingrese nuevo nombre del administrador: ");
-        String nombre = scanner.nextLine();
-        System.out.println("Ingrese nuevo telefono del administrador: ");
-        String telefono = scanner.nextLine();
-        System.out.println("Ingrese nuevo direccion del administrador: ");
-        String direccion = scanner.nextLine();
-
-        administradorDAO.editarAdministrador(cedula,nombre,telefono,direccion);
-    }
-
-    public void listarAdministradores(){
-        List<Administrador> administrador = administradorDAO.listarAdministradores();
-        if (administrador.isEmpty()) {
-            System.out.println("No hay administradores para mostrar");
-        }
-        else {
-            for (Administrador administrador1 : administrador) {
-                administrador1.mostrarInfo();
-            }
-        }
-    }
-
-  
-     private void crearLector() {
+    private void crearLector() {
         try {
             System.out.println("Ingrese el id del lector: ");
             int id = scanner.nextInt();
@@ -501,10 +469,10 @@ public class menu {
             } else {
                 for (Lector lector : lectores) {
                     System.out.println("ID: " + lector.getIdLector()
-                        + ", Nombre: " + lector.getNombre()
-                        + ", Dirección: " + lector.getDireccion()
-                        + ", Teléfono: " + lector.getTelefono()
-                        + ", Correo: " + lector.getCorreo());
+                            + ", Nombre: " + lector.getNombre()
+                            + ", Dirección: " + lector.getDireccion()
+                            + ", Teléfono: " + lector.getTelefono()
+                            + ", Correo: " + lector.getCorreo());
                 }
             }
 
@@ -736,5 +704,39 @@ public class menu {
 
         libroautorDAO.eliminarAutorDeLibro(id_libro,id_autor);
     }
+    public void listarLibrosReservados() {
+        List<Libro> libros = librodao.listarLibrosReservados();
+
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros para mostrar");
+        } else {
+            for (Libro libro : libros) {
+                libro.mostrarInformacion();
+            }
+        }
+    }
+
+    public void confimarDevolucion() {
+        try {
+            System.out.println("Ingrese el id del libro: ");
+            int idLibro = scanner.nextInt();
+
+            prestamoDAO.confirmarDevolucion(idLibro);
+        } catch (SQLException e) {
+            System.out.println("Error en la devolución del libro: " + e.getMessage());
+        }
+    }
+
+
+
+    private void eliminarComentario() {
+        System.out.println("Ingrese el id del lector a eliminar: ");
+        int id_comentario = scanner.nextInt();
+        scanner.nextLine();
+
+        comentarioDAO.eliminarComentario(id_comentario);
+    }
+
+
 
 }

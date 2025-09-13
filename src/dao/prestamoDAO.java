@@ -1,5 +1,6 @@
 package dao;
 
+import basedatos.conexion;
 import models.Prestamo;
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,6 +51,17 @@ public class prestamoDAO {
             ps.setInt(1, idPrestamo);
             ps.executeUpdate();
             System.out.println("✅ Préstamo eliminado con éxito");
+        }
+    }
+
+    public void confirmarDevolucion(int idLibro) throws SQLException{
+        String sql = "UPDATE prestamo SET estado = ? WHERE id_libro = ? AND estado = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
+            ps.setString(1,"DISPONIBLE");
+            ps.setInt(2,idLibro);
+            ps.setString(3,"RESERVADO");
+            ps.executeUpdate();
+            System.out.println("Devolución del préstamo confirmada.");
         }
     }
 }

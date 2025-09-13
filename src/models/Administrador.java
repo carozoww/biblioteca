@@ -1,20 +1,23 @@
 package models;
 
-public class Administrador {
-    int  cedula;
-    String nombre;
-    String correo;
-    String direccion;
+import java.time.LocalDate;
+import java.util.Date;
 
-    public Administrador(int cedula, String nombre, String correo, String direccion) {
-        this.cedula = cedula;
+public class Administrador {
+    private int  id;
+    private String nombre;
+    private String correo;
+    private Date fechaNacimiento;
+
+    public Administrador(int id, String nombre, String correo, Date fechaNacimiento) {
+        this.id = id;
         this.nombre = nombre;
         this.correo = correo;
-        this.direccion = direccion;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
-    public int getCedula() {
-        return cedula;
+    public int getId() {
+        return id;
     }
 
     public String getNombre() {
@@ -25,13 +28,13 @@ public class Administrador {
         return correo;
     }
 
-    public String getDireccion() {
-        return direccion;
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
 
-    public void setCedula(int cedula) {
-    this.cedula = cedula;
+    public void setId(int id) {
+    this.id = id;
     }
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -39,15 +42,13 @@ public class Administrador {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+    public void setFechaNacimiento(Date fechaNacimiento) {this.fechaNacimiento = fechaNacimiento;}
 
     public void mostrarInfo(){
-        System.out.println("cedula: " + this.cedula);
+        System.out.println("id: " + this.id);
         System.out.println("nombre: " + this.nombre);
         System.out.println("correo: " + this.correo);
-        System.out.println("direccion: " + this.direccion);
+        System.out.println("fechaNacimiento: " + this.fechaNacimiento);
 
     }
 

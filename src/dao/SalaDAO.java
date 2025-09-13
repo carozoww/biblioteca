@@ -9,14 +9,13 @@ import java.util.List;
 
 public class SalaDAO {
 
-    public void crearSala (int id, String ubicacion, int maxPersonas) throws SQLException{
-        String sql = "INSERT INTO sala (id_sala, ubicacion, max_personas, estado) VALUES (?, ?, ?, ?)";
-        String estado = "DISPONIBLE";
+    public void crearSala (int numeroSala, String ubicacion, int maxPersonas) throws SQLException{
+        String sql = "INSERT INTO sala (numero_sala, ubicacion, max_personas) VALUES (?, ?, ?)";
+
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)){
-            ps.setInt(1, id);
+            ps.setInt(1, numeroSala);
             ps.setString(2, ubicacion);
             ps.setInt(3, maxPersonas);
-            ps.setString(4, estado);
             ps.executeUpdate();
             System.out.println("Sala creada");
         }
@@ -30,21 +29,19 @@ public class SalaDAO {
         try (Statement st = conexion.getInstancia().getConnection().createStatement()){
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
-                lista.add(new Sala(rs.getInt("id_sala"), rs.getString("ubicacion"), rs.getInt("max_personas"), rs.getString("estado")));
+                lista.add(new Sala(rs.getInt("id_sala"), rs.getInt("numero_sala"), rs.getString("ubicacion"), rs.getInt("max_personas")));
             }
-
         }
-
         return lista;
     }
 
-    public void editarSala (int id, String nuevaUbicacion, int nuevoMaxPersonas, String nuevoEstado) throws SQLException {
-        String sql = "UPDATE sala SET ubicacion = ?, max_personas = ?, estado = ? WHERE id_sala = ?";
+    public void editarSala (int id, int numeroSala, String nuevaUbicacion, int nuevoMaxPersonas) throws SQLException {
+        String sql = "UPDATE sala SET numero_sala = ?, ubicacion = ?, max_personas = ? WHERE id_sala = ?";
 
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
-            ps.setString(1, nuevaUbicacion);
-            ps.setInt(2, nuevoMaxPersonas);
-            ps.setString(3, nuevoEstado);
+            ps.setInt(1, numeroSala);
+            ps.setString(2, nuevaUbicacion);
+            ps.setInt(3, nuevoMaxPersonas);
             ps.setInt(4, id);
             int filas = ps.executeUpdate();
             if (filas > 0) System.out.println("Sala actualizada.");
