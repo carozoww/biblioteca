@@ -94,6 +94,8 @@ public class AdminMenu {
         String nombre = sc.nextLine();
         System.out.println("Ingrese nuevo fecha nacimiento del administrador: ");
         Date fechaNacimiento = Date.valueOf(sc.next());
+        sc.nextLine();
+
         System.out.println("Ingrese nuevo correo del administrador: ");
         String correo = sc.nextLine();
 
