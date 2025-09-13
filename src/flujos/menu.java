@@ -1,17 +1,18 @@
 package flujos;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
-import dao.EditorialDAO;
-import dao.LibroDAO;
-import dao.autorDAO;
-import dao.generoDAO;
-import models.Libro;
-import models.Editorial;
+import dao.*;
+import models.*;
 
 import java.util.List;
 import java.util.Scanner;
+
+import basedatos.conexion;
 
 public class menu {
     private final Scanner scanner = new Scanner(System.in);
@@ -20,22 +21,34 @@ public class menu {
     private final LibroDAO librodao;
     private final EditorialDAO editorialdao;
     private final SalaMenu salamenu;
+    private final AdminMenu adminmenu;
+    private final AdministradorDAO administradorDAO;
+    private final lectorDAO lectorDAO;
+    private final prestamoDAO prestamoDAO;
+    private final ComentarioDAO comentarioDAO;
+    private Connection conn;
 
     public menu() {
+        this.comentarioDAO = new ComentarioDAO();
+        this.administradorDAO = new AdministradorDAO();
         this.autordao = new autorDAO();
         this.generodao = new generoDAO();
         this.librodao = new LibroDAO();
         this.editorialdao = new EditorialDAO();
         this.salamenu = new SalaMenu();
+        this.adminmenu = new AdminMenu();
+        this.lectorDAO = new lectorDAO(null);
+        this.prestamoDAO = new prestamoDAO(null);
+        this.conn = conn;
     }
 
-    public void mostrarMenu(){
-        try{
+    public void mostrarMenu() {
+        try {
 
 
-            int opcion= 0;
+            int opcion = 0;
 
-            do{
+            do {
                 System.out.println("\n === Gestion de biblioteca ===");
                 System.out.println("1. Crear autor");
                 System.out.println("2. Modificar autor");
@@ -51,26 +64,47 @@ public class menu {
                 System.out.println("12. Eliminar editorial");
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
-                System.out.println("15. Gestionar salas y sus reservas");
-                System.out.println("16. Salir");
+                System.out.println("15. Gestionar salas");
+
+                System.out.println("16. Gestionar Administrador");
+                System.out.println("17. eliminar Comentario");
+                System.out.println("18. Crear lector");
+                System.out.println("19. Eliminar lector");
+                System.out.println("20. Modificar lector");
+                System.out.println("21. Listar lectores");
+                System.out.println("22. Crear préstamo");
+                System.out.println("23. Finalizar préstamo");
+                System.out.println("24. Listar préstamos");
+                System.out.println("25. Listar libros reservados");
+                System.out.println("26. Confirmar devolución de un libro");
+                System.out.println("27. Salir");
+
+ 
+
 
                 System.out.println("Opcion");
 
                 opcion = scanner.nextInt();
                 scanner.nextLine();
 
-                switch(opcion){
-                    case 1: crearAutor();
+                switch (opcion) {
+                    case 1:
+                        crearAutor();
                         break;
-                    case 2: modificarAutor();
+                    case 2:
+                        modificarAutor();
                         break;
-                    case 3: eliminarAutor();
+                    case 3:
+                        eliminarAutor();
                         break;
-                    case 4: crearGenero();
+                    case 4:
+                        crearGenero();
                         break;
-                    case 5: modificarGenero();
+                    case 5:
+                        modificarGenero();
                         break;
-                    case 6: eliminarGenero();
+                    case 6:
+                        eliminarGenero();
                         break;
                     case 7:
                         crearLibro();
@@ -100,12 +134,47 @@ public class menu {
                         salamenu.iniciar(scanner);
                         break;
                     case 16:
+                        adminmenu.iniciar(scanner);
+                        break;
+                    case 17:
+                        eliminarComentario();
+                        break;
+                    case 18:
+                        crearLector();
+                        break;
+                    case 19:
+                        eliminarLector();
+                        break;
+                    case 20:
+
+                        editarLector();
+                        break;
+                    case 21:
+                        listarLectores();
+                        break;
+                    case 22:
+                        crearPrestamo();
+                        break;
+                    case 23:
+                        eliminarPrestamo();
+                        break;
+                    case 24:
+                        listarPrestamos();
+                        break;
+                    case 25:
+                        listarLibrosReservados();
+                        break;
+                    case 26:
+                        confimarDevolucion();
+                        break;
+                    case 27:
                         break;
                 }
-            }while(opcion != 16);
+            } while (opcion != 27);
 
 
-        }catch(Exception e){
+
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -117,14 +186,14 @@ public class menu {
         System.out.println("Ingrese el apellido del autor");
         String ape = scanner.next();
 
-        autordao.crearAutor(nombre, ape);
+        autorDAO.crearAutor(nombre, ape);
     }
 
     private void mostrarAutor() throws SQLException {
         List<String> autores = autorDAO.mostrarAutores();
-        if(autores.isEmpty()){
+        if (autores.isEmpty()) {
             System.out.println("No existe el usuario");
-        }else{
+        } else {
             autores.forEach(System.out::println);
         }
 
@@ -141,7 +210,7 @@ public class menu {
         System.out.println("Ingrese el nuevo apellido del autor");
         String ape = scanner.next();
 
-        autordao.modificarAutor(id,nombre,ape);
+        autorDAO.modificarAutor(id, nombre, ape);
 
 
     }
@@ -150,7 +219,7 @@ public class menu {
         mostrarAutor();
         System.out.println("Ingrese el id del autor a eliminar");
         int id = scanner.nextInt();
-        autordao.eliminarAutor(id);
+        autorDAO.eliminarAutor(id);
 
     }
 
@@ -158,21 +227,21 @@ public class menu {
         System.out.println("Ingrese el nombre del nuevo genero");
         String nombre = scanner.next();
 
-        generodao.crearGenero(nombre);
+        generoDAO.crearGenero(nombre);
 
     }
 
-    private void mostrarGenero() throws SQLException{
+    private void mostrarGenero() throws SQLException {
         List<String> generos = generoDAO.mostrarGeneros();
 
-        if(generos.isEmpty()){
+        if (generos.isEmpty()) {
             System.out.println("No hay generos registrados");
-        }else{
+        } else {
             generos.forEach(System.out::println);
         }
     }
 
-    private void modificarGenero() throws SQLException{
+    private void modificarGenero() throws SQLException {
         mostrarGenero();
 
         System.out.println("Ingrese el id del genero a modificar");
@@ -181,18 +250,19 @@ public class menu {
         System.out.println("Ingrese el nuevo nombre del genero");
         String nombre = scanner.next();
 
-        generodao.modificarGenero(id,nombre);
+        generoDAO.modificarGenero(id, nombre);
 
     }
 
-    private void eliminarGenero() throws SQLException{
+    private void eliminarGenero() throws SQLException {
         mostrarGenero();
 
         System.out.println("Ingrese el id del genero a eliminar");
         int id = scanner.nextInt();
 
-        generodao.eliminarGenero(id);
+        generoDAO.eliminarGenero(id);
     }
+
     public void crearLibro() throws SQLException {
         System.out.println("Ingrese el titulo del libro: ");
         String titulo = scanner.nextLine();
@@ -209,7 +279,7 @@ public class menu {
         librodao.crearLibro(titulo, isbn, fechaPublicacion, idEditorial);
     }
 
-    public void eliminarLibro(){
+    public void eliminarLibro() {
         listarLibros();
         System.out.println("\n Ingrese el id del libro a eliminar: ");
         int idLibro = scanner.nextInt();
@@ -217,7 +287,7 @@ public class menu {
         librodao.eliminarLibro(idLibro);
     }
 
-    public void editarLibro(){
+    public void editarLibro() {
         listarLibros();
         System.out.println("\n Ingrese el id del libro a modificar: ");
         int idLibro = scanner.nextInt();
@@ -237,6 +307,7 @@ public class menu {
 
         librodao.editarLibro(idLibro, nombre, isbn, fechaPublicacion, idEditorial);
     }
+
     public void listarLibros() {
         List<Libro> libros = librodao.listarLibros();
 
@@ -248,6 +319,7 @@ public class menu {
             }
         }
     }
+
     public void crearEditorial() {
         System.out.println("Ingrese el nombre de la editorial: ");
         String nombre = scanner.nextLine();
@@ -255,7 +327,7 @@ public class menu {
         editorialdao.crearEditorial(nombre);
     }
 
-    public void eliminarEditorial(){
+    public void eliminarEditorial() {
         listarEditoriales();
         System.out.println("Ingrese el id de la editorial a eliminar: ");
         int idEditorial = scanner.nextInt();
@@ -263,7 +335,7 @@ public class menu {
         editorialdao.eliminarEditorial(idEditorial);
     }
 
-    public void editarEditorial(){
+    public void editarEditorial() {
         listarEditoriales();
         System.out.println("Ingrese el id de la editorial a modificar: ");
         int idEditorial = scanner.nextInt();
@@ -284,9 +356,199 @@ public class menu {
                 editorial.mostrarInformacion();
             }
         }
+    }
 
+    private void crearLector() {
+        try {
+            System.out.println("Ingrese el id del lector: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
 
+            System.out.println("Ingrese el nombre del lector: ");
+            String nombre = scanner.nextLine();
+
+            System.out.println("Ingrese la dirección del lector: ");
+            String direccion = scanner.nextLine();
+
+            System.out.println("Ingrese el teléfono del lector: ");
+            String telefono = scanner.nextLine();
+
+            System.out.println("Ingrese el correo del lector: ");
+            String correo = scanner.nextLine();
+
+            Lector lector = new Lector(id, nombre, direccion, telefono, correo);
+            lectorDAO.crearLector(lector);
+
+            System.out.println("Lector creado correctamente");
+
+        } catch (SQLException e) {
+            System.out.println("Error al crear lector: " + e.getMessage());
+        }
+    }
+
+    private void editarLector() {
+        try {
+            listarLectores();
+            System.out.println("Ingrese el id del lector a modificar: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.println("Ingrese el nuevo nombre: ");
+            String nombre = scanner.nextLine();
+
+            System.out.println("Ingrese la nueva dirección: ");
+            String direccion = scanner.nextLine();
+
+            System.out.println("Ingrese el nuevo teléfono: ");
+            String telefono = scanner.nextLine();
+
+            System.out.println("Ingrese el nuevo correo: ");
+            String correo = scanner.nextLine();
+
+            Lector lectorEditado = new Lector(id, nombre, direccion, telefono, correo);
+
+            lectorDAO.editarLector(lectorEditado);
+
+            System.out.println("Lector editado correctamente.");
+        } catch (SQLException e) {
+            System.out.println("Error al editar lector: " + e.getMessage());
+        }
+    }
+
+    private void listarLectores() {
+        try {
+            List<Lector> lectores = lectorDAO.listarLectores();
+
+            if (lectores.isEmpty()) {
+                System.out.println("No hay lectores registrados.");
+            } else {
+                for (Lector lector : lectores) {
+                    System.out.println("ID: " + lector.getIdLector()
+                            + ", Nombre: " + lector.getNombre()
+                            + ", Dirección: " + lector.getDireccion()
+                            + ", Teléfono: " + lector.getTelefono()
+                            + ", Correo: " + lector.getCorreo());
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error al listar lectores: " + e.getMessage());
+        }
     }
 
 
+    private void eliminarLector() {
+        try {
+            listarLectores();
+            System.out.println("Ingrese el id del lector a eliminar: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            lectorDAO.eliminarLector(id);
+            System.out.println("Lector eliminado correctamente.");
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar lector: " + e.getMessage());
+        }
+    }
+
+
+    private void crearPrestamo() {
+        try {
+            System.out.println("Ingrese el id del préstamo: ");
+            int idPrestamo = scanner.nextInt();
+
+            System.out.println("Ingrese el id del lector: ");
+            int idLector = scanner.nextInt();
+
+            System.out.println("Ingrese el id del libro: ");
+            int idLibro = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.println("Ingrese la fecha de préstamo (YYYY-MM-DD): ");
+            LocalDate fechaPrestamo = LocalDate.parse(scanner.nextLine());
+
+            System.out.println("Ingrese la fecha de devolución (YYYY-MM-DD): ");
+            LocalDate fechaDevolucion = LocalDate.parse(scanner.nextLine());
+
+            System.out.println("Ingrese el estado del préstamo (ej: 'activo', 'devuelto'): ");
+            String estado = scanner.nextLine();
+
+            Prestamo prestamo = new Prestamo(idPrestamo, idLector, idLibro, fechaPrestamo, fechaDevolucion, estado);
+            prestamoDAO.crearPrestamo(prestamo);
+
+            System.out.println("Préstamo creado correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al crear préstamo: " + e.getMessage());
+        }
+    }
+
+    private void listarPrestamos() {
+        try {
+            List<Prestamo> prestamos = prestamoDAO.listarPrestamos();
+
+            if (prestamos.isEmpty()) {
+                System.out.println("No hay préstamos registrados.");
+            } else {
+                for (Prestamo prestamo : prestamos) {
+                    System.out.println("ID Préstamo: " + prestamo.getIdPrestamo()
+                            + ", ID Lector: " + prestamo.getIdLector()
+                            + ", ID Libro: " + prestamo.getIdLibro()
+                            + ", Fecha Préstamo: " + prestamo.getFechaPrestamo()
+                            + ", Fecha Devolución: " + prestamo.getFechaDevolucion()
+                            + ", Estado: " + prestamo.getEstado());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al listar préstamos: " + e.getMessage());
+        }
+    }
+
+    private void eliminarPrestamo() {
+        try {
+            listarPrestamos();
+            System.out.println("Ingrese el id del préstamo a eliminar: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+
+            prestamoDAO.eliminarPrestamo(id);
+            System.out.println("Préstamo eliminado correctamente.");
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar préstamo: " + e.getMessage());
+        }
+    }
+
+    public void listarLibrosReservados() {
+        List<Libro> libros = librodao.listarLibrosReservados();
+
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros para mostrar");
+        } else {
+            for (Libro libro : libros) {
+                libro.mostrarInformacion();
+            }
+        }
+    }
+
+    public void confimarDevolucion() {
+        try {
+            System.out.println("Ingrese el id del libro: ");
+            int idLibro = scanner.nextInt();
+
+            prestamoDAO.confirmarDevolucion(idLibro);
+        } catch (SQLException e) {
+            System.out.println("Error en la devolución del libro: " + e.getMessage());
+        }
+    }
+
+
+
+    private void eliminarComentario() {
+        System.out.println("Ingrese el id del lector a eliminar: ");
+        int id_comentario = scanner.nextInt();
+        scanner.nextLine();
+
+        comentarioDAO.eliminarComentario(id_comentario);
+    }
 }
+

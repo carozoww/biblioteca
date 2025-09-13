@@ -78,4 +78,28 @@ public class LibroDAO {
         }
         return libros;
     }
+
+    public List<Libro> listarLibrosReservados(){
+        List<Libro> libros = new ArrayList<>();
+        String consulta = "SELECT * FROM libro, prestamo WHERE estado = 'RESERVADO'";
+
+        try{
+            Statement st = conexion.getInstancia().getConnection().createStatement();
+            ResultSet rs = st.executeQuery(consulta);
+
+            while(rs.next()){
+                libros.add(new Libro(rs.getInt("id_libro"),
+                        rs.getString("titulo"),
+                        rs.getInt("isbn"),
+                        rs.getDate("fecha_publicacion"),
+                        rs.getInt("id_editorial")));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return libros;
+    }
+
+
 }

@@ -3,26 +3,23 @@ package dao;
 import models.Administrador;
 import basedatos.conexion;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdministradorDAO {
 
-    public void crearAdministradorDAO(int cedula,String nombre,String telefono ,String direccion ){
+    public void crearAdministradorDAO(String nombre, Date fechaNacimiento , String correo ){
 
-        String consulta = "INSERT INTO administrador(cedula,nombre,telefono,direccion) VALUE(?,?,?,?) ";
+        String consulta = "INSERT INTO administrador(nombre,fechaNac,correo) VALUE(?,?,?) ";
 
         try {
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
 
-            ps.setInt(1, cedula);
-            ps.setString(2, nombre);
-            ps.setString(3, telefono);
-            ps.setString(4, direccion);
+
+            ps.setString(1, nombre);
+            ps.setDate(2, fechaNacimiento);
+            ps.setString(3, correo);
             ps.executeUpdate();
 
             System.out.println("Administrador insertado exitosamente");
@@ -33,16 +30,16 @@ public class AdministradorDAO {
         }
     }
 
-    public void editarAdministrador(int cedula,String nombre,String telefono ,String direccion ){
+    public void editarAdministrador(int id,String nombre,Date fechaNacimiento ,String correo ){
 
-            String consulta = "UPDATE usuarios SET nombre = ?, telefono = ?, direccion = ? WHERE cedula = ?" ;
+            String consulta = "UPDATE administrador SET nombre = ?, fechaNac = ?, correo = ? WHERE id = ?" ;
             try {
                 PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
 
                 ps.setString(1, nombre);
-                ps.setString(2, telefono);
-                ps.setString(3, direccion);
-                ps.setInt(4, cedula);
+                ps.setDate(2, fechaNacimiento);
+                ps.setString(3, correo);
+                ps.setInt(4, id);
                 ps.executeUpdate();
 
                 System.out.println("Administrador modificando exitosamente");
@@ -54,7 +51,7 @@ public class AdministradorDAO {
     }
 
     public List<Administrador> listarAdministradores(){
-        String consulta = "SELECT * FROM administradores";
+        String consulta = "SELECT * FROM administrador";
         List<Administrador> listaAdministradores = new ArrayList<>();
 
         try {
@@ -62,10 +59,11 @@ public class AdministradorDAO {
             ResultSet rs = st.executeQuery(consulta);
 
             while (rs.next()) {
-                listaAdministradores.add(new Administrador(rs.getInt("cedula"),
-                        " - "+rs.getString("nombre"),
-                        " - "+rs.getString("telefono"),
-                        " - "+rs.getString("direccion")));
+                listaAdministradores.add(new Administrador(rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getDate("fechaNac"))
+                );
             }
 
         }catch (SQLException e){
@@ -75,13 +73,13 @@ public class AdministradorDAO {
         return listaAdministradores;
     }
 
-    public void eliminarAdministrador(int cedula){
-            String consulta = "DELETE FROM administradores WHERE cedula = ?";
+    public void eliminarAdministrador(int id){
+            String consulta = "DELETE FROM administrador WHERE id = ?";
 
             try {
                 PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
 
-                ps.setInt(1, cedula);
+                ps.setInt(1, id);
                 ps.executeUpdate();
 
                 System.out.println("Administrador eliminado exitosamente");
