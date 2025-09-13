@@ -65,6 +65,7 @@ public class menu {
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
                 System.out.println("15. Gestionar salas");
+
                 System.out.println("16. Gestionar Administrador");
                 System.out.println("17. eliminar Comentario");
                 System.out.println("18. Crear lector");
@@ -77,6 +78,9 @@ public class menu {
                 System.out.println("25. Listar libros reservados");
                 System.out.println("26. Confirmar devolución de un libro");
                 System.out.println("27. Salir");
+
+ 
+
 
                 System.out.println("Opcion");
 
@@ -142,6 +146,7 @@ public class menu {
                         eliminarLector();
                         break;
                     case 20:
+
                         editarLector();
                         break;
                     case 21:
@@ -166,6 +171,7 @@ public class menu {
                         break;
                 }
             } while (opcion != 27);
+
 
 
         } catch (Exception e) {
@@ -536,6 +542,7 @@ public class menu {
     }
 
 
+
     private void eliminarComentario() {
         System.out.println("Ingrese el id del lector a eliminar: ");
         int id_comentario = scanner.nextInt();
@@ -544,3 +551,4 @@ public class menu {
         comentarioDAO.eliminarComentario(id_comentario);
     }
 }
+
