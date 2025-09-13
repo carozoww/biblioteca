@@ -1,6 +1,7 @@
 package dao;
 
 import basedatos.conexion;
+import models.Genero;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,15 +26,15 @@ public class generoDAO {
         }
     }
 
-    public static List<String> mostrarGeneros(){
-        List<String> generos = new ArrayList<>();
+    public static List<Genero> mostrarGeneros(){
+        List<Genero> generos = new ArrayList<>();
         String query = "SELECT * FROM genero";
         try{
             Statement st = conexion.getInstancia().getConnection().createStatement();
             ResultSet rs = st.executeQuery(query);
 
             while(rs.next()){
-                generos.add(rs.getInt("id_genero") + " - " + rs.getString("nombre"));
+                generos.add(new Genero(rs.getInt("id_genero"),rs.getString("nombre")));
             }
 
         }catch(SQLException e){
