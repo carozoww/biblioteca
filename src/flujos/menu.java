@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import dao.*;
 import models.*;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import basedatos.conexion;
 
@@ -25,6 +24,8 @@ public class menu {
     private final lectorDAO lectorDAO;
     private final prestamoDAO prestamoDAO;
     private Connection conn;
+    private final LibroGeneroDAO librogeneroDAO;
+    private final LibroAutorDAO libroautorDAO;
 
     public menu() {
         this.administradorDAO = new AdministradorDAO();
@@ -36,6 +37,8 @@ public class menu {
         this.lectorDAO = new lectorDAO(null);
         this.prestamoDAO = new prestamoDAO(null);
         this.conn = conn;
+        this.librogeneroDAO = new LibroGeneroDAO();
+        this.libroautorDAO = new LibroAutorDAO();
     }
 
     public void mostrarMenu(){
@@ -72,7 +75,16 @@ public class menu {
                 System.out.println("24. Crear préstamo");
                 System.out.println("25. Finalizar préstamo");
                 System.out.println("26. Listar préstamos");
-                System.out.println("27. Salir");
+                System.out.println("27. Asignar genero a libro");
+                System.out.println("28. Listar generos de libros");
+                System.out.println("29. Modificar genero de libro");
+                System.out.println("30. Eliminar genero de libro");
+                System.out.println("31. Asignar autor a libro");
+                System.out.println("32. Listar autores de libros");
+                System.out.println("33. Modificar autor de libro");
+                System.out.println("34. Eliminar autor de libro");
+
+                System.out.println("35. Salir");
 
                 System.out.println("Opcion");
 
@@ -152,10 +164,32 @@ public class menu {
                     case 26: 
                         listarPrestamos(); 
                         break;
-                    case 27: 
+                    case 27:
+                        asignarGeneroLibro();
+                        break;
+                    case 28:
+                        mostrarGenerosLibro();
+                        break;
+                    case 29:
+                        modificarGeneroLibro();
+                        break;
+                    case 30:
+                        eliminarGeneroDeLibro();
+                        break;
+                    case 31:
+                        asignarAutorALibro();
+                        break;
+                    case 32:
+                        mostrarAutoresDeLibros();
+                        break;
+                    case 33:
+                        modificarAutorDeLibro();
+                        break;
+                    case 34:
+                        eliminarAutorDeLibro();
                         break;
                 }
-            }while(opcion != 20);
+            }while(opcion != 35);
 
 
         }catch(Exception e){
@@ -174,11 +208,13 @@ public class menu {
     }
 
     private void mostrarAutor() throws SQLException {
-        List<String> autores = autorDAO.mostrarAutores();
+        List<Autor> autores = autorDAO.mostrarAutores();
         if(autores.isEmpty()){
             System.out.println("No existe el usuario");
         }else{
-            autores.forEach(System.out::println);
+            for(Autor autor: autores){
+                autor.mostrarInfo();
+            }
         }
 
     }
@@ -216,12 +252,14 @@ public class menu {
     }
 
     private void mostrarGenero() throws SQLException{
-        List<String> generos = generoDAO.mostrarGeneros();
+        List<Genero> generos = generoDAO.mostrarGeneros();
 
         if(generos.isEmpty()){
             System.out.println("No hay generos registrados");
         }else{
-            generos.forEach(System.out::println);
+            for(Genero genero:generos){
+                genero.mostrarInfo();
+            }
         }
     }
 
@@ -557,4 +595,146 @@ public class menu {
             System.out.println("Error al eliminar préstamo: " + e.getMessage());
         }
     }
+
+    private void asignarGeneroLibro() throws SQLException {
+        System.out.println("Elija un libro al que asignarle un genero: ");
+        listarLibros();
+        int id_libro = scanner.nextInt();
+        System.out.println("Elija un genero: ");
+        mostrarGenero();
+        int id_genero = scanner.nextInt();
+
+        librogeneroDAO.asignarGeneroLibro(id_libro, id_genero);
+
+    }
+
+    private void mostrarGenerosLibro(){
+        List<LibroGenero> librosGeneros = librogeneroDAO.listarGenerosDeLibros();
+        Map<Integer,String> mapa = new HashMap<>();
+        for(LibroGenero libroGenero : librosGeneros){
+            mapa.put(libroGenero.getLibro().getIdLibro(),libroGenero.getLibro().getTitulo());
+
+        }
+
+        for(Map.Entry<Integer, String> entry : mapa.entrySet()){
+            System.out.println("Libro: "+entry.getValue());
+            for(LibroGenero librogenero : librosGeneros){
+                if(entry.getKey() == librogenero.getLibro().getIdLibro()){
+                    librogenero.getGenero().mostrarInfo();
+                }
+            }
+        }
+
+    }
+
+    private void mostrarGenerosDeUnLibro(int id_libro){
+        List<Genero> generos = librogeneroDAO.listarGenerosDeLibro(id_libro);
+
+        if(generos.isEmpty()){
+            System.out.println("El libro no tiene generos asignados");
+        }else{
+            for(Genero genero: generos){
+                genero.mostrarInfo();
+            }
+        }
+    }
+
+    private void modificarGeneroLibro() throws SQLException {
+        System.out.println("Ingrese el id del libro a modificar: ");
+        listarLibros();
+        int id_libro = scanner.nextInt();
+        System.out.println("Ingrese el genero a modificar de ese libro: ");
+        mostrarGenerosDeUnLibro(id_libro);
+        int id_genero_old = scanner.nextInt();
+        mostrarGenero();
+        System.out.println("Ingrese el genero a modificar de ese libro: ");
+        int id_genero_new = scanner.nextInt();
+
+        librogeneroDAO.modificarLibroGenero(id_libro, id_genero_old,id_genero_new);
+
+    }
+
+    private void eliminarGeneroDeLibro(){
+        System.out.println("Ingrese el id del libro de cual desea eliminar un genero: ");
+        listarLibros();
+        int id_libro = scanner.nextInt();
+        System.out.println("Ingrese el genero a eliminar de ese libro: ");
+        mostrarGenerosDeUnLibro(id_libro);
+        int id_genero = scanner.nextInt();
+
+        librogeneroDAO.eliminarGeneroDeLibro(id_libro, id_genero);
+    }
+
+    private void asignarAutorALibro() throws SQLException {
+        System.out.println("Ingrese el id del libro al cual desea asignar un nuevo autor: ");
+        listarLibros();
+        int id_libro = scanner.nextInt();
+        System.out.println("Ingrese un autor: ");
+        mostrarAutor();
+        int id_autor = scanner.nextInt();
+
+        libroautorDAO.asignarAutorALibro(id_autor,id_libro);
+
+    }
+
+    private void mostrarAutoresDeLibros(){
+        List<LibroAutor> autores = libroautorDAO.listarAutoresDeLibros();
+        Map<Integer,String> mapa = new HashMap<>();
+        if(autores.isEmpty()){
+            System.out.println("No hay autores asignados a libros");
+        }else{
+            for(LibroAutor libroautor : autores){
+                mapa.put(libroautor.getLibro().getIdLibro(),libroautor.getLibro().getTitulo());
+            }
+            for(Map.Entry<Integer, String> entry : mapa.entrySet()){
+                System.out.println("Libro: "+entry.getValue());
+                for(LibroAutor libroautor : autores){
+                    if(entry.getKey() == libroautor.getLibro().getIdLibro()){
+                        libroautor.getAutor().mostrarInfo();
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    private void mostrarAutoresDeUnLibro(int id_libro){
+        List<Autor> autores = libroautorDAO.listarAutoresDeUnLibro(id_libro);
+
+        if(autores.isEmpty()){
+            System.out.println("No hay autores asignados a ese libro");
+        }else{
+            for(Autor autor: autores){
+                autor.mostrarInfo();
+            }
+        }
+
+    }
+
+    private void modificarAutorDeLibro() throws SQLException {
+        listarLibros();
+        System.out.println("Ingrese el id de un libro que desee modificar su autor: ");
+        int id_libro = scanner.nextInt();
+        mostrarAutoresDeUnLibro(id_libro);
+        System.out.println("Ingrese un id de un autor a modificar: ");
+        int id_autor_old = scanner.nextInt();
+        mostrarAutor();
+        System.out.println("Ingrese un id del nuevo autor del libro: ");
+        int id_autor_new = scanner.nextInt();
+
+        libroautorDAO.modificarAutorDeLibro(id_libro,id_autor_old,id_autor_new);
+    }
+
+    private void eliminarAutorDeLibro(){
+        listarLibros();
+        System.out.println("Ingrese el id de un libro que desee eliminar un autor: ");
+        int id_libro = scanner.nextInt();
+        mostrarAutoresDeUnLibro(id_libro);
+        System.out.println("Ingrese un id de un autor a eliminar: ");
+        int id_autor = scanner.nextInt();
+
+        libroautorDAO.eliminarAutorDeLibro(id_libro,id_autor);
+    }
+
 }

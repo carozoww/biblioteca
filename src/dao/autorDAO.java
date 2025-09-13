@@ -1,6 +1,7 @@
 package dao;
 
 import basedatos.conexion;
+import models.Autor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,15 +32,19 @@ public class autorDAO {
         }
     }
 
-    public static List<String> mostrarAutores() throws SQLException{
+    public static List<Autor> mostrarAutores() throws SQLException{
         String query1 = "SELECT * FROM autor";
-        List<String> listaAutores = new ArrayList<>();
+        List<Autor> listaAutores = new ArrayList<>();
         try{
             Statement st =  conexion.getInstancia().getConnection().createStatement();
             ResultSet rs = st.executeQuery(query1);
 
             while(rs.next()){
-                listaAutores.add(rs.getInt("id_autor") + " - " + rs.getString("nombre")+ " - " + rs.getString("apellido"));
+                listaAutores.add(
+                        new Autor(
+                                rs.getInt("id_autor"),
+                                rs.getString("nombre"),
+                                rs.getString("apellido")));
             }
 
         }catch(SQLException e){
