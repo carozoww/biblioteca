@@ -80,19 +80,6 @@ public class menu {
                 System.out.println("24. Listar préstamos");
                 System.out.println("25. Listar libros reservados");
                 System.out.println("26. Confirmar devolución de un libro");
-                System.out.println("27. Salir");
-                System.out.println("15. Gestionar salas y sus reservas");
-                System.out.println("16. Crear administrador");
-                System.out.println("17. Eliminar administrador");
-                System.out.println("18. Modificar administrador");
-                System.out.println("19. Listar administradores");
-                System.out.println("20. Crear lector");
-                System.out.println("21. Eliminar lector");
-                System.out.println("22. Modificar lector");
-                System.out.println("23. Listar lectores");
-                System.out.println("24. Crear préstamo");
-                System.out.println("25. Finalizar préstamo");
-                System.out.println("26. Listar préstamos");
                 System.out.println("27. Asignar genero a libro");
                 System.out.println("28. Listar generos de libros");
                 System.out.println("29. Modificar genero de libro");
@@ -168,7 +155,6 @@ public class menu {
                         eliminarLector();
                         break;
                     case 20:
-
                         editarLector();
                         break;
                     case 21:
