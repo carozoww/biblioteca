@@ -74,7 +74,7 @@ public class AdministradorDAO {
     }
 
     public void eliminarAdministrador(int id){
-            String consulta = "DELETE FROM administradores WHERE id = ?";
+            String consulta = "DELETE FROM administrador WHERE id = ?";
 
             try {
                 PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);

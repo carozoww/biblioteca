@@ -1,40 +1,38 @@
 package models;
 
 public class Sala {
-    private int id_sala;
+    private int idSala;
+    private int numeroSala;
     private String ubicacion;
-    private int max_personas;
-    private String estado;
+    private int maxPersonas;
 
-    public Sala(int id_sala, String ubicacion, int max_personas, String estado) {
-        this.id_sala = id_sala;
+    public Sala(int idSala, int numeroSala, String ubicacion, int maxPersonas) {
+        this.idSala = idSala;
+        this.numeroSala = numeroSala;
         this.ubicacion = ubicacion;
-        this.max_personas = max_personas;
-        this.estado = estado;
+        this.maxPersonas = maxPersonas;
     }
 
-    public int getId_sala() {
-        return id_sala;
+    public int getIdSala() {
+        return idSala;
     }
+
+    public int getNumeroSala() {return numeroSala;}
 
     public String getUbicacion() {
         return ubicacion;
     }
 
-    public int getMax_personas() {
-        return max_personas;
-    }
-
-    public String getEstado() {
-        return estado;
+    public int getMaxPersonas() {
+        return maxPersonas;
     }
 
     public void mostrarInformacion(){
         System.out.println("###############");
-        System.out.println("ID: " + this.id_sala);
+        System.out.println("ID: " + this.idSala);
+        System.out.println("Numero de Sala: " + this.numeroSala);
         System.out.println("Ubicacion: " + this.ubicacion);
-        System.out.println("Personas Max.: " + this.max_personas);
-        System.out.println("Estado: " + this.estado);
+        System.out.println("Personas Max.: " + this.maxPersonas);
     }
 
 }

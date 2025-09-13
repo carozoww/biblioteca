@@ -3,6 +3,7 @@ package flujos;
 import dao.AdministradorDAO;
 import models.Administrador;
 
+import java.security.spec.RSAOtherPrimeInfo;
 import java.sql.*;
 
 import static java.util.Date.*;
@@ -20,7 +21,8 @@ public class AdminMenu {
 
     public void iniciar(Scanner sc) throws SQLException {
         try{
-            while (true) {
+            int op;
+            do{
                 System.out.println("\n=== Gestión de Administradores ===");
                 System.out.println("1. Crear Administrador");
                 System.out.println("2. Listar Administrador");
@@ -29,20 +31,19 @@ public class AdminMenu {
                 System.out.println("6. Volver");
                 System.out.print("Opción: ");
 
-                int op = leerOpcion(sc);
+                 op = leerOpcion(sc);
 
                 switch (op) {
-                    case 1: crearAdministrador(sc);
-                    case 2: listarAdministradores();
-                    case 3: editarAdministrador(sc);
-                    case 4: eliminarAdministrador(sc);
-                    case 6: {
-                        return;
-                    }
-                }while (op != 6);
-            }
+                    case 1: crearAdministrador(sc);break;
+                    case 2: listarAdministradores();break;
+                    case 3: editarAdministrador(sc);break;
+                    case 4: eliminarAdministrador(sc);break;
+                    case 6: {return;}
+                    default:System.out.printf("Opcion no valido");
+                }
+            }while (op != 6);
         }catch (SQLException ex){
-            System.out.println(ex.getMessage());
+            System.out.println("Error en la base de datos" + ex.getMessage());
         }
     }
 
@@ -66,7 +67,7 @@ public class AdminMenu {
 
         sc.nextLine();
 
-        System.out.println("Ingrese direccion del administrador: ");
+        System.out.println("Ingrese correo del administrador: ");
         String correo = sc.nextLine();
 
         admindao.crearAdministradorDAO(nombre, fechaNacimiento, correo);

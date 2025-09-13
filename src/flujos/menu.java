@@ -25,9 +25,11 @@ public class menu {
     private final AdministradorDAO administradorDAO;
     private final lectorDAO lectorDAO;
     private final prestamoDAO prestamoDAO;
+    private final ComentarioDAO comentarioDAO;
     private Connection conn;
 
     public menu() {
+        this.comentarioDAO = new ComentarioDAO();
         this.administradorDAO = new AdministradorDAO();
         this.autordao = new autorDAO();
         this.generodao = new generoDAO();
@@ -40,13 +42,13 @@ public class menu {
         this.conn = conn;
     }
 
-    public void mostrarMenu(){
-        try{
+    public void mostrarMenu() {
+        try {
 
 
-            int opcion= 0;
+            int opcion = 0;
 
-            do{
+            do {
                 System.out.println("\n === Gestion de biblioteca ===");
                 System.out.println("1. Crear autor");
                 System.out.println("2. Modificar autor");
@@ -62,15 +64,18 @@ public class menu {
                 System.out.println("12. Eliminar editorial");
                 System.out.println("13. Modificar editorial");
                 System.out.println("14. Listar editoriales");
-                System.out.println("15. Gestionar salas y sus reservas");
-                System.out.println("16. Gestionar administrador");
-                System.out.println("20. Crear lector");
-                System.out.println("21. Eliminar lector");
-                System.out.println("22. Modificar lector");
-                System.out.println("23. Listar lectores");
-                System.out.println("24. Crear préstamo");
-                System.out.println("25. Finalizar préstamo");
-                System.out.println("26. Listar préstamos");
+                System.out.println("15. Gestionar salas");
+                System.out.println("16. Gestionar Administrador");
+                System.out.println("17. eliminar Comentario");
+                System.out.println("18. Crear lector");
+                System.out.println("19. Eliminar lector");
+                System.out.println("20. Modificar lector");
+                System.out.println("21. Listar lectores");
+                System.out.println("22. Crear préstamo");
+                System.out.println("23. Finalizar préstamo");
+                System.out.println("24. Listar préstamos");
+                System.out.println("25. Listar libros reservados");
+                System.out.println("26. Confirmar devolución de un libro");
                 System.out.println("27. Salir");
 
                 System.out.println("Opcion");
@@ -78,18 +83,24 @@ public class menu {
                 opcion = scanner.nextInt();
                 scanner.nextLine();
 
-                switch(opcion){
-                    case 1: crearAutor();
+                switch (opcion) {
+                    case 1:
+                        crearAutor();
                         break;
-                    case 2: modificarAutor();
+                    case 2:
+                        modificarAutor();
                         break;
-                    case 3: eliminarAutor();
+                    case 3:
+                        eliminarAutor();
                         break;
-                    case 4: crearGenero();
+                    case 4:
+                        crearGenero();
                         break;
-                    case 5: modificarGenero();
+                    case 5:
+                        modificarGenero();
                         break;
-                    case 6: eliminarGenero();
+                    case 6:
+                        eliminarGenero();
                         break;
                     case 7:
                         crearLibro();
@@ -121,34 +132,43 @@ public class menu {
                     case 16:
                         adminmenu.iniciar(scanner);
                         break;
-                    case 20: 
-                        crearLector(); 
+                    case 17:
+                        eliminarComentario();
                         break;
-                    case 21: 
-                        eliminarLector(); 
+                    case 18:
+                        crearLector();
                         break;
-                    case 22: 
-                        editarLector(); 
+                    case 19:
+                        eliminarLector();
                         break;
-                    case 23: 
-                        listarLectores(); 
+                    case 20:
+                        editarLector();
                         break;
-                    case 24: 
-                        crearPrestamo(); 
+                    case 21:
+                        listarLectores();
                         break;
-                    case 25: 
-                        eliminarPrestamo(); 
+                    case 22:
+                        crearPrestamo();
                         break;
-                    case 26: 
-                        listarPrestamos(); 
+                    case 23:
+                        eliminarPrestamo();
                         break;
-                    case 27: 
+                    case 24:
+                        listarPrestamos();
+                        break;
+                    case 25:
+                        listarLibrosReservados();
+                        break;
+                    case 26:
+                        confimarDevolucion();
+                        break;
+                    case 27:
                         break;
                 }
-            }while(opcion != 20);
+            } while (opcion != 27);
 
 
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -165,9 +185,9 @@ public class menu {
 
     private void mostrarAutor() throws SQLException {
         List<String> autores = autorDAO.mostrarAutores();
-        if(autores.isEmpty()){
+        if (autores.isEmpty()) {
             System.out.println("No existe el usuario");
-        }else{
+        } else {
             autores.forEach(System.out::println);
         }
 
@@ -184,7 +204,7 @@ public class menu {
         System.out.println("Ingrese el nuevo apellido del autor");
         String ape = scanner.next();
 
-        autorDAO.modificarAutor(id,nombre,ape);
+        autorDAO.modificarAutor(id, nombre, ape);
 
 
     }
@@ -205,17 +225,17 @@ public class menu {
 
     }
 
-    private void mostrarGenero() throws SQLException{
+    private void mostrarGenero() throws SQLException {
         List<String> generos = generoDAO.mostrarGeneros();
 
-        if(generos.isEmpty()){
+        if (generos.isEmpty()) {
             System.out.println("No hay generos registrados");
-        }else{
+        } else {
             generos.forEach(System.out::println);
         }
     }
 
-    private void modificarGenero() throws SQLException{
+    private void modificarGenero() throws SQLException {
         mostrarGenero();
 
         System.out.println("Ingrese el id del genero a modificar");
@@ -224,11 +244,11 @@ public class menu {
         System.out.println("Ingrese el nuevo nombre del genero");
         String nombre = scanner.next();
 
-        generoDAO.modificarGenero(id,nombre);
+        generoDAO.modificarGenero(id, nombre);
 
     }
 
-    private void eliminarGenero() throws SQLException{
+    private void eliminarGenero() throws SQLException {
         mostrarGenero();
 
         System.out.println("Ingrese el id del genero a eliminar");
@@ -236,6 +256,7 @@ public class menu {
 
         generoDAO.eliminarGenero(id);
     }
+
     public void crearLibro() throws SQLException {
         System.out.println("Ingrese el titulo del libro: ");
         String titulo = scanner.nextLine();
@@ -252,7 +273,7 @@ public class menu {
         librodao.crearLibro(titulo, isbn, fechaPublicacion, idEditorial);
     }
 
-    public void eliminarLibro(){
+    public void eliminarLibro() {
         listarLibros();
         System.out.println("\n Ingrese el id del libro a eliminar: ");
         int idLibro = scanner.nextInt();
@@ -260,7 +281,7 @@ public class menu {
         librodao.eliminarLibro(idLibro);
     }
 
-    public void editarLibro(){
+    public void editarLibro() {
         listarLibros();
         System.out.println("\n Ingrese el id del libro a modificar: ");
         int idLibro = scanner.nextInt();
@@ -280,6 +301,7 @@ public class menu {
 
         librodao.editarLibro(idLibro, nombre, isbn, fechaPublicacion, idEditorial);
     }
+
     public void listarLibros() {
         List<Libro> libros = librodao.listarLibros();
 
@@ -291,6 +313,7 @@ public class menu {
             }
         }
     }
+
     public void crearEditorial() {
         System.out.println("Ingrese el nombre de la editorial: ");
         String nombre = scanner.nextLine();
@@ -298,7 +321,7 @@ public class menu {
         editorialdao.crearEditorial(nombre);
     }
 
-    public void eliminarEditorial(){
+    public void eliminarEditorial() {
         listarEditoriales();
         System.out.println("Ingrese el id de la editorial a eliminar: ");
         int idEditorial = scanner.nextInt();
@@ -306,7 +329,7 @@ public class menu {
         editorialdao.eliminarEditorial(idEditorial);
     }
 
-    public void editarEditorial(){
+    public void editarEditorial() {
         listarEditoriales();
         System.out.println("Ingrese el id de la editorial a modificar: ");
         int idEditorial = scanner.nextInt();
@@ -328,64 +351,8 @@ public class menu {
             }
         }
     }
-    /*public void crearAdministrador() {
-        System.out.println("Ingrese el cedula del administrador: ");
-        int cedula = scanner.nextInt();
-        scanner.nextLine();
 
-        System.out.println("Ingrese nombre del  administrador: ");
-        String nombre = scanner.nextLine();
-
-        System.out.println("Ingrese telefono del administrador: ");
-        String telefono = scanner.nextLine();
-
-        System.out.println("Ingrese direccion del administrador: ");
-        String direccion = scanner.nextLine();
-
-        administradorDAO.crearAdministradorDAO(cedula,nombre,telefono,direccion);
-    }
-
-
-    public void eliminarAdministrador(){
-        listarAdministradores();
-        System.out.println("Ingrese el cedula del administrador: ");
-        int cedula = scanner.nextInt();
-        scanner.nextLine();
-
-        administradorDAO.eliminarAdministrador(cedula);
-    }
-
-    public void editarAdministrador(){
-
-        listarAdministradores();
-        System.out.println("Ingrese el cedula del administrador a modificar: ");
-        int cedula = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("Ingrese nuevo nombre del administrador: ");
-        String nombre = scanner.nextLine();
-        System.out.println("Ingrese nuevo telefono del administrador: ");
-        String telefono = scanner.nextLine();
-        System.out.println("Ingrese nuevo direccion del administrador: ");
-        String direccion = scanner.nextLine();
-
-        administradorDAO.editarAdministrador(cedula,nombre,telefono,direccion);
-    }
-
-    public void listarAdministradores(){
-        List<Administrador> administrador = administradorDAO.listarAdministradores();
-        if (administrador.isEmpty()) {
-            System.out.println("No hay administradores para mostrar");
-        }
-        else {
-            for (Administrador administrador1 : administrador) {
-                administrador1.mostrarInfo();
-            }
-        }
-    }
-
-*/
-     private void crearLector() {
+    private void crearLector() {
         try {
             System.out.println("Ingrese el id del lector: ");
             int id = scanner.nextInt();
@@ -404,13 +371,13 @@ public class menu {
             String correo = scanner.nextLine();
 
             Lector lector = new Lector(id, nombre, direccion, telefono, correo);
-            lectorDAO.crearLector(lector); 
+            lectorDAO.crearLector(lector);
 
             System.out.println("Lector creado correctamente");
 
         } catch (SQLException e) {
             System.out.println("Error al crear lector: " + e.getMessage());
-        }  
+        }
     }
 
     private void editarLector() {
@@ -451,14 +418,14 @@ public class menu {
             } else {
                 for (Lector lector : lectores) {
                     System.out.println("ID: " + lector.getIdLector()
-                        + ", Nombre: " + lector.getNombre()
-                        + ", Dirección: " + lector.getDireccion()
-                        + ", Teléfono: " + lector.getTelefono()
-                        + ", Correo: " + lector.getCorreo());
+                            + ", Nombre: " + lector.getNombre()
+                            + ", Dirección: " + lector.getDireccion()
+                            + ", Teléfono: " + lector.getTelefono()
+                            + ", Correo: " + lector.getCorreo());
                 }
             }
 
-         } catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Error al listar lectores: " + e.getMessage());
         }
     }
@@ -479,7 +446,6 @@ public class menu {
     }
 
 
-    
     private void crearPrestamo() {
         try {
             System.out.println("Ingrese el id del préstamo: ");
@@ -544,5 +510,37 @@ public class menu {
         } catch (SQLException e) {
             System.out.println("Error al eliminar préstamo: " + e.getMessage());
         }
+    }
+
+    public void listarLibrosReservados() {
+        List<Libro> libros = librodao.listarLibrosReservados();
+
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros para mostrar");
+        } else {
+            for (Libro libro : libros) {
+                libro.mostrarInformacion();
+            }
+        }
+    }
+
+    public void confimarDevolucion() {
+        try {
+            System.out.println("Ingrese el id del libro: ");
+            int idLibro = scanner.nextInt();
+
+            prestamoDAO.confirmarDevolucion(idLibro);
+        } catch (SQLException e) {
+            System.out.println("Error en la devolución del libro: " + e.getMessage());
+        }
+    }
+
+
+    private void eliminarComentario() {
+        System.out.println("Ingrese el id del lector a eliminar: ");
+        int id_comentario = scanner.nextInt();
+        scanner.nextLine();
+
+        comentarioDAO.eliminarComentario(id_comentario);
     }
 }
