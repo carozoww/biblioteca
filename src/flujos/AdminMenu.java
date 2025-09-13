@@ -39,7 +39,6 @@ public class AdminMenu {
                     case 2: listarAdministradores();break;
                     case 3: editarAdministrador(sc);break;
                     case 4: eliminarAdministrador(sc);break;
-                    case 5: iniciarSesion(sc);break;
                     case 6: {return;}
                     default:System.out.printf("Opcion no valido");
                 }
@@ -99,7 +98,6 @@ public class AdminMenu {
         String nombre = sc.nextLine();
         System.out.println("Ingrese nuevo fecha nacimiento del administrador: ");
         Date fechaNacimiento = Date.valueOf(sc.next());
-        sc.nextLine();
         System.out.println("Ingrese nuevo correo del administrador: ");
         String correo = sc.nextLine();
         System.out.println("Ingrese nueva contrasenia del administrador: ");
