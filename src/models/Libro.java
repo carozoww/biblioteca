@@ -55,6 +55,7 @@ public class Libro {
         System.out.println("ISBN: " + isbn);
         System.out.println("Fecha de publicacion: " + fechaPublicacion);
         System.out.println("Id de la editorial: " + idEditorial);
+        System.out.println("\n");
 
     }
 }
