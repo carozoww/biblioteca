@@ -19,8 +19,9 @@ public class menu {
     private final GeneroMenu generomenu;
     private final LibroAutorMenu libroautormenu;
     private final LibroGeneroMenu librogeneromenu;
+    private final LibroMenu libromenu;
+    private final EditorialMenu editorialmenu;
     private final LibroDAO librodao;
-    private final EditorialDAO editorialdao;
     private final SalaMenu salamenu;
     private final AdminMenu adminmenu;
     private final AdministradorDAO administradorDAO;
@@ -38,8 +39,9 @@ public class menu {
         this.generomenu = new GeneroMenu();
         this.libroautormenu = new LibroAutorMenu();
         this.librogeneromenu = new LibroGeneroMenu();
+        this.libromenu = new LibroMenu();
+        this.editorialmenu = new EditorialMenu();
         this.librodao = new LibroDAO();
-        this.editorialdao = new EditorialDAO();
         this.salamenu = new SalaMenu();
         this.adminmenu = new AdminMenu();
         this.lectorDAO = new lectorDAO(null);
@@ -61,30 +63,25 @@ public class menu {
                 System.out.println("2. Gestionar generos");
                 System.out.println("3. Gestionar autores de libros");
                 System.out.println("4. Gestionar Generos de libros");
-                System.out.println("7. Crear libro");
-                System.out.println("8. Eliminar libro");
-                System.out.println("9. Modificar libro");
-                System.out.println("10. Listar libros");
-                System.out.println("11. Crear editorial");
-                System.out.println("12. Eliminar editorial");
-                System.out.println("13. Modificar editorial");
-                System.out.println("14. Listar editoriales");
-                System.out.println("15. Gestionar salas");
-
-                System.out.println("16. Gestionar Administrador");
-                System.out.println("17. eliminar Comentario");
-                System.out.println("18. Crear lector");
-                System.out.println("19. Eliminar lector");
-                System.out.println("20. Modificar lector");
-                System.out.println("21. Listar lectores");
-                System.out.println("22. Crear préstamo");
-                System.out.println("23. Finalizar préstamo");
-                System.out.println("24. Listar préstamos");
-                System.out.println("25. Listar libros reservados");
-                System.out.println("26. Confirmar devolución de un libro");
+                System.out.println("5. Gestionar libros");
+                System.out.println("6. Gestionar editoriales");
+                System.out.println("7. Gestionar salas");
+                System.out.println("8. Gestionar Administrador");
+                System.out.println("9. Eliminar Comentario");
+                System.out.println("10. Crear lector");
+                System.out.println("11. Eliminar lector");
+                System.out.println("12. Modificar lector");
+                System.out.println("13. Listar lectores");
+                System.out.println("14. Crear préstamo");
+                System.out.println("15. Finalizar préstamo");
+                System.out.println("16. Listar préstamos");
+                System.out.println("17. Listar libros reservados");
+                System.out.println("18. Confirmar devolución de un libro");
+                System.out.println("19. Gestionar penalizaciones");
+                System.out.println("20. Salir");
 
 
-                System.out.println("Opcion");
+                System.out.println("Opcion: ");
 
                 opcion = scanner.nextInt();
                 scanner.nextLine();
@@ -102,180 +99,60 @@ public class menu {
                     case 4:
                         librogeneromenu.iniciar(scanner);
                         break;
+                    case 5:
+                        libromenu.mostrarMenuLibro(scanner);
+                        break;
+                    case 6:
+                        editorialmenu.mostrarMenuEditorial(scanner);
+                        break;
                     case 7:
-                        crearLibro();
-                        break;
-                    case 8:
-                        eliminarLibro();
-                        break;
-                    case 9:
-                        editarLibro();
-                        break;
-                    case 10:
-                        listarLibros();
-                        break;
-                    case 11:
-                        crearEditorial();
-                        break;
-                    case 12:
-                        eliminarEditorial();
-                        break;
-                    case 13:
-                        editarEditorial();
-                        break;
-                    case 14:
-                        listarEditoriales();
-                        break;
-                    case 15:
                         salamenu.iniciar(scanner);
                         break;
-                    case 16:
+                    case 8:
                         adminmenu.iniciar(scanner);
                         break;
-                    case 17:
+                    case 9:
                         eliminarComentario();
                         break;
-                    case 18:
+                    case 10:
                         crearLector();
                         break;
-                    case 19:
+                    case 11:
                         eliminarLector();
                         break;
-                    case 20:
+                    case 12:
 
                         editarLector();
                         break;
-                    case 21:
+                    case 13:
                         listarLectores();
                         break;
-                    case 22:
+                    case 14:
                         crearPrestamo();
                         break;
-                    case 23:
+                    case 15:
                         eliminarPrestamo();
                         break;
-                    case 24:
+                    case 16:
                         listarPrestamos();
                         break;
-                    case 25:
+                    case 17:
                         listarLibrosReservados();
                         break;
-                    case 26:
+                    case 18:
                         confimarDevolucion();
+                        break;
+                    case 19:
+                        //penalizacionmenu.mostrarMenuPena(scanner);
                         break;
 
                 }
-            } while (opcion != 35);
+            } while (opcion != 20);
 
 
 
         }catch(Exception e){
             System.out.println(e.getMessage());
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public void crearLibro() throws SQLException {
-        System.out.println("Ingrese el titulo del libro: ");
-        String titulo = scanner.nextLine();
-
-        System.out.println("Ingrese el isbn del libro: ");
-        int isbn = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Ingrese la fecha de publicacion del libro: ");
-        Date fechaPublicacion = Date.valueOf(scanner.next());
-
-        System.out.println("Ingrese el id de la editorial del libro: ");
-        int idEditorial = scanner.nextInt();
-
-        librodao.crearLibro(titulo, isbn, fechaPublicacion, idEditorial);
-    }
-
-    public void eliminarLibro() {
-        listarLibros();
-        System.out.println("\n Ingrese el id del libro a eliminar: ");
-        int idLibro = scanner.nextInt();
-
-        librodao.eliminarLibro(idLibro);
-    }
-
-    public void editarLibro() {
-        listarLibros();
-        System.out.println("\n Ingrese el id del libro a modificar: ");
-        int idLibro = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("Ingrese el nuevo nombre del libro: ");
-        String nombre = scanner.nextLine();
-
-        System.out.println("Ingrese el nuevo isbn del libro: ");
-        int isbn = scanner.nextInt();
-
-        System.out.println("Ingrese la fecha de publicacion del libro: ");
-        Date fechaPublicacion = Date.valueOf(scanner.next());
-
-        System.out.println("Ingrese el id de la editorial del libro: ");
-        int idEditorial = scanner.nextInt();
-
-        librodao.editarLibro(idLibro, nombre, isbn, fechaPublicacion, idEditorial);
-    }
-
-    public void listarLibros() {
-        List<Libro> libros = librodao.listarLibros();
-
-        if (libros.isEmpty()) {
-            System.out.println("No hay libros para mostrar");
-        } else {
-            for (Libro libro : libros) {
-                libro.mostrarInformacion();
-            }
-        }
-    }
-
-    public void crearEditorial() {
-        System.out.println("Ingrese el nombre de la editorial: ");
-        String nombre = scanner.nextLine();
-
-        editorialdao.crearEditorial(nombre);
-    }
-
-    public void eliminarEditorial() {
-        listarEditoriales();
-        System.out.println("Ingrese el id de la editorial a eliminar: ");
-        int idEditorial = scanner.nextInt();
-
-        editorialdao.eliminarEditorial(idEditorial);
-    }
-
-    public void editarEditorial() {
-        listarEditoriales();
-        System.out.println("Ingrese el id de la editorial a modificar: ");
-        int idEditorial = scanner.nextInt();
-
-        System.out.println("Ingrese el nuevo nombre de la editorial: ");
-        String nombre = scanner.nextLine();
-
-        editorialdao.editarEditorial(idEditorial, nombre);
-    }
-
-    public void listarEditoriales() {
-        List<Editorial> editoriales = editorialdao.listarEditorial();
-
-        if (editoriales.isEmpty()) {
-            System.out.println("No hay editoriales para mostrar");
-        } else {
-            for (Editorial editorial : editoriales) {
-                editorial.mostrarInformacion();
-            }
         }
     }
 

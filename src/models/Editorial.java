@@ -28,5 +28,6 @@ public class Editorial {
     public void mostrarInformacion() {
         System.out.println("Id: " + idEditorial);
         System.out.println("Nombre: " + nombre);
+        System.out.println("\n");
     }
 }
