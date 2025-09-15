@@ -15,12 +15,12 @@ import java.util.Scanner;
 public class LibroAutorMenu {
     private final LibroAutorDAO libroautorDAO;
     private final AutorMenu autormenu;
-    private final LibroDAO librodao;
+    private final LibroMenu libromenu;
 
     public LibroAutorMenu() {
         this.libroautorDAO = new LibroAutorDAO();
         this.autormenu = new AutorMenu();
-        this.librodao = new LibroDAO();
+        this.libromenu = new LibroMenu();
     }
 
     public void iniciar(Scanner sc) throws SQLException {
@@ -29,9 +29,9 @@ public class LibroAutorMenu {
             do{
                 System.out.println("\n=== Gestión de autores de libros ===");
                 System.out.println("1. Asignar autor a libro");
-                System.out.println("2. Listar generos");
-                System.out.println("3. Editar genero");
-                System.out.println("4. Eliminar genero");
+                System.out.println("2. Listar autores asignados a libro");
+                System.out.println("3. Editar autor asignado a libro");
+                System.out.println("4. Eliminar autor asignado a libro");
                 System.out.println("5. Volver");
                 System.out.print("Opción: ");
 
@@ -63,7 +63,7 @@ public class LibroAutorMenu {
 
     public void asignarAutorALibro(Scanner sc) throws SQLException {
         System.out.println("Ingrese el id del libro al cual desea asignar un nuevo autor: ");
-        listarLibros();
+        libromenu.listarLibros();
         int id_libro = sc.nextInt();
         System.out.println("Ingrese un autor: ");
         autormenu.mostrarAutor();
@@ -110,7 +110,7 @@ public class LibroAutorMenu {
 
     public void modificarAutorDeLibro(Scanner sc) throws SQLException {
         System.out.println("Ingrese el id de un libro que desee modificar su autor: ");
-        listarLibros();
+        libromenu.listarLibros();
         int id_libro = sc.nextInt();
         mostrarAutoresDeUnLibro(id_libro);
         System.out.println("Ingrese un id de un autor a modificar: ");
@@ -123,7 +123,7 @@ public class LibroAutorMenu {
     }
 
     public void eliminarAutorDeLibro(Scanner sc){
-        listarLibros();
+        libromenu.listarLibros();
         System.out.println("Ingrese el id de un libro que desee eliminar un autor: ");
         int id_libro = sc.nextInt();
         mostrarAutoresDeUnLibro(id_libro);
@@ -133,17 +133,7 @@ public class LibroAutorMenu {
         libroautorDAO.eliminarAutorDeLibro(id_libro,id_autor);
     }
 
-    public void listarLibros() {
-        List<Libro> libros = librodao.listarLibros();
 
-        if (libros.isEmpty()) {
-            System.out.println("No hay libros para mostrar");
-        } else {
-            for (Libro libro : libros) {
-                libro.mostrarInformacion();
-            }
-        }
-    }
 
 
 }

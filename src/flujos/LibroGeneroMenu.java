@@ -29,9 +29,9 @@ public class LibroGeneroMenu {
             do {
                 System.out.println("\n=== Gestión de generos de libros ===");
                 System.out.println("1. Asignar genero a libro");
-                System.out.println("2. Listar generos");
-                System.out.println("3. Editar genero");
-                System.out.println("4. Eliminar genero");
+                System.out.println("2. Listar generos asignados a libros");
+                System.out.println("3. Editar genero asignado a libro");
+                System.out.println("4. Eliminar genero asignado a libro");
                 System.out.println("5. Volver");
                 System.out.print("Opción: ");
 
