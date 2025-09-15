@@ -25,6 +25,7 @@ public class PenalizacionMenu {
                 System.out.println("2. Eliminar penalizacion");
                 System.out.println("3. Listar penalizaciones activas");
                 System.out.println("4. Volver al menu principal");
+                System.out.println("5. Salir");
 
                 System.out.println("Ingrese la opcion: ");
 
@@ -41,9 +42,8 @@ public class PenalizacionMenu {
                     case 3:
                         listarPenalizaciones();
                         break;
-                    case 4: {
-                        return;
-                    }
+                    case 4:
+                        {return;}
                     case 5:
                         System.exit(0);
                         break;
