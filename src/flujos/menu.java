@@ -31,6 +31,7 @@ public class menu {
     private Connection conn;
     private final LibroGeneroDAO librogeneroDAO;
     private final LibroAutorDAO libroautorDAO;
+    private final PenalizacionMenu penalizacionmenu;
 
     public menu() {
         this.comentarioDAO = new ComentarioDAO();
@@ -49,6 +50,7 @@ public class menu {
         this.conn = conn;
         this.librogeneroDAO = new LibroGeneroDAO();
         this.libroautorDAO = new LibroAutorDAO();
+        this.penalizacionmenu = new PenalizacionMenu();
     }
 
     public void mostrarMenu() {
@@ -143,7 +145,7 @@ public class menu {
                         confimarDevolucion();
                         break;
                     case 19:
-                        //penalizacionmenu.mostrarMenuPena(scanner);
+                        penalizacionmenu.mostarMenuPena(scanner);
                         break;
 
                 }
