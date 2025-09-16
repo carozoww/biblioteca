@@ -2,6 +2,8 @@ package flujos;
 
 import dao.PenalizacionDAO;
 import dao.LectorDAO;
+import models.Lector;
+import models.Libro;
 import models.Penalizacion;
 import java.sql.SQLException;
 import java.util.List;
@@ -10,10 +12,11 @@ import java.util.Scanner;
 public class PenalizacionMenu {
 
     private final PenalizacionDAO penalizaciondao;
-    private final LectorDAO lectordao = new LectorDAO();
+    private final LectorDAO lectordao;
 
     public PenalizacionMenu() {
         this.penalizaciondao = new PenalizacionDAO();
+        this.lectordao = new LectorDAO();
     }
 
     public void mostarMenuPena(Scanner scanner) {
@@ -56,7 +59,23 @@ public class PenalizacionMenu {
         }
     }
     public void aplicarPenalizacion(Scanner scanner) throws SQLException {
-        //lectorDAO.listarLectores();
+        List<Lector> lectores = lectordao.listarLectores();
+        if (lectores.isEmpty()) {
+            System.out.println("No hay lectores para mostrar");
+        } else {
+            for (Lector lector : lectores) {
+                System.out.printf("%-5d %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
+                        lector.getID(),
+                        lector.getNombre(),
+                        lector.getCedula(),
+                        lector.getTelefono(),
+                        lector.getDireccion(),
+                        lector.isAutenticacion(),
+                        lector.getFechaNac(),
+                        lector.isMembresia(),
+                        lector.getCorreo());
+            }
+        }
         System.out.println("Ingrese el id del lector a penalizar: ");
         int id = scanner.nextInt();
         scanner.nextLine();
