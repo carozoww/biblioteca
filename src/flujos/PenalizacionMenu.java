@@ -1,7 +1,7 @@
 package flujos;
 
 import dao.PenalizacionDAO;
-import dao.lectorDAO;
+import dao.LectorDAO;
 import models.Penalizacion;
 import java.sql.SQLException;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class PenalizacionMenu {
 
     private final PenalizacionDAO penalizaciondao;
-    private final lectorDAO lectordao = new lectorDAO(null);
+    private final LectorDAO lectordao = new LectorDAO();
 
     public PenalizacionMenu() {
         this.penalizaciondao = new PenalizacionDAO();
