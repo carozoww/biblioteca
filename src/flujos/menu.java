@@ -71,7 +71,7 @@ public class menu {
                 System.out.println("10. Gestionar Lectores");
                 System.out.println("11. Gestión de préstamos");
                 System.out.println("12. Gestionar penalizaciones");
-                System.out.println("15. Salir");
+                System.out.println("13. Salir");
 
 
                 System.out.println("Opcion: ");
@@ -113,15 +113,15 @@ public class menu {
                     case 11:
                         prestamomenu.mostrarMenuPrestamo();
                         break;
+                    /*case 12:
+                        confimarDevolucion();
+                        break;*/
                     case 12:
-                        //confimarDevolucion();
-                        break;
-                    case 13:
                         penalizacionmenu.mostarMenuPena(scanner);
                         break;
 
                 }
-            } while (opcion != 14);
+            } while (opcion != 13);
 
 
 
