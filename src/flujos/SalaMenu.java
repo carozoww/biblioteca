@@ -14,11 +14,11 @@ import java.util.Scanner;
 
 public class SalaMenu {
     private final SalaDAO dao;
-    //private final ReservaDAO reservaDAO;
+    private final ReservaDAO reservaDAO;
 
     public SalaMenu() {
         this.dao = new SalaDAO();
-        //this.reservaDAO = new ReservaDAO();
+        this.reservaDAO = new ReservaDAO();
     }
 
     public void iniciar(Scanner sc) throws SQLException{
@@ -29,7 +29,7 @@ public class SalaMenu {
             System.out.println("3. Editar sala");
             System.out.println("4. Borrar sala");
             System.out.println("5. Gestionar reservas");
-            System.out.println("5. Volver");
+            System.out.println("6. Volver");
             System.out.print("Opción: ");
 
             int op = leerEntero(sc);
@@ -38,8 +38,8 @@ public class SalaMenu {
                 case 2 -> listarSalas();
                 case 3 -> editarSala(sc);
                 case 4 -> borrarSala(sc);
-                //case 5 -> gestionarReservas(sc);
-                case 5 -> { return; }
+                case 5 -> gestionarReservas(sc);
+                case 6 -> { return; }
                 default -> System.out.println("Opción inválida.");
             }
         }
@@ -103,7 +103,7 @@ public class SalaMenu {
         sc.nextLine();
         return n;
     }
-/*
+
     private void gestionarReservas(Scanner sc) throws SQLException {
         while (true) {
             System.out.println("\n=== Reservas por Sala ===");
@@ -162,5 +162,5 @@ public class SalaMenu {
         } else {
             reservas.forEach(Reserva::mostrarInformacion);
         }
-    }*/
+    }
 }
