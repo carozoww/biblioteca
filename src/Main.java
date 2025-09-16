@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) {
         try{
             conexion.getInstancia().getConnection();
+            System.out.println("base de datos funcionando");
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }

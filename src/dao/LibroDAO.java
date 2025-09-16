@@ -101,5 +101,28 @@ public class LibroDAO {
         return libros;
     }
 
+    public Libro buscarPorId(int idLibro) {
+        String consulta = "SELECT * FROM libro WHERE id_libro = ?";
+        try {
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setInt(1, idLibro);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Libro(
+                        rs.getInt("id_libro"),
+                        rs.getString("titulo"),
+                        rs.getInt("isbn"),
+                        rs.getDate("fecha_publicacion"),
+                        rs.getInt("id_editorial")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar libro: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
+
 
 }
