@@ -62,6 +62,7 @@ public class PenalizacionMenu {
         List<Lector> lectores = lectordao.listarLectores();
         if (lectores.isEmpty()) {
             System.out.println("No hay lectores para mostrar");
+            return;
         } else {
             for (Lector lector : lectores) {
                 System.out.printf("%-5d %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
@@ -101,9 +102,26 @@ public class PenalizacionMenu {
 
     public void quitarPenalizacion(Scanner scanner) throws SQLException {
 
-        listarPenalizaciones();
+
+        List<Penalizacion> penas = penalizaciondao.listarPenalizaciones();
+
+        if (penas.isEmpty()) {
+            System.out.println("No hay penalizaciones para mostrar");
+            return;
+        } else {
+            for (Penalizacion pen : penas) {
+                pen.mostrarInformacion();
+            }
+        }
+
         System.out.println("Ingrese el id del lector para quitarle la penalizacion: ");
         int id = scanner.nextInt();
+
+        Lector lector = lectordao.buscarPorId(id);
+        if (lector == null) {
+            System.out.println("No hay lectores con ese id");
+            return;
+        }
 
         List<Penalizacion> penaActiva = penalizaciondao.buscarPenalizacionActivaPorUsuario(id);
         if(penaActiva.isEmpty()) {

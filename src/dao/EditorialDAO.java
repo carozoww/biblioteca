@@ -2,6 +2,7 @@ package dao;
 
 import basedatos.conexion;
 import models.Editorial;
+import models.Libro;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,4 +71,21 @@ public class EditorialDAO {
         }
         return editoriales;
     }
+    public Editorial buscarEditorialPorId(int idEditorial) {
+        String consulta = "SELECT * FROM editorial WHERE id_editorial = ?";
+        try {
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setInt(1, idEditorial);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Editorial(rs.getInt("id_editorial"),
+                        rs.getString("nombre"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar libro: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
 }
