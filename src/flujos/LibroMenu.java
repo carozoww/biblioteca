@@ -70,6 +70,7 @@ public class LibroMenu {
 
         System.out.println("Ingrese el isbn del libro: ");
         int isbn = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("Ingrese la fecha de publicacion del libro: ");
         Date fechaPublicacion = Date.valueOf(scanner.next());
