@@ -123,6 +123,57 @@ public class LibroDAO {
         return null;
     }
 
+    public List<Libro> existeISBN(String isbn) {
+        List<Libro> libros = new ArrayList<>();
+        String consulta = "SELECT * FROM libro WHERE isbn = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setString(1, isbn);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                libros.add(
+                        new Libro(
+                                rs.getInt("id_libro"),
+                                rs.getString("titulo"),
+                                rs.getString("isbn"),
+                                rs.getDate("fecha_publicacion"),
+                                rs.getInt("id_editorial")
+                        ));
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return libros;
+    }
+
+    public List<Libro> existeISBNporId(int id_libro, String isbn) {
+        List<Libro> libros = new ArrayList<>();
+        String query = "SELECT * FROM libro where id_libro != ? and isbn = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1, id_libro);
+            ps.setString(2, isbn);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                libros.add(
+                        new Libro(
+                                rs.getInt("id_libro"),
+                                rs.getString("titulo"),
+                                rs.getString("isbn"),
+                                rs.getDate("fecha_publicacion"),
+                                rs.getInt("id_editorial")
+                        ));
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return libros;
+    }
+
 
 
 }

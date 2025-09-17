@@ -71,6 +71,12 @@ public class LibroMenu {
         System.out.println("Ingrese el isbn del libro: ");
         String isbn = scanner.nextLine();
 
+        List<Libro> libro = librodao.existeISBN(isbn);
+        if(!libro.isEmpty()){
+            System.out.println("Ya existe un libro con ese isbn");
+            return;
+        }
+
         System.out.println("Ingrese la fecha de publicacion del libro: ");
         Date fechaPublicacion = Date.valueOf(scanner.next());
 
@@ -129,6 +135,13 @@ public class LibroMenu {
 
         System.out.println("Ingrese el nuevo isbn del libro: ");
         String isbn = scanner.nextLine();
+
+        List<Libro> libro1 = librodao.existeISBNporId(idLibro,isbn);
+        if(!libro1.isEmpty()){
+            System.out.println("Ya existe un libro con ese isbn");
+            return;
+        }
+
 
         System.out.println("Ingrese la fecha de publicacion del libro: ");
         Date fechaPublicacion = Date.valueOf(scanner.next());
