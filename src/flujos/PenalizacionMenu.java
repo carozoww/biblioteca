@@ -3,7 +3,6 @@ package flujos;
 import dao.PenalizacionDAO;
 import dao.LectorDAO;
 import models.Lector;
-import models.Libro;
 import models.Penalizacion;
 import java.sql.SQLException;
 import java.util.List;
