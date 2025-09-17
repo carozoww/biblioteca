@@ -89,6 +89,7 @@ public class SalaMenu {
     }
 
     private void borrarSala(Scanner sc) throws SQLException{
+        listarSalas();
         System.out.println("ID a borrar: ");
         int idBorrar = leerEntero(sc);
         dao.borrarSala(idBorrar);

@@ -157,9 +157,8 @@ public class menu {
 
 
     private void eliminarComentario() {
-        System.out.println("Ingrese el id del lector a eliminar: ");
+        System.out.println("Ingrese el id del comentario a eliminar: ");
         int id_comentario = scanner.nextInt();
-        scanner.nextLine();
 
         comentarioDAO.eliminarComentario(id_comentario);
     }

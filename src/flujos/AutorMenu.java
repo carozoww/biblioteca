@@ -64,7 +64,7 @@ public class AutorMenu {
     public void mostrarAutor() throws SQLException {
         List<Autor> autores = autorDAO.mostrarAutores();
         if(autores.isEmpty()){
-            System.out.println("No existe el usuario");
+            System.out.println("No existen autores registrados en el sistema");
         }else{
             for(Autor autor: autores){
                 autor.mostrarInfo();

@@ -42,11 +42,16 @@ public class EditorialDAO {
     }
 
     public void eliminarEditorial(int idEditorial) {
+        String consultaUpd = "UPDATE libro SET id_editorial = null WHERE id_editorial = ?";
         String consulta = "DELETE FROM editorial WHERE id_editorial = ?";
         try {
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consultaUpd);
             ps.setInt(1, idEditorial);
             ps.executeUpdate();
+
+            PreparedStatement ps1 = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps1.setInt(1, idEditorial);
+            ps1.executeUpdate();
 
             System.out.println("Editorial eliminada correctamente");
         } catch (SQLException e) {
