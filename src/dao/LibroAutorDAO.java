@@ -44,7 +44,7 @@ public class LibroAutorDAO {
                                 new Libro(
                                         rs.getInt("id_libro"),
                                         rs.getString("titulo"),
-                                        rs.getInt("isbn"),
+                                        rs.getString("isbn"),
                                         rs.getDate("fecha_publicacion"),
                                         rs.getInt("id_editorial")
                                 ),

@@ -5,11 +5,11 @@ import java.sql.Date;
 public class Libro {
     private int idLibro;
     private String titulo;
-    private int isbn;
+    private String isbn;
     private Date fechaPublicacion;
     private int idEditorial;
 
-    public Libro(int idLibro, String titulo, int isbn, Date fechaPublicacion,  int idEditorial) {
+    public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial) {
         this.idLibro = idLibro;
         this.titulo = titulo;
         this.isbn = isbn;
@@ -28,10 +28,10 @@ public class Libro {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-    public int getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
-    public void setIsbn(int isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
     public Date getFechaPublicacion() {
