@@ -3,7 +3,6 @@ package flujos;
 import dao.PenalizacionDAO;
 import dao.LectorDAO;
 import models.Lector;
-import models.Libro;
 import models.Penalizacion;
 import java.sql.SQLException;
 import java.util.List;
@@ -64,6 +63,9 @@ public class PenalizacionMenu {
             System.out.println("No hay lectores para mostrar");
             return;
         } else {
+            System.out.printf("%-5s %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
+                    "ID", "Nombre", "Cédula", "Teléfono", "Dirección",
+                    "Autenticado", "FechaNac", "Membresía", "Correo");
             for (Lector lector : lectores) {
                 System.out.printf("%-5d %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
                         lector.getID(),
