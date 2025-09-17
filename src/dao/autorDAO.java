@@ -23,7 +23,7 @@ public class autorDAO {
             ps.setString(2,apellido);
             ps.executeUpdate();
 
-            System.out.println("Usuario creado con exito");
+            System.out.println("Autor creado con exito");
 
 
 
@@ -65,7 +65,7 @@ public class autorDAO {
 
             ps.executeUpdate();
 
-            System.out.println("Usuario creado con exito");
+            System.out.println("Autor modificado con exito");
 
         }catch(SQLException e ){
             throw new RuntimeException(e);
@@ -80,10 +80,9 @@ public class autorDAO {
             ps.setInt(1, idautor);
             ps.executeUpdate();
 
+            System.out.println("Autor eliminado con exito");
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
-
-
 }
