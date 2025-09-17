@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibroDAO {
-    public void crearLibro(String titulo, int isbn, Date fechaPublicacion, int idEditorial) {
+    public void crearLibro(String titulo, String isbn, Date fechaPublicacion, int idEditorial) {
         String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial) VALUES (?, ?, ?, ?)";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setString(1, titulo);
-            ps.setInt(2, isbn);
+            ps.setString(2, isbn);
             ps.setDate(3, fechaPublicacion);
             ps.setInt(4, idEditorial);
             ps.executeUpdate();
@@ -25,12 +25,12 @@ public class LibroDAO {
 
     }
 
-    public void editarLibro(int idLibro, String titulo, int isbn, Date fechaPublicacion, int idEditorial) {
+    public void editarLibro(int idLibro, String titulo, String isbn, Date fechaPublicacion, int idEditorial) {
         String consulta = "UPDATE libro SET titulo = ?, isbn = ?, fecha_publicacion = ?, id_editorial = ? WHERE id_libro = ?";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setString(1, titulo);
-            ps.setInt(2, isbn);
+            ps.setString(2, isbn);
             ps.setDate(3, fechaPublicacion);
             ps.setInt(4, idEditorial);
             ps.setInt(5, idLibro);
@@ -68,7 +68,7 @@ public class LibroDAO {
             while(rs.next()){
                 libros.add(new Libro(rs.getInt("id_libro"),
                         rs.getString("titulo"),
-                        rs.getInt("isbn"),
+                        rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial")));
             }
@@ -90,7 +90,7 @@ public class LibroDAO {
             while(rs.next()){
                 libros.add(new Libro(rs.getInt("id_libro"),
                         rs.getString("titulo"),
-                        rs.getInt("isbn"),
+                        rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial")));
             }
@@ -112,7 +112,7 @@ public class LibroDAO {
                 return new Libro(
                         rs.getInt("id_libro"),
                         rs.getString("titulo"),
-                        rs.getInt("isbn"),
+                        rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial")
                 );

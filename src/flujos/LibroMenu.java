@@ -69,8 +69,7 @@ public class LibroMenu {
         String titulo = scanner.nextLine();
 
         System.out.println("Ingrese el isbn del libro: ");
-        int isbn = scanner.nextInt();
-        scanner.nextLine();
+        String isbn = scanner.nextLine();
 
         System.out.println("Ingrese la fecha de publicacion del libro: ");
         Date fechaPublicacion = Date.valueOf(scanner.next());
@@ -129,7 +128,7 @@ public class LibroMenu {
         String nombre = scanner.nextLine();
 
         System.out.println("Ingrese el nuevo isbn del libro: ");
-        int isbn = scanner.nextInt();
+        String isbn = scanner.nextLine();
 
         System.out.println("Ingrese la fecha de publicacion del libro: ");
         Date fechaPublicacion = Date.valueOf(scanner.next());
