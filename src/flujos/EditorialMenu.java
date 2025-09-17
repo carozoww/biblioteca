@@ -70,6 +70,13 @@ public class EditorialMenu {
         System.out.println("Ingrese el id de la editorial a eliminar: ");
         int idEditorial = scanner.nextInt();
 
+        Editorial editorial = editorialdao.buscarEditorialPorId(idEditorial);
+
+        if(editorial == null){
+            System.out.println("La editorial no existe");
+            return;
+        }
+
         editorialdao.eliminarEditorial(idEditorial);
     }
 
@@ -77,6 +84,14 @@ public class EditorialMenu {
         listarEditoriales();
         System.out.println("Ingrese el id de la editorial a modificar: ");
         int idEditorial = scanner.nextInt();
+        scanner.nextLine();
+
+        Editorial editorial = editorialdao.buscarEditorialPorId(idEditorial);
+
+        if(editorial == null){
+            System.out.println("La editorial no existe");
+            return;
+        }
 
         System.out.println("Ingrese el nuevo nombre de la editorial: ");
         String nombre = scanner.nextLine();
