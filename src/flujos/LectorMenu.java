@@ -94,8 +94,6 @@ public class LectorMenu {
             lectorDAO.crearLector(nombre, cedula, telefono, direccion, autenticacion,
                     fechaNac, membresia, correo, contrasenia);
 
-            System.out.println("Lector creado correctamente.");
-
         } catch (Exception e) {
             System.out.println("Error al crear lector: " + e.getMessage());
         }
@@ -157,8 +155,6 @@ public class LectorMenu {
                     id, nombre, cedula, telefono, direccion,
                     autenticacion, fechaNac, membresia, correo, contrasenia
             );
-
-            System.out.println("Lector editado correctamente.");
         } catch (Exception e) {
             System.out.println("Error al editar lector: " + e.getMessage());
         }
@@ -200,8 +196,13 @@ public class LectorMenu {
             int id = scanner.nextInt();
             scanner.nextLine();
 
+            Lector lectorActual = lectorDAO.buscarPorId(id);
+            if (lectorActual == null) {
+                System.out.println("No se encontró el lector con ID " + id);
+                return;
+            }
+
             lectorDAO.eliminarLector(id);
-            System.out.println("Lector eliminado correctamente.");
         } catch (Exception e) {
             System.out.println("Error al eliminar lector: " + e.getMessage());
         }

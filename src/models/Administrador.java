@@ -49,12 +49,13 @@ public class Administrador {
     public void setContrasenia(String contrasenia) {this.contrasenia = contrasenia;}
 
     public void mostrarInfo(){
-        System.out.println("id: " + this.id);
-        System.out.println("nombre: " + this.nombre);
-        System.out.println("correo: " + this.correo);
-        System.out.println("fechaNacimiento: " + this.fechaNacimiento);
-        System.out.println("contrasenia: " + this.contrasenia);
+        System.out.printf("%-5d %-10s %-30s %-30s %-20s%n",
+                getId(),
+                getNombre(),
+                getFechaNacimiento(),
+                getCorreo(),
+                getContrasenia());
 
-    }
+        }
 
 }

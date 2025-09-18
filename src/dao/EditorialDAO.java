@@ -88,7 +88,7 @@ public class EditorialDAO {
                         rs.getString("nombre"));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error al buscar libro: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar editorial: " + e.getMessage(), e);
         }
         return null;
     }

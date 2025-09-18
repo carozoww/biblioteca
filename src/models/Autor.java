@@ -36,8 +36,9 @@ public class Autor {
     }
 
     public void mostrarInfo(){
-        System.out.println("Id Autor: "+this.getId_autor());
-        System.out.println("Nombre: "+this.getNombre());
-        System.out.println("Apellido: "+this.getApellido());
+        System.out.printf("%-5d %-20s %-20s%n",
+            getId_autor(),
+            getNombre(),
+            getApellido());
     }
 }

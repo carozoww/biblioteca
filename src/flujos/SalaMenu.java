@@ -1,7 +1,9 @@
 package flujos;
 
+import dao.LectorDAO;
 import dao.SalaDAO;
 import dao.ReservaDAO;
+import models.Lector;
 import models.Sala;
 import models.Reserva;
 
@@ -16,10 +18,14 @@ public class SalaMenu {
     private final SalaDAO dao;
     private final ReservaDAO reservaDAO;
     private final leer instancia;
+    private final SalaDAO saladao;
+    private final LectorDAO lectorDAO;
 
     public SalaMenu() {
         this.dao = new SalaDAO();
         this.reservaDAO = new ReservaDAO();
+        this.saladao = new SalaDAO();
+        this.lectorDAO = new LectorDAO();
         this.instancia = new leer();
     }
 
@@ -68,6 +74,8 @@ public class SalaMenu {
         if (salas.isEmpty()){
             System.out.println("No hay salas registradas.");
         }else {
+            System.out.printf("%-5s %-20s %-20s %-20s%n",
+                    "ID", "Numero de sala", "Ubicacion", "Max. Personas");
             for (Sala sala: salas) {
                 sala.mostrarInformacion();
             }
@@ -77,6 +85,13 @@ public class SalaMenu {
     private void editarSala(Scanner sc) throws SQLException{
         System.out.println("ID a editar: ");
         int idEditar = leerEntero(sc);
+
+        Sala sala = saladao.buscarSalaPorId(idEditar);
+
+        if(sala == null){
+            System.out.println("No existe sala con ese id");
+            return;
+        }
 
         System.out.println("Nuevo numero de sala: ");
         int numeroSala = leerEntero(sc);
@@ -94,6 +109,14 @@ public class SalaMenu {
         listarSalas();
         System.out.println("ID a borrar: ");
         int idBorrar = leerEntero(sc);
+
+        Sala sala = saladao.buscarSalaPorId(idBorrar);
+
+        if(sala == null){
+            System.out.println("No existe sala con ese id");
+            return;
+        }
+
         dao.borrarSala(idBorrar);
     }
 
@@ -132,8 +155,20 @@ public class SalaMenu {
         System.out.println("Sala ID: ");
         int salaId = leerEntero(sc);
 
+        Sala sala = saladao.buscarSalaPorId(salaId);
+        if(sala == null){
+            System.out.println("No existe sala con ese id");
+            return;
+        }
+
         System.out.println("Usuario ID: ");
         int userId = leerEntero(sc);
+
+        Lector lectorActual = lectorDAO.buscarPorId(userId);
+        if (lectorActual == null) {
+            System.out.println("No se encontró el lector con ID " + userId);
+            return;
+        }
 
         System.out.println("Fecha de inicio (YYYY-MM-DD HH:mm:ss): ");
         String fecha = sc.nextLine().trim();
@@ -151,6 +186,12 @@ public class SalaMenu {
     private void eliminarReservaDeSala(Scanner sc) throws SQLException {
         System.out.print("Reserva ID: ");
         int reservaId = leerEntero(sc);
+
+        Reserva reserva = reservaDAO.buscarReservaPorId(reservaId);
+        if (reserva == null) {
+            System.out.println("Reserva no encontrada");
+            return;
+        }
 
         reservaDAO.eliminarReserva(reservaId);
     }

@@ -25,4 +25,8 @@ public class LibroAutor {
     public void setAutor(Autor autor) {
         this.autor = autor;
     }
+
+    public void mostrarInformacion(){
+        System.out.printf("%-20s %-20s%n", getLibro(), getAutor());
+    }
 }

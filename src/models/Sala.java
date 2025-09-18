@@ -28,11 +28,11 @@ public class Sala {
     }
 
     public void mostrarInformacion(){
-        System.out.println("###############");
-        System.out.println("ID: " + this.idSala);
-        System.out.println("Numero de Sala: " + this.numeroSala);
-        System.out.println("Ubicacion: " + this.ubicacion);
-        System.out.println("Personas Max.: " + this.maxPersonas);
+        System.out.printf("%-5d %-20s %-20s %-20s%n",
+                getIdSala(),
+                getNumeroSala(),
+                getUbicacion(),
+                getMaxPersonas());
     }
 
 }

@@ -36,7 +36,7 @@ public class GeneroMenu {
                     case 3: modificarGenero(sc);break;
                     case 4: eliminarGenero(sc);break;
                     case 5: {return;}
-                    default:System.out.printf("Opcion no valido");
+                    default:System.out.printf("Opción no válida");
                 }
             }while (op != 5);
         }catch (SQLException ex){
@@ -68,6 +68,7 @@ public class GeneroMenu {
         if(generos.isEmpty()){
             System.out.println("No hay generos registrados");
         }else{
+            System.out.printf("%-5s %-20s%n", "ID", "Nombre");
             for(Genero genero:generos){
                 genero.mostrarInfo();
             }
@@ -79,6 +80,13 @@ public class GeneroMenu {
 
         System.out.println("Ingrese el id del genero a modificar");
         int id = sc.nextInt();
+
+        Genero gen = generodao.buscarGeneroPorId(id);
+
+        if(gen == null){
+            System.out.println("No existe un genero con ese id");
+            return;
+        }
 
         System.out.println("Ingrese el nuevo nombre del genero");
         String nombre = instancia.leerPalabra(sc);
@@ -92,6 +100,13 @@ public class GeneroMenu {
 
         System.out.println("Ingrese el id del genero a eliminar");
         int id = sc.nextInt();
+
+        Genero gen = generodao.buscarGeneroPorId(id);
+
+        if(gen == null){
+            System.out.println("No existe un genero con ese id");
+            return;
+        }
 
         generoDAO.eliminarGenero(id);
     }

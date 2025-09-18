@@ -157,11 +157,48 @@ public class menu {
 
 
     private void eliminarComentario() {
+        List<Comentario> comen = comentarioDAO.listarComentario();
+
+        if(comen.isEmpty()) {
+            System.out.println("No hay comentarios para listar");
+            return;
+        } else {
+            System.out.printf("%-5s %-50s%n", "ID", "Contenido");
+            for (Comentario comentario : comen) {
+                System.out.printf("%-5d %-50s%n",
+                        comentario.getId_comentario(),
+                        comentario.getContenido());
+            }
+        }
+
         System.out.println("Ingrese el id del comentario a eliminar: ");
         int id_comentario = scanner.nextInt();
 
+        Comentario comen1 = comentarioDAO.buscarComentarioPorId(id_comentario);
+        if(comen1 == null) {
+            System.out.println("No existe un comentario con ese id");
+            return;
+        }
+
         comentarioDAO.eliminarComentario(id_comentario);
     }
+
+
+
+    public boolean iniciarSesion(Scanner sc){
+        System.out.println("Ingrese correo electronico: ");
+        String correo = sc.nextLine();
+        System.out.println("Ingrese contrasenia: ");
+        String contra = sc.nextLine();
+
+        List<Administrador>listaAdmin =administradorDAO.inicioSesion(correo,contra);
+        if(!listaAdmin.isEmpty()){
+            System.out.println("Inicio de sesion satisfactorio");
+            System.out.println("Bienvenido : " + listaAdmin.get(0).getNombre() +"\n");
+            return true;
+        }else{
+            System.out.println("Correo electronico o contrasenia incorrecta");
+        return false;
+        }
+    }
 }
-
-

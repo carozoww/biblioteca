@@ -2,6 +2,7 @@ package dao;
 
 import models.Administrador;
 import basedatos.conexion;
+import models.Lector;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -117,6 +118,25 @@ public class AdministradorDAO {
         }
         return listaAdministradores;
     }
+    public Administrador buscarAdminPorId(int ID) {
+        String consulta = "SELECT * FROM administrador WHERE ID = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
+            ps.setInt(1, ID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Administrador(
+                        rs.getInt("ID"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getDate("fechaNac"),
+                        rs.getString("contrasenia")
 
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar al administrador: " + e.getMessage(), e);
+        }
+        return null;
+    }
 
 }

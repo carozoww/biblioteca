@@ -72,4 +72,21 @@ public class generoDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public Genero buscarGeneroPorId(int ID) {
+        String consulta = "SELECT * FROM genero WHERE id_genero = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
+            ps.setInt(1, ID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Genero(
+                        rs.getInt("id_genero"),
+                        rs.getString("nombre")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar genero: " + e.getMessage(), e);
+        }
+        return null;
+    }
 }

@@ -58,4 +58,23 @@ public class SalaDAO {
             else System.out.println("Sala no encontrada");
         }
     }
+    public Sala buscarSalaPorId(int id) {
+        String consulta = "SELECT * FROM sala WHERE id_sala = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Sala(
+                        rs.getInt("id_sala"),
+                        rs.getInt("numero_sala"),
+                        rs.getString("ubicacion"),
+                        rs.getInt("max_personas")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar sala: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
 }
