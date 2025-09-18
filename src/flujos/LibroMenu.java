@@ -14,10 +14,12 @@ public class LibroMenu {
 
     private final LibroDAO librodao;
     private final EditorialDAO editorialdao;
+    private final leer instancia;
 
     public LibroMenu() {
         this.librodao = new LibroDAO();
         this.editorialdao = new EditorialDAO();
+        this.instancia = new leer();
     }
 
     public void mostrarMenuLibro(Scanner scanner) {
@@ -66,10 +68,10 @@ public class LibroMenu {
 
     public void crearLibro(Scanner scanner) throws SQLException {
         System.out.println("Ingrese el titulo del libro: ");
-        String titulo = scanner.nextLine();
+        String titulo = instancia.leerPalabra(scanner);
 
         System.out.println("Ingrese el isbn del libro: ");
-        String isbn = scanner.nextLine();
+        String isbn = scanner.next();
 
         List<Libro> libro = librodao.existeISBN(isbn);
         if(!libro.isEmpty()){
@@ -131,10 +133,10 @@ public class LibroMenu {
         }
 
         System.out.println("Ingrese el nuevo nombre del libro: ");
-        String nombre = scanner.nextLine();
+        String nombre = instancia.leerPalabra(scanner);
 
         System.out.println("Ingrese el nuevo isbn del libro: ");
-        String isbn = scanner.nextLine();
+        String isbn = scanner.next();
 
         List<Libro> libro1 = librodao.existeISBNporId(idLibro,isbn);
         if(!libro1.isEmpty()){

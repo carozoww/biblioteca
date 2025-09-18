@@ -12,10 +12,12 @@ public class PenalizacionMenu {
 
     private final PenalizacionDAO penalizaciondao;
     private final LectorDAO lectordao;
+    private final leer instancia;
 
     public PenalizacionMenu() {
         this.penalizaciondao = new PenalizacionDAO();
         this.lectordao = new LectorDAO();
+        this.instancia = new leer();
     }
 
     public void mostarMenuPena(Scanner scanner) {
@@ -94,7 +96,7 @@ public class PenalizacionMenu {
         scanner.nextLine();
 
         System.out.println("Ingrese el motivo de la penalizacion: ");
-        String motivo = scanner.nextLine();
+        String motivo = instancia.leerPalabra(scanner);
 
         System.out.println("Ingrese el id del administrador: ");
         int idAd = scanner.nextInt();

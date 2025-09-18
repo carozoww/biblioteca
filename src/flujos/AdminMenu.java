@@ -14,9 +14,12 @@ import java.util.Scanner;
 public class AdminMenu {
 
     private final AdministradorDAO admindao;
+    private final leer instancia;
 
     public AdminMenu() {
+
         this.admindao = new AdministradorDAO();
+        this.instancia = new leer();
     }
 
     public void iniciar(Scanner sc) throws SQLException {
@@ -62,18 +65,18 @@ public class AdminMenu {
     public void crearAdministrador(Scanner sc) throws SQLException {
 
         System.out.println("Ingrese nombre del  administrador: ");
-        String nombre = leerPalabra(sc);
+        String nombre = instancia.leerPalabra(sc);
 
         System.out.println("Ingrese fecha Nacimiento del administrador(formato: yyyy-mm-dd): ");
         Date fechaNacimiento = Date.valueOf(sc.next());
 
         sc.nextLine();
 
-        System.out.println("Ingrese correo del administrador: ");
-        String correo = sc.nextLine();
+        System.out.println("Ingrese correo del administrador(sin espacios): ");
+        String correo = sc.next();
 
-        System.out.println("Ingrese  contrasenia del administrador: ");
-        String contra = sc.nextLine();
+        System.out.println("Ingrese  contrasenia del administrador(sin espacios): ");
+        String contra = sc.next();
 
         admindao.crearAdministradorDAO(nombre, fechaNacimiento, correo,contra);
     }
@@ -101,9 +104,9 @@ public class AdminMenu {
         Date fechaNacimiento = Date.valueOf(sc.next());
         sc.nextLine();
         System.out.println("Ingrese nuevo correo del administrador: ");
-        String correo = sc.nextLine();
+        String correo = sc.next();
         System.out.println("Ingrese nueva contrasenia del administrador: ");
-        String contra = sc.nextLine();
+        String contra = sc.next();
 
         admindao.editarAdministrador(id, nombre, fechaNacimiento , correo,contra);
     }
@@ -121,9 +124,9 @@ public class AdminMenu {
 
     public void iniciarSesion(Scanner sc){
         System.out.println("Ingrese correo electronico: ");
-        String correo = sc.nextLine();
+        String correo = sc.next();
         System.out.println("Ingrese contrasenia: ");
-        String contra = sc.nextLine();
+        String contra = sc.next();
 
         if(!admindao.inicioSesion(correo,contra).isEmpty()){
             System.out.println("Inicia de sesion satisfactorio");
@@ -132,14 +135,5 @@ public class AdminMenu {
         }
     }
 
-    public String leerPalabra(Scanner sc){
-        String palabra =  sc.nextLine();
-        while(palabra.isEmpty() || palabra == " "){
-            if(palabra.isEmpty()){
-                System.out.println("El campo no puede quedar vacío ");
-            }
-            palabra =  sc.nextLine();
-        }
-        return palabra;
-    }
+
 }

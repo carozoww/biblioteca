@@ -9,8 +9,12 @@ import java.util.Scanner;
 
 public class GeneroMenu {
     private final generoDAO generodao;
+    private final leer instancia;
 
-    public GeneroMenu(){ this.generodao = new generoDAO();}
+    public GeneroMenu(){
+        this.generodao = new generoDAO();
+        this.instancia = new leer();
+    }
 
     public void iniciar(Scanner sc) throws SQLException {
         try{
@@ -52,7 +56,7 @@ public class GeneroMenu {
 
     public void crearGenero(Scanner sc) throws SQLException {
         System.out.println("Ingrese el nombre del nuevo genero");
-        String nombre = sc.next();
+        String nombre = instancia.leerPalabra(sc);
 
         generoDAO.crearGenero(nombre);
 
@@ -77,7 +81,7 @@ public class GeneroMenu {
         int id = sc.nextInt();
 
         System.out.println("Ingrese el nuevo nombre del genero");
-        String nombre = sc.next();
+        String nombre = instancia.leerPalabra(sc);
 
         generoDAO.modificarGenero(id, nombre);
 

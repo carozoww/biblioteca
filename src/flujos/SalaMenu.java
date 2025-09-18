@@ -15,10 +15,12 @@ import java.util.Scanner;
 public class SalaMenu {
     private final SalaDAO dao;
     private final ReservaDAO reservaDAO;
+    private final leer instancia;
 
     public SalaMenu() {
         this.dao = new SalaDAO();
         this.reservaDAO = new ReservaDAO();
+        this.instancia = new leer();
     }
 
     public void iniciar(Scanner sc) throws SQLException{
@@ -51,7 +53,7 @@ public class SalaMenu {
         int numeroSala = leerEntero(sc);
 
         System.out.println("Ubicacion: ");
-        String ubicacion = sc.nextLine();
+        String ubicacion = instancia.leerPalabra(sc);
 
         System.out.println("Máximo de Personas: ");
         int maxPersonas = leerEntero(sc);
@@ -80,7 +82,7 @@ public class SalaMenu {
         int numeroSala = leerEntero(sc);
 
         System.out.println("Nueva ubicacion: ");
-        String nuevaUbicacion = sc.nextLine();
+        String nuevaUbicacion = instancia.leerPalabra(sc);
 
         System.out.println("Nuevo Max Personas: ");
         int nuevaMaxPersonas = leerEntero(sc);

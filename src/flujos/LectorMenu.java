@@ -9,8 +9,10 @@ import java.util.Scanner;
 
 public class LectorMenu {
     private final LectorDAO lectorDAO;
+    private final leer instancia;
 
     public LectorMenu() {
+        this.instancia = new leer();
         this.lectorDAO = new LectorDAO();
     }
 
@@ -55,23 +57,23 @@ public class LectorMenu {
     private void crearLector(Scanner scanner) {
         try {
             System.out.println("Ingrese nombre del lector: ");
-            String nombre = scanner.nextLine();
+            String nombre = instancia.leerPalabra(scanner);
 
             System.out.println("Ingrese cédula: ");
-            String cedula = scanner.nextLine();
+            String cedula = scanner.next();
 
             System.out.println("Ingrese teléfono: ");
-            String telefono = scanner.nextLine();
+            String telefono = instancia.leerPalabra(scanner);
 
             System.out.println("Ingrese dirección: ");
-            String direccion = scanner.nextLine();
+            String direccion = instancia.leerPalabra(scanner);
 
             System.out.println("Desea autentificar al lector? (si/no): ");
-            String inputAut = scanner.nextLine();
+            String inputAut = scanner.next();
             boolean autenticacion = inputAut.equalsIgnoreCase("si");
 
             System.out.println("Ingrese fecha de nacimiento (YYYY-MM-DD): ");
-            String fechaNacStr = scanner.nextLine();
+            String fechaNacStr = scanner.next();
             LocalDate fechaNac;
             if (fechaNacStr.isEmpty()) {
                 fechaNac = LocalDate.now();
@@ -80,14 +82,14 @@ public class LectorMenu {
             }
 
             System.out.println("Desea activar la membresía? (si/no): ");
-            String inputMemb = scanner.nextLine();
+            String inputMemb = scanner.next();
             boolean membresia = inputMemb.equalsIgnoreCase("si");
 
             System.out.println("Ingrese el correo: ");
-            String correo = scanner.nextLine();
+            String correo = scanner.next();
 
             System.out.println("Ingrese la contraseña: ");
-            String contrasenia = scanner.nextLine();
+            String contrasenia = scanner.next();
 
             lectorDAO.crearLector(nombre, cedula, telefono, direccion, autenticacion,
                     fechaNac, membresia, correo, contrasenia);
@@ -118,16 +120,16 @@ public class LectorMenu {
 
 
             System.out.println("Ingrese el nuevo correo: ");
-            String correo = scanner.nextLine();
+            String correo = scanner.next();
 
             System.out.println("Ingrese la nueva cedula: ");
-            String cedula = scanner.nextLine();
+            String cedula = scanner.next();
 
             System.out.println("Ingrese el nuevo telefono: ");
-            String telefono = scanner.nextLine();
+            String telefono = instancia.leerPalabra(scanner);
 
             System.out.println("Ingrese la nueva dirección: ");
-            String direccion = scanner.nextLine();
+            String direccion = instancia.leerPalabra(scanner);
 
             if (!autenticacion) {
                 System.out.println("Autenticación actualmente inactiva. ¿Desea activarla? (si/no): ");
@@ -138,18 +140,18 @@ public class LectorMenu {
             }
 
             System.out.println("Ingrese fecha de nacimiento (YYYY-MM-DD): ");
-            LocalDate fechaNac = LocalDate.parse(scanner.nextLine());
+            LocalDate fechaNac = LocalDate.parse(scanner.next());
 
             System.out.println("Membresía actual: " + membresiaActual);
             System.out.println("¿Desea cambiar la membresía? (si/no): ");
-            String inputMembresia = scanner.nextLine().trim().toLowerCase();
+            String inputMembresia = scanner.next().trim().toLowerCase();
             boolean membresia = inputMembresia.isEmpty() ? membresiaActual : inputMembresia.equals("si");
 
             System.out.println("Ingrese el nuevo nombre: ");
-            String nombre = scanner.nextLine();
+            String nombre = instancia.leerPalabra(scanner);
 
             System.out.println("Ingrese la nueva contraseña: ");
-            String contrasenia = scanner.nextLine();
+            String contrasenia = scanner.next();
 
             lectorDAO.editarLector(
                     id, nombre, cedula, telefono, direccion,

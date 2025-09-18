@@ -8,9 +8,11 @@ import java.util.Scanner;
 
 public class EditorialMenu {
     private final EditorialDAO editorialdao;
+    private final leer instancia;
 
     public EditorialMenu() {
         this.editorialdao = new EditorialDAO();
+        this.instancia = new leer();
     }
     public void mostrarMenuEditorial(Scanner scanner) {
         try {
@@ -63,7 +65,7 @@ public class EditorialMenu {
     }
     public void crearEditorial(Scanner scanner) {
         System.out.println("Ingrese el nombre de la editorial: ");
-        String nombre = scanner.nextLine();
+        String nombre = instancia.leerPalabra(scanner);
 
         editorialdao.crearEditorial(nombre);
     }
@@ -97,7 +99,7 @@ public class EditorialMenu {
         }
 
         System.out.println("Ingrese el nuevo nombre de la editorial: ");
-        String nombre = scanner.nextLine();
+        String nombre = instancia.leerPalabra(scanner);
 
         editorialdao.editarEditorial(idEditorial, nombre);
     }
