@@ -15,11 +15,13 @@ public class PrestamoMenu {
     private final Scanner scanner;
     private final PrestamoDAO prestamoDAO;
     private final LectorDAO lectorDAO;
+    private final LibroMenu libromenu;
 
     public PrestamoMenu(Scanner scanner, PrestamoDAO prestamoDAO, LectorDAO lectorDAO) {
         this.scanner = scanner;
         this.prestamoDAO = prestamoDAO;
         this.lectorDAO = lectorDAO;
+        this.libromenu = new LibroMenu();
     }
 
     public void mostrarMenuPrestamo() {
@@ -47,6 +49,20 @@ public class PrestamoMenu {
 
     private void crearPrestamo() {
         try {
+            List<Lector> lectores = lectorDAO.listarLectores();
+            if (lectores.isEmpty()) {
+                System.out.println("No hay lectores para mostrar");
+                return;
+            } else {
+                System.out.println("LISTADO DE LECTORES");
+                System.out.printf("%-5s %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
+                        "ID", "Nombre", "Cédula", "Teléfono", "Dirección",
+                        "Autenticado", "FechaNac", "Membresía", "Correo");
+                for (Lector lector : lectores) {
+                    lector.mostrarInformacion();
+                }
+            }
+
             System.out.print("Ingrese ID del lector: ");
             int idLector = scanner.nextInt();
             scanner.nextLine();
@@ -56,6 +72,8 @@ public class PrestamoMenu {
                 System.out.println("No se encontró lector con ID " + idLector);
                 return;
             }
+
+            libromenu.listarLibros();
 
             System.out.print("Ingrese ID del libro: ");
             int idLibro = scanner.nextInt();
@@ -71,7 +89,6 @@ public class PrestamoMenu {
 
             prestamoDAO.crearPrestamo(idLector, idLibro, fechaPrestamo, estado);
 
-            System.out.println("Préstamo creado correctamente.");
 
         } catch (Exception e) {
             System.out.println("Error al crear préstamo: " + e.getMessage());

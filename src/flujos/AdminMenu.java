@@ -32,7 +32,7 @@ public class AdminMenu {
                 System.out.println("6. Volver");
                 System.out.print("Opción: ");
 
-                op = leerOpcion(sc);
+        op = leerOpcion(sc);
 
                 switch (op) {
                     case 1:
@@ -72,10 +72,10 @@ public class AdminMenu {
 
     public void crearAdministrador(Scanner sc) throws SQLException {
 
-        System.out.println("Ingrese nombre del  administrador: ");
+        System.out.println("Ingrese nombre del administrador: ");
         String nombre = sc.nextLine();
 
-        System.out.println("Ingrese fecha Nacimiento del administrador(formato: yyyy-mm-dd): ");
+        System.out.println("Ingrese fecha Nacimiento del administrador(formato: YYYY-MM-DD): ");
         Date fechaNacimiento = Date.valueOf(sc.next());
 
         sc.nextLine();
@@ -96,6 +96,12 @@ public class AdminMenu {
         int id = sc.nextInt();
         sc.nextLine();
 
+        Administrador admin = admindao.buscarAdminPorId(id);
+        if(admin == null) {
+            System.out.println("El administrador no existe");
+            return;
+        }
+
         admindao.eliminarAdministrador(id);
     }
 
@@ -105,6 +111,12 @@ public class AdminMenu {
         System.out.println("Ingrese el id del administrador a modificar: ");
         int id = sc.nextInt();
         sc.nextLine();
+
+        Administrador admin = admindao.buscarAdminPorId(id);
+        if(admin == null) {
+            System.out.println("El administrador no existe");
+            return;
+        }
 
         System.out.println("Ingrese nuevo nombre del administrador: ");
         String nombre = sc.nextLine();
@@ -124,6 +136,8 @@ public class AdminMenu {
         if (administrador.isEmpty()) {
             System.out.println("No hay administradores para mostrar");
         } else {
+            System.out.printf("%-5s %-10s %-30s %-30s %-20s%n",
+                    "ID","Nombre","Fecha Nacimiento","Correo","Contraseña");
             for (Administrador administrador1 : administrador) {
                 administrador1.mostrarInfo();
             }

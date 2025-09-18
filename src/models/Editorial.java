@@ -25,9 +25,10 @@ public class Editorial {
         this.nombre = nombre;
     }
 
-    public void mostrarInformacion() {
-        System.out.println("Id: " + idEditorial);
-        System.out.println("Nombre: " + nombre);
-        System.out.println("\n");
+    public void mostrarInformacion(){
+        System.out.printf("%-5d %-20s%n",
+                getIdEditorial(),
+                getNombre());
+
     }
 }

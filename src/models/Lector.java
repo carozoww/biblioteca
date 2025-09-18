@@ -14,7 +14,8 @@ public class Lector {
     private String correo;
     private String contrasenia;
 
-    public Lector() {}
+    public Lector() {
+    }
 
     public Lector(int ID, String nombre, String cedula, String telefono, String direccion, boolean autenticacion,
                   LocalDate fechaNac, boolean membresia, String correo, String contrasenia) {
@@ -61,6 +62,7 @@ public class Lector {
     public int getID() {
         return ID;
     }
+
     public void setID(int ID) {
         this.ID = ID;
     }
@@ -68,6 +70,7 @@ public class Lector {
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -83,6 +86,7 @@ public class Lector {
     public String getTelefono() {
         return telefono;
     }
+
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
@@ -90,6 +94,7 @@ public class Lector {
     public String getDireccion() {
         return direccion;
     }
+
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
@@ -105,6 +110,7 @@ public class Lector {
     public LocalDate getFechaNac() {
         return fechaNac;
     }
+
     public void setFechaNac(LocalDate fechaNac) {
         this.fechaNac = fechaNac;
     }
@@ -120,6 +126,7 @@ public class Lector {
     public String getCorreo() {
         return correo;
     }
+
     public void setCorreo(String correo) {
         this.correo = correo;
     }
@@ -127,8 +134,22 @@ public class Lector {
     public String getContrasenia() {
         return contrasenia;
     }
+
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
+    }
+
+    public void mostrarInformacion() {
+        System.out.printf("%-5d %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
+                getID(),
+                getNombre(),
+                getCedula(),
+                getTelefono(),
+                getDireccion(),
+                isAutenticacion(),
+                getFechaNac(),
+                isMembresia(),
+                getCorreo());
     }
 }
 

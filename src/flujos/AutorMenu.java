@@ -33,7 +33,7 @@ public class AutorMenu {
                     case 3: modificarAutor(sc);break;
                     case 4: eliminarAutor(sc);break;
                     case 5: {return;}
-                    default:System.out.printf("Opcion no valido");
+                    default:System.out.printf("Opción no válida");
                 }
             }while (op != 6);
         }catch (SQLException ex){
@@ -66,6 +66,7 @@ public class AutorMenu {
         if(autores.isEmpty()){
             System.out.println("No existen autores registrados en el sistema");
         }else{
+            System.out.printf("%-5s %-20s %-20s%n", "ID", "Nombre", "Apellido");
             for(Autor autor: autores){
                 autor.mostrarInfo();
             }
@@ -77,6 +78,12 @@ public class AutorMenu {
         mostrarAutor();
         System.out.println("Ingrese el id del autor a modificar");
         int id = sc.nextInt();
+
+        Autor autor = autordao.buscarAutorPorId(id);
+        if(autor == null) {
+            System.out.println("El autor con ese id no existe");
+            return;
+        }
 
         System.out.println("Ingrese el nuevo nombre del autor");
         String nombre = sc.next();
@@ -91,8 +98,16 @@ public class AutorMenu {
 
     public void eliminarAutor(Scanner sc) throws SQLException {
         mostrarAutor();
+
         System.out.println("Ingrese el id del autor a eliminar");
         int id = sc.nextInt();
+
+        Autor autor = autordao.buscarAutorPorId(id);
+        if(autor == null) {
+            System.out.println("El autor con ese id no existe");
+            return;
+        }
+
         autorDAO.eliminarAutor(id);
 
     }
