@@ -9,6 +9,7 @@ public class Libro {
     private Date fechaPublicacion;
     private int idEditorial;
     private String editorial;
+    private Boolean estado_asignacion;
 
     public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial) {
         this.idLibro = idLibro;
@@ -17,6 +18,7 @@ public class Libro {
         this.fechaPublicacion = fechaPublicacion;
         this.idEditorial = idEditorial;
         this.editorial = editorial;
+        this.estado_asignacion = true;
     }
     public int getIdLibro() {
         return idLibro;
@@ -43,6 +45,13 @@ public class Libro {
     public String getEditorial() {return editorial;}
     public void setEditorial(String editorial) {this.editorial = editorial;}
 
+    public Boolean getEstado_asignacion() {
+        return estado_asignacion;
+    }
+    public void setEstado_asignacion(Boolean estado_asignacion) {
+        this.estado_asignacion = estado_asignacion;
+    }
+
     public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
@@ -63,6 +72,7 @@ public class Libro {
             System.out.println("Nombre de la editorial: Sin asignar");
         }else{
             System.out.println("Nombre de la editorial: " + editorial);
+            System.out.println("Estado de la asignación: " + estado_asignacion);
         }
         System.out.println("\n");
 

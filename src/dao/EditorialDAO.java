@@ -93,4 +93,18 @@ public class EditorialDAO {
         return null;
     }
 
+
+    public void desasignarEditorial(int id_editorial){
+        String query =  "UPDATE libro SET ed_asignada = FALSE WHERE id_editorial = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1, id_editorial);
+            ps.executeUpdate();
+            System.out.println("Todos los libros asignados a la editorial con la id "+id_editorial);
+            System.out.println("han sido desasignados correctamente");
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -21,8 +21,9 @@ public class EditorialMenu {
                 System.out.println("2. Modificar editorial");
                 System.out.println("3. Eliminar editorial");
                 System.out.println("4. Listar editoriales");
-                System.out.println("5. Volver al menu principal");
-                System.out.println("6. Salir");
+                System.out.println("5. Desactivar editorial");
+                System.out.println("6. Volver al menu principal");
+                System.out.println("7. Salir");
 
                 System.out.println("Ingrese la opcion: ");
 
@@ -43,14 +44,16 @@ public class EditorialMenu {
                         listarEditoriales();
                         break;
                     case 5:
-                        {return;}
+                        desactivarEditorial(scanner);
                     case 6:
+                        {return;}
+                    case 7:
                         System.exit(0);
                         break;
                     default:
                         System.out.println("Opción no válida.");
                 }
-            } while (opcion != 6);
+            } while (opcion != 7);
 
 
         } catch (Exception e) {
@@ -109,5 +112,21 @@ public class EditorialMenu {
                 editorial.mostrarInformacion();
             }
         }
+    }
+
+    public void desactivarEditorial(Scanner scanner){
+        System.out.println("#EDITORIALES: ");
+        List<Editorial> editoriales = editorialdao.listarEditorial();
+        if (editoriales.isEmpty()) {
+            System.out.println("No hay editoriales para mostrar");
+            System.out.println("Registre nuevas editoriales para poder desasignarlas ");
+            return;
+        }
+        listarEditoriales();
+        System.out.println("Ingrese el id de la editorial a desactivar: ");
+        int idEditorial = scanner.nextInt();
+
+        editorialdao.desasignarEditorial(idEditorial);
+
     }
 }
