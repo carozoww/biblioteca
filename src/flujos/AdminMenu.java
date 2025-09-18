@@ -62,7 +62,7 @@ public class AdminMenu {
     public void crearAdministrador(Scanner sc) throws SQLException {
 
         System.out.println("Ingrese nombre del  administrador: ");
-        String nombre = sc.nextLine();
+        String nombre = leerPalabra(sc);
 
         System.out.println("Ingrese fecha Nacimiento del administrador(formato: yyyy-mm-dd): ");
         Date fechaNacimiento = Date.valueOf(sc.next());
@@ -96,7 +96,7 @@ public class AdminMenu {
         sc.nextLine();
 
         System.out.println("Ingrese nuevo nombre del administrador: ");
-        String nombre = sc.nextLine();
+        String nombre = sc.next();
         System.out.println("Ingrese nuevo fecha nacimiento del administrador(formato: yyyy-mm-dd): ");
         Date fechaNacimiento = Date.valueOf(sc.next());
         sc.nextLine();
@@ -130,5 +130,16 @@ public class AdminMenu {
         }else{
             System.out.println("Correo electronico o contrasenia incorrecta");
         }
+    }
+
+    public String leerPalabra(Scanner sc){
+        String palabra =  sc.nextLine();
+        while(palabra.isEmpty() || palabra == " "){
+            if(palabra.isEmpty()){
+                System.out.println("El campo no puede quedar vacío ");
+            }
+            palabra =  sc.nextLine();
+        }
+        return palabra;
     }
 }
