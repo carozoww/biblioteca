@@ -157,8 +157,28 @@ public class menu {
 
 
     private void eliminarComentario() {
+        List<Comentario> comen = comentarioDAO.listarComentario();
+
+        if(comen.isEmpty()) {
+            System.out.println("No hay comentarios para listar");
+            return;
+        } else {
+            System.out.printf("%-5s %-50s%n", "ID", "Contenido");
+            for (Comentario comentario : comen) {
+                System.out.printf("%-5d %-50s%n",
+                        comentario.getId_comentario(),
+                        comentario.getContenido());
+            }
+        }
+
         System.out.println("Ingrese el id del comentario a eliminar: ");
         int id_comentario = scanner.nextInt();
+
+        Comentario comen1 = comentarioDAO.buscarComentarioPorId(id_comentario);
+        if(comen1 == null) {
+            System.out.println("No existe un comentario con ese id");
+            return;
+        }
 
         comentarioDAO.eliminarComentario(id_comentario);
     }

@@ -2,6 +2,7 @@ package flujos;
 
 import dao.LibroDAO;
 import dao.LibroGeneroDAO;
+import dao.generoDAO;
 import models.Genero;
 import models.Libro;
 import models.LibroGenero;
@@ -16,11 +17,13 @@ public class LibroGeneroMenu {
     private final LibroGeneroDAO librogeneroDAO;
     private final GeneroMenu generomenu;
     private final LibroDAO librodao;
+    private final generoDAO generodao;
 
     public LibroGeneroMenu() {
         this.librogeneroDAO = new LibroGeneroDAO();
         this.generomenu = new GeneroMenu();
         this.librodao = new LibroDAO();
+        this.generodao = new generoDAO();
     }
 
     public void iniciar(Scanner sc) throws SQLException {
@@ -54,7 +57,7 @@ public class LibroGeneroMenu {
                         return;
                     }
                     default:
-                        System.out.printf("Opcion no valido");
+                        System.out.printf("Opción no válida");
                 }
             } while (op != 5);
         } catch (SQLException ex) {
@@ -75,10 +78,26 @@ public class LibroGeneroMenu {
     public void asignarGeneroLibro(Scanner sc) throws SQLException {
         System.out.println("Elija un libro al que asignarle un genero: ");
         listarLibros();
+
         int id_libro = sc.nextInt();
+
+        Libro libro = librodao.buscarPorId(id_libro);
+
+        if(libro == null){
+            System.out.println("Error: no existe un libro con ese id");
+            return;
+        }
+
         System.out.println("Elija un genero: ");
         generomenu.mostrarGenero();
         int id_genero = sc.nextInt();
+
+        Genero gen = generodao.buscarGeneroPorId(id_genero);
+
+        if(gen == null){
+            System.out.println("No existe un genero con ese id");
+            return;
+        }
 
         librogeneroDAO.asignarGeneroLibro(id_libro, id_genero);
 
@@ -109,20 +128,36 @@ public class LibroGeneroMenu {
         if(generos.isEmpty()){
             System.out.println("El libro no tiene generos asignados");
         }else{
-            for(Genero genero: generos){
+            System.out.printf("%-5s %-20s%n", "ID", "Nombre");
+            for(Genero genero:generos){
                 genero.mostrarInfo();
-            }
         }
+    }
     }
 
     public void modificarGeneroLibro(Scanner sc) throws SQLException {
         System.out.println("Ingrese el id del libro a modificar: ");
         listarLibros();
         int id_libro = sc.nextInt();
+
+        Libro libro = librodao.buscarPorId(id_libro);
+
+        if(libro == null){
+            System.out.println("Error: no existe un libro con ese id");
+            return;
+        }
         System.out.println("Ingrese el genero a modificar de ese libro: ");
         mostrarGenerosDeUnLibro(id_libro);
         int id_genero_old = sc.nextInt();
         generomenu.mostrarGenero();
+
+        Genero gen = generodao.buscarGeneroPorId(id_genero_old);
+
+        if(gen == null){
+            System.out.println("No existe un genero con ese id");
+            return;
+        }
+
         System.out.println("Ingrese el genero a modificar de ese libro: ");
         int id_genero_new = sc.nextInt();
 
@@ -134,9 +169,23 @@ public class LibroGeneroMenu {
         System.out.println("Ingrese el id del libro de cual desea eliminar un genero: ");
         listarLibros();
         int id_libro = sc.nextInt();
+
+        Libro libro = librodao.buscarPorId(id_libro);
+
+        if(libro == null){
+            System.out.println("Error: no existe un libro con ese id");
+            return;
+        }
         System.out.println("Ingrese el genero a eliminar de ese libro: ");
         mostrarGenerosDeUnLibro(id_libro);
         int id_genero = sc.nextInt();
+
+        Genero gen = generodao.buscarGeneroPorId(id_genero);
+
+        if(gen == null){
+            System.out.println("No existe un genero con ese id");
+            return;
+        }
 
         librogeneroDAO.eliminarGeneroDeLibro(id_libro, id_genero);
     }
@@ -147,6 +196,7 @@ public class LibroGeneroMenu {
         if (libros.isEmpty()) {
             System.out.println("No hay libros para mostrar");
         } else {
+            System.out.printf("%-5s %-50s %-20s %-30s %-30s%n", "ID", "Titulo", "ISBN", "Fecha de Publicacion", "Editorial");
             for (Libro libro : libros) {
                 libro.mostrarInformacion();
             }

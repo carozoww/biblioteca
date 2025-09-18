@@ -40,7 +40,10 @@ public class PenalizacionDAO {
     }
     public List<Penalizacion> listarPenalizaciones() {
         List<Penalizacion> lista = new ArrayList<>();
-        String consulta = "SELECT * FROM penalizacion";
+        String consulta = "SELECT p.id_pena, p.duracion, p.motivo, p.id_lector, p.id_admin, l.nombre AS lector, a.nombre AS admin " +
+                "FROM penalizacion p " +
+                "LEFT JOIN lector l ON p.id_lector = l.ID " +
+                "LEFT JOIN administrador a ON p.id_admin = a.ID";
         try {
              Statement st = conexion.getInstancia().getConnection().createStatement();
              ResultSet rs = st.executeQuery(consulta);
@@ -50,7 +53,9 @@ public class PenalizacionDAO {
                 rs.getInt("duracion"),
                 rs.getString("motivo"),
                 rs.getInt("id_lector"),
-                rs.getInt("id_admin")));
+                rs.getInt("id_admin"),
+                rs.getString("lector"),
+                rs.getString("admin")));
 
             }
         } catch (SQLException e) {
@@ -61,7 +66,13 @@ public class PenalizacionDAO {
 
     public List<Penalizacion> buscarPenalizacionActivaPorUsuario(int id) {
         List<Penalizacion> lista = new ArrayList<>();
-        String consulta = "SELECT * FROM penalizacion WHERE id_lector = ?";
+        String consulta = "SELECT p.id_pena, p.duracion, p.motivo, p.id_lector, p.id_admin, " +
+                "l.nombre AS lector, a.nombre AS admin " +
+                "FROM penalizacion p " +
+                "LEFT JOIN lector l ON p.id_lector = l.ID " +
+                "LEFT JOIN administrador a ON p.id_admin = a.ID " +
+                "WHERE p.id_lector = ?";
+
         try {
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setInt(1,id);
@@ -72,11 +83,13 @@ public class PenalizacionDAO {
                         rs.getInt("duracion"),
                         rs.getString("motivo"),
                         rs.getInt("id_lector"),
-                        rs.getInt("id_admin")));
+                        rs.getInt("id_admin"),
+                        rs.getString("lector"),
+                        rs.getString("admin")));
 
             }
         } catch (SQLException e) {
-            System.out.println("Error listando penalizacion: " + e.getMessage());
+            System.out.println("Error listando penalización: " + e.getMessage());
         }
         return lista;
     }

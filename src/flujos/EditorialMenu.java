@@ -22,12 +22,10 @@ public class EditorialMenu {
                 System.out.println("3. Eliminar editorial");
                 System.out.println("4. Listar editoriales");
                 System.out.println("5. Volver al menu principal");
-                System.out.println("6. Salir");
 
                 System.out.println("Ingrese la opcion: ");
 
-                opcion = scanner.nextInt();
-                scanner.nextLine();
+                opcion = leerOpcion(scanner);
 
                 switch (opcion) {
                     case 1:
@@ -43,14 +41,12 @@ public class EditorialMenu {
                         listarEditoriales();
                         break;
                     case 5:
-                        {return;}
-                    case 6:
-                        System.exit(0);
+                        System.out.println("Volviendo al menú principal");
                         break;
                     default:
                         System.out.println("Opción no válida.");
                 }
-            } while (opcion != 6);
+            }while (opcion != 5);
 
 
         } catch (Exception e) {
@@ -58,6 +54,17 @@ public class EditorialMenu {
         }
 
     }
+
+    private int leerOpcion(Scanner sc) {
+        while (!sc.hasNextInt()) {
+            System.out.print("Ingrese un número válido: ");
+            sc.next();
+        }
+        int opcion = sc.nextInt();
+        sc.nextLine();
+        return opcion;
+    }
+
     public void crearEditorial(Scanner scanner) {
         System.out.println("Ingrese el nombre de la editorial: ");
         String nombre = scanner.nextLine();
@@ -105,6 +112,7 @@ public class EditorialMenu {
         if (editoriales.isEmpty()) {
             System.out.println("No hay editoriales para mostrar");
         } else {
+            System.out.printf("%-5s %-20s%n", "ID", "Nombre");
             for (Editorial editorial : editoriales) {
                 editorial.mostrarInformacion();
             }

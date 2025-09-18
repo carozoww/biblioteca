@@ -107,7 +107,9 @@ public class LibroDAO {
     }
 
     public Libro buscarPorId(int idLibro) {
-        String consulta = "SELECT * FROM libro WHERE id_libro = ?";
+        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
+                "WHERE id_libro = ?";
         try {
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setInt(1, idLibro);
@@ -120,7 +122,7 @@ public class LibroDAO {
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial"),
-                        rs.getString("editorial")
+                        rs.getString("nombre")
                 );
             }
         } catch (SQLException e) {
@@ -131,7 +133,9 @@ public class LibroDAO {
 
     public List<Libro> existeISBN(String isbn) {
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT * FROM libro WHERE isbn = ?";
+        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
+                "WHERE isbn = ?";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setString(1, isbn);
@@ -145,7 +149,7 @@ public class LibroDAO {
                                 rs.getString("isbn"),
                                 rs.getDate("fecha_publicacion"),
                                 rs.getInt("id_editorial"),
-                                rs.getString("editorial")
+                                rs.getString("nombre")
                         ));
             }
 
@@ -157,7 +161,9 @@ public class LibroDAO {
 
     public List<Libro> existeISBNporId(int id_libro, String isbn) {
         List<Libro> libros = new ArrayList<>();
-        String query = "SELECT * FROM libro where id_libro != ? and isbn = ?";
+        String query = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
+                "WHERE id_libro != ? and isbn = ?";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
             ps.setInt(1, id_libro);
@@ -172,7 +178,7 @@ public class LibroDAO {
                                 rs.getString("isbn"),
                                 rs.getDate("fecha_publicacion"),
                                 rs.getInt("id_editorial"),
-                                rs.getString("editorial")
+                                rs.getString("nombre")
                         ));
             }
 
@@ -181,7 +187,6 @@ public class LibroDAO {
         }
         return libros;
     }
-
 
 
 }

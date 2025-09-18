@@ -55,16 +55,11 @@ public class Libro {
         this.idEditorial = idEditorial;
     }
     public void mostrarInformacion(){
-        System.out.println("Id del libro: " + idLibro);
-        System.out.println("Titulo: " + titulo);
-        System.out.println("ISBN: " + isbn);
-        System.out.println("Fecha de publicacion: " + fechaPublicacion);
-        if(getEditorial()==null){
-            System.out.println("Nombre de la editorial: Sin asignar");
-        }else{
-            System.out.println("Nombre de la editorial: " + editorial);
-        }
-        System.out.println("\n");
-
+            System.out.printf("%-5d %-50s %-20s %-30s %-30s%n",
+                    getIdLibro(),
+                    getTitulo(),
+                    getIsbn(),
+                    getFechaPublicacion(),
+                    getEditorial() != null ? getEditorial() : "Sin editorial");
     }
 }

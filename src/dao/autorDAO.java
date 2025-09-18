@@ -85,4 +85,22 @@ public class autorDAO {
             throw new RuntimeException(e);
         }
     }
+    public Autor buscarAutorPorId(int id) {
+        String consulta = "SELECT * FROM autor WHERE id_autor = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Autor(
+                        rs.getInt("id_autor"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar autor: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
 }

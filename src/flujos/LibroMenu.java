@@ -33,8 +33,7 @@ public class LibroMenu {
 
                 System.out.println("Ingrese la opcion: ");
 
-                opcion = scanner.nextInt();
-                scanner.nextLine();
+                opcion = leerOpcion(scanner);
 
                 switch (opcion) {
                     case 1:
@@ -50,19 +49,25 @@ public class LibroMenu {
                         listarLibros();
                         break;
                     case 5:
-                        {return;}
-                    case 6:
-                        System.exit(0);
+                        System.out.println("Volviendo al menú principal");
                         break;
                     default:
                         System.out.println("Opción no válida.");
                 }
-            }while (opcion != 6);
+            }while (opcion != 5);
         }catch (SQLException e){
             System.out.println("Error en la base de datos" + e.getMessage());
         }
     }
-
+    private int leerOpcion(Scanner sc) {
+        while (!sc.hasNextInt()) {
+            System.out.print("Ingrese un número válido: ");
+            sc.next();
+        }
+        int opcion = sc.nextInt();
+        sc.nextLine();
+        return opcion;
+    }
 
     public void crearLibro(Scanner scanner) throws SQLException {
         System.out.println("Ingrese el titulo del libro: ");
@@ -83,7 +88,9 @@ public class LibroMenu {
         List<Editorial> editoriales = editorialdao.listarEditorial();
         if(editoriales.isEmpty()){
             System.out.println("No hay editoriales para mostrar");
+            return;
         } else {
+            System.out.printf("%-5s %-20s%n", "ID", "Nombre");
             for(Editorial editorial : editoriales){
                 editorial.mostrarInformacion();
             }
@@ -151,6 +158,7 @@ public class LibroMenu {
             System.out.println("No hay editoriales para mostrar");
             return;
         } else {
+            System.out.printf("%-5s %-20s%n", "ID", "Nombre");
             for(Editorial editorial : editoriales){
                 editorial.mostrarInformacion();
             }
@@ -175,6 +183,7 @@ public class LibroMenu {
         if (libros.isEmpty()) {
             System.out.println("No hay libros para mostrar");
         } else {
+            System.out.printf("%-5s %-50s %-20s %-30s %-30s%n", "ID", "Titulo", "ISBN", "Fecha de Publicacion", "Editorial");
             for (Libro libro : libros) {
                 libro.mostrarInformacion();
             }

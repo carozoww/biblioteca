@@ -26,7 +26,8 @@ public class Genero {
     }
 
     public void mostrarInfo(){
-        System.out.println("Id genero: "+this.getId_genero());
-        System.out.println("Nombre: "+this.getNombre());
+        System.out.printf("%-5d %-20s%n",
+                getId_genero(),
+                getNombre());
     }
 }

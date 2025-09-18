@@ -5,8 +5,6 @@ public class LibroGenero {
     private Genero genero;
 
 
-
-
     public LibroGenero(Libro lib, Genero gen){
         this.libro = lib;
         this.genero = gen;
@@ -26,5 +24,9 @@ public class LibroGenero {
 
     public void setGenero(Genero genero) {
         this.genero = genero;
+    }
+
+    public void mostrarInformacion(){
+        System.out.printf("%-20s %-20s%n", getLibro(), getGenero());
     }
 }
