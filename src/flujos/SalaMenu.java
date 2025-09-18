@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -83,6 +84,13 @@ public class SalaMenu {
     }
 
     private void editarSala(Scanner sc) throws SQLException{
+        List<Sala> salas = dao.listarSalas();
+        if (salas.isEmpty()){
+            System.out.println("No hay salas registradas.");
+            return;
+        }
+        listarSalas();
+
         System.out.println("ID a editar: ");
         int idEditar = leerEntero(sc);
 
@@ -131,58 +139,158 @@ public class SalaMenu {
     }
 
     private void gestionarReservas(Scanner sc) throws SQLException {
-        while (true) {
-            System.out.println("\n=== Reservas por Sala ===");
-            System.out.println("1. Agregar reserva a sala");
-            System.out.println("2. Eliminar reserva de sala");
-            System.out.println("3. Listar reservas de un sala");
-            System.out.println("4. Volver");
-            System.out.print("Opción: ");
+        try {
+            while (true) {
+                System.out.println("\n=== Reservas por Sala ===");
+                System.out.println("1. Agregar reserva a sala");
+                System.out.println("2. Finalizar reserva de sala");
+                System.out.println("3. Listar reservas");
+                System.out.println("4. Volver");
+                System.out.print("Opción: ");
 
-            int op = leerEntero(sc);
-            switch (op) {
-                case 1 -> agregarReservaASala(sc);
-                case 2 -> eliminarReservaDeSala(sc);
-                case 3 -> listarReservasDeSala(sc);
-                case 4 -> { return; }
-                default -> System.out.println("Opción inválida.");
+                int op = leerEntero(sc);
+                switch (op) {
+                    case 1 -> agregarReservaASala(sc);
+                    case 2 -> finalizarReserva(sc);
+                    case 3 -> listarReservas(sc);
+                    case 4 -> { return; }
+                    default -> System.out.println("Opción inválida.");
+                }
             }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
-    private void agregarReservaASala(Scanner sc) throws SQLException {
-        this.listarSalas();
-        System.out.println("Sala ID: ");
-        int salaId = leerEntero(sc);
+    private void finalizarReserva(Scanner sc) {
+        try {
+            List<Reserva> reservas = reservaDAO.listarReservasSinFinalizar();
+            if (reservas.isEmpty()){
+                System.out.println("No hay reservas registradas.");
+                return;
+            }
+            listarReservasSinFinalizar(sc);
+            System.out.print("Ingrese ID de la reserva a finalizar: ");
+            int idReserva = leerEntero(sc);
 
-        Sala sala = saladao.buscarSalaPorId(salaId);
-        if(sala == null){
-            System.out.println("No existe sala con ese id");
-            return;
+            reservaDAO.finalizarReserva(idReserva);
+        } catch (Exception e) {
+            System.out.println("Error al finalizar préstamo: " + e.getMessage());
         }
-
-        System.out.println("Usuario ID: ");
-        int userId = leerEntero(sc);
-
-        Lector lectorActual = lectorDAO.buscarPorId(userId);
-        if (lectorActual == null) {
-            System.out.println("No se encontró el lector con ID " + userId);
-            return;
-        }
-
-        System.out.println("Fecha de inicio (YYYY-MM-DD HH:mm:ss): ");
-        String fecha = sc.nextLine().trim();
-        Timestamp fechaInicio = null;
-        if (!fecha.isBlank()) {
-            fechaInicio = Timestamp.valueOf(fecha);
-        }
-
-        System.out.println("Duracion de la reserva (minutos): ");
-        int duracion = leerEntero(sc);
-
-        reservaDAO.agregarReserva(salaId, userId, fechaInicio, duracion);
     }
 
+    private void listarReservasSinFinalizar(Scanner sc){
+        try {
+            List<Reserva> reservas = reservaDAO.listarReservasSinFinalizar();
+            if (reservas.isEmpty()){
+                System.out.println("No hay reservas en curso.");
+                return;
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+            System.out.printf("%-12s %-20s %-20s %-10s %-10s %-10s%n",
+                    "ID Reserva", "Fecha Entrada", "Fecha Fin", "ID Sala", "ID Usuario", "Estado");
+
+            for (Reserva r : reservas) {
+                System.out.printf("%-12d %-20s %-20s %-10d %-10d %-10s%n",
+                        r.getId_Reserva(),
+                        r.getFecha_in().format(formatter),
+                        r.getFecha_fin()!= null ? r.getFecha_fin().format(formatter) : "-",
+                        r.getId_sala(),
+                        r.getId_usuario(),
+                        r.getEstado()
+                );
+            }
+
+        } catch (Exception e){
+            System.out.println("Error al listar reservas: " + e.getMessage());
+        }
+    }
+
+    private void listarLectores() {
+        try {
+            List<Lector> lectores = lectorDAO.listarLectores();
+
+            if (lectores.isEmpty()) {
+                System.out.println("No hay lectores registrados.");
+            } else {
+                System.out.printf("%-5s %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
+                        "ID", "Nombre", "Cédula", "Teléfono", "Dirección",
+                        "Autenticado", "FechaNac", "Membresía", "Correo");
+
+                for (Lector lector : lectores) {
+                    System.out.printf("%-5d %-20s %-15s %-15s %-20s %-12s %-12s %-8s %-25s%n",
+                            lector.getID(),
+                            lector.getNombre(),
+                            lector.getCedula(),
+                            lector.getTelefono(),
+                            lector.getDireccion(),
+                            lector.isAutenticacion(),
+                            lector.getFechaNac(),
+                            lector.isMembresia(),
+                            lector.getCorreo());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al listar lectores: " + e.getMessage());
+        }
+    }
+
+
+    private void listarReservas(Scanner sc){
+        try {
+            List<Reserva> reservas = reservaDAO.listarReservas();
+            if (reservas.isEmpty()){
+                System.out.println("No hay reservas registradas.");
+                return;
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+            System.out.printf("%-12s %-20s %-20s %-10s %-10s %-10s%n",
+                    "ID Reserva", "Fecha Entrada", "Fecha Fin", "ID Sala", "ID Usuario", "Estado");
+
+            for (Reserva r : reservas) {
+                System.out.printf("%-12d %-20s %-20s %-10d %-10d %-10s%n",
+                        r.getId_Reserva(),
+                        r.getFecha_in().format(formatter),
+                        r.getFecha_fin()!= null ? r.getFecha_fin().format(formatter) : "-",
+                        r.getId_sala(),
+                        r.getId_usuario(),
+                        r.getEstado()
+                );
+            }
+
+        } catch (Exception e){
+            System.out.println("Error al listar reservas: " + e.getMessage());
+        }
+    }
+
+    private void agregarReservaASala(Scanner sc){
+        try {
+            List<Sala> salas = dao.listarSalas();
+            if (salas.isEmpty()){
+                System.out.println("No hay salas registradas.");
+                return;
+            }
+            listarSalas();
+            System.out.println("Sala ID: ");
+            int salaId = leerEntero(sc);
+
+            List<Lector> lectores = lectorDAO.listarLectores();
+            if (lectores.isEmpty()){
+                System.out.println("No hay lectores registrados.");
+                return;
+            }
+            listarLectores();
+
+            System.out.println("Usuario ID: ");
+            int userId = leerEntero(sc);
+
+            reservaDAO.agregarReserva(salaId, userId);
+        } catch (Exception e){
+            System.out.println("Error al agregar la reserva: " + e.getMessage());
+        }
+    }
     private void eliminarReservaDeSala(Scanner sc) throws SQLException {
         System.out.print("Reserva ID: ");
         int reservaId = leerEntero(sc);
