@@ -8,188 +8,137 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibroDAO {
-    public void crearLibro(String titulo, String isbn, Date fechaPublicacion, int idEditorial) {
-        String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial,ed_asignada) VALUES (?, ?, ?, ?,TRUE)";
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setString(1, titulo);
-            ps.setString(2, isbn);
-            ps.setDate(3, fechaPublicacion);
-            ps.setInt(4, idEditorial);
-            ps.executeUpdate();
 
-            System.out.println("Libro creado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+    public void crearLibro(String titulo, String isbn, Date fechaPublicacion, int idEditorial) throws SQLException {
+        String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial, ed_asignada) VALUES (?, ?, ?, ?, TRUE)";
+        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+        ps.setString(1, titulo);
+        ps.setString(2, isbn);
+        ps.setDate(3, fechaPublicacion);
+        ps.setInt(4, idEditorial);
+        ps.executeUpdate();
     }
 
-    public void editarLibro(int idLibro, String titulo, String isbn, Date fechaPublicacion, int idEditorial) {
+    public void editarLibro(int idLibro, String titulo, String isbn, Date fechaPublicacion, int idEditorial) throws SQLException {
         String consulta = "UPDATE libro SET titulo = ?, isbn = ?, fecha_publicacion = ?, id_editorial = ? WHERE id_libro = ?";
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setString(1, titulo);
-            ps.setString(2, isbn);
-            ps.setDate(3, fechaPublicacion);
-            ps.setInt(4, idEditorial);
-            ps.setInt(5, idLibro);
-
-            ps.executeUpdate();
-
-            System.out.println("Libro modificado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+        ps.setString(1, titulo);
+        ps.setString(2, isbn);
+        ps.setDate(3, fechaPublicacion);
+        ps.setInt(4, idEditorial);
+        ps.setInt(5, idLibro);
+        ps.executeUpdate();
     }
 
-    public void eliminarLibro(int idLibro) {
+    public void eliminarLibro(int idLibro) throws SQLException {
         String consulta = "DELETE FROM libro WHERE id_libro = ?";
-
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setInt(1, idLibro);
-            ps.executeUpdate();
-
-            System.out.println("Libro eliminado correctamente");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+        ps.setInt(1, idLibro);
+        ps.executeUpdate();
     }
 
-    public List<Libro> listarLibros(){
+    public List<Libro> listarLibros() throws SQLException {
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre " +
+        String consulta = "SELECT l.id_libro, titulo, isbn, fecha_publicacion, l.id_editorial, ed_asignada, e.nombre " +
                 "FROM libro l LEFT JOIN editorial e ON l.id_editorial = e.id_editorial";
+        Statement st = conexion.getInstancia().getConnection().createStatement();
+        ResultSet rs = st.executeQuery(consulta);
 
-        try{
-            Statement st = conexion.getInstancia().getConnection().createStatement();
-            ResultSet rs = st.executeQuery(consulta);
-
-            while(rs.next()){
-                libros.add(new Libro(rs.getInt("id_libro"),
-                        rs.getString("titulo"),
-                        rs.getString("isbn"),
-                        rs.getDate("fecha_publicacion"),
-                        rs.getInt("id_editorial"),
-                        rs.getString("nombre")
-                ));
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        while (rs.next()) {
+            libros.add(new Libro(
+                    rs.getInt("id_libro"),
+                    rs.getString("titulo"),
+                    rs.getString("isbn"),
+                    rs.getDate("fecha_publicacion"),
+                    rs.getInt("id_editorial"),
+                    rs.getString("nombre")
+            ));
         }
         return libros;
     }
 
-    public List<Libro> listarLibrosReservados(){
+    public List<Libro> listarLibrosReservados() throws SQLException {
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
-                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
+        String consulta = "SELECT l.id_libro, titulo, isbn, fecha_publicacion, l.id_editorial, ed_asignada, e.nombre " +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial " +
                 "JOIN prestamo p ON l.id_libro = p.id_libro WHERE estado = 'RESERVADO'";
+        Statement st = conexion.getInstancia().getConnection().createStatement();
+        ResultSet rs = st.executeQuery(consulta);
 
-        try{
-            Statement st = conexion.getInstancia().getConnection().createStatement();
-            ResultSet rs = st.executeQuery(consulta);
-
-            while(rs.next()){
-                libros.add(new Libro(rs.getInt("id_libro"),
-                        rs.getString("titulo"),
-                        rs.getString("isbn"),
-                        rs.getDate("fecha_publicacion"),
-                        rs.getInt("id_editorial"),
-                        rs.getString("nombre")
-                ));
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        while (rs.next()) {
+            libros.add(new Libro(
+                    rs.getInt("id_libro"),
+                    rs.getString("titulo"),
+                    rs.getString("isbn"),
+                    rs.getDate("fecha_publicacion"),
+                    rs.getInt("id_editorial"),
+                    rs.getString("nombre")
+            ));
         }
         return libros;
     }
 
-    public Libro buscarPorId(int idLibro) {
-        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
-                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
-                "WHERE id_libro = ?";
-        try {
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setInt(1, idLibro);
-            ResultSet rs = ps.executeQuery();
+    public Libro buscarPorId(int idLibro) throws SQLException {
+        String consulta = "SELECT l.id_libro, titulo, isbn, fecha_publicacion, l.id_editorial, ed_asignada, e.nombre " +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial WHERE id_libro = ?";
+        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+        ps.setInt(1, idLibro);
+        ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return new Libro(
-                        rs.getInt("id_libro"),
-                        rs.getString("titulo"),
-                        rs.getString("isbn"),
-                        rs.getDate("fecha_publicacion"),
-                        rs.getInt("id_editorial"),
-                        rs.getString("nombre")
-                );
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al buscar libro: " + e.getMessage(), e);
+        if (rs.next()) {
+            return new Libro(
+                    rs.getInt("id_libro"),
+                    rs.getString("titulo"),
+                    rs.getString("isbn"),
+                    rs.getDate("fecha_publicacion"),
+                    rs.getInt("id_editorial"),
+                    rs.getString("nombre")
+            );
         }
         return null;
     }
 
-    public List<Libro> existeISBN(String isbn) {
+    public List<Libro> existeISBN(String isbn) throws SQLException {
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
-                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
-                "WHERE isbn = ?";
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
-            ps.setString(1, isbn);
-            ResultSet rs = ps.executeQuery();
+        String consulta = "SELECT l.id_libro, titulo, isbn, fecha_publicacion, l.id_editorial, ed_asignada, e.nombre " +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial WHERE isbn = ?";
+        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+        ps.setString(1, isbn);
+        ResultSet rs = ps.executeQuery();
 
-            while(rs.next()){
-                libros.add(
-                        new Libro(
-                                rs.getInt("id_libro"),
-                                rs.getString("titulo"),
-                                rs.getString("isbn"),
-                                rs.getDate("fecha_publicacion"),
-                                rs.getInt("id_editorial"),
-                                rs.getString("nombre")
-                        ));
-            }
-
-        }catch(SQLException e){
-            throw new RuntimeException(e);
+        while (rs.next()) {
+            libros.add(new Libro(
+                    rs.getInt("id_libro"),
+                    rs.getString("titulo"),
+                    rs.getString("isbn"),
+                    rs.getDate("fecha_publicacion"),
+                    rs.getInt("id_editorial"),
+                    rs.getString("nombre")
+            ));
         }
         return libros;
     }
 
-    public List<Libro> existeISBNporId(int id_libro, String isbn) {
+    public List<Libro> existeISBNporId(int id_libro, String isbn) throws SQLException {
         List<Libro> libros = new ArrayList<>();
-        String query = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
-                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
-                "WHERE id_libro != ? and isbn = ?";
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
-            ps.setInt(1, id_libro);
-            ps.setString(2, isbn);
-            ResultSet rs = ps.executeQuery();
+        String consulta = "SELECT l.id_libro, titulo, isbn, fecha_publicacion, l.id_editorial, ed_asignada, e.nombre " +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial WHERE id_libro != ? AND isbn = ?";
+        PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+        ps.setInt(1, id_libro);
+        ps.setString(2, isbn);
+        ResultSet rs = ps.executeQuery();
 
-            while(rs.next()){
-                libros.add(
-                        new Libro(
-                                rs.getInt("id_libro"),
-                                rs.getString("titulo"),
-                                rs.getString("isbn"),
-                                rs.getDate("fecha_publicacion"),
-                                rs.getInt("id_editorial"),
-                                rs.getString("nombre")
-                        ));
-            }
-
-        }catch(SQLException e){
-            throw new RuntimeException(e);
+        while (rs.next()) {
+            libros.add(new Libro(
+                    rs.getInt("id_libro"),
+                    rs.getString("titulo"),
+                    rs.getString("isbn"),
+                    rs.getDate("fecha_publicacion"),
+                    rs.getInt("id_editorial"),
+                    rs.getString("nombre")
+            ));
         }
         return libros;
     }
-
-
-
 }
+

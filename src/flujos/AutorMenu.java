@@ -11,12 +11,14 @@ public class AutorMenu {
 
     private final autorDAO autordao;
 
-    public AutorMenu(){ this.autordao = new autorDAO(); }
+    public AutorMenu() {
+        this.autordao = new autorDAO();
+    }
 
-    public void iniciar(Scanner sc) throws SQLException {
-        try{
-            int op;
-            do{
+    public void iniciar(Scanner sc) {
+        int op;
+        do {
+            try {
                 System.out.println("\n=== Gestión de Autores ===");
                 System.out.println("1. Crear autor");
                 System.out.println("2. Listar autores");
@@ -28,17 +30,19 @@ public class AutorMenu {
                 op = leerOpcion(sc);
 
                 switch (op) {
-                    case 1: crearAutor(sc);break;
-                    case 2: mostrarAutor();break;
-                    case 3: modificarAutor(sc);break;
-                    case 4: eliminarAutor(sc);break;
-                    case 5: {return;}
-                    default:System.out.printf("Opcion no valido");
+                    case 1: crearAutor(sc); break;
+                    case 2: mostrarAutor(); break;
+                    case 3: modificarAutor(sc); break;
+                    case 4: eliminarAutor(sc); break;
+                    case 5: return;
+                    default: System.out.println("Opción no válida");
                 }
-            }while (op != 6);
-        }catch (SQLException ex){
-            System.out.println("Error en la base de datos" + ex.getMessage());
-        }
+            } catch (SQLException e) {
+                System.out.println("Error en la base de datos: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+            }
+        } while (true);
     }
 
     private int leerOpcion(Scanner sc) {
@@ -52,51 +56,68 @@ public class AutorMenu {
     }
 
     public void crearAutor(Scanner sc) throws SQLException {
-        System.out.println("Ingrese el nombre del autor");
-        String nombre = sc.next();
+        try {
+            System.out.println("Ingrese el nombre del autor:");
+            String nombre = sc.nextLine();
 
-        System.out.println("Ingrese el apellido del autor");
-        String ape = sc.next();
+            System.out.println("Ingrese el apellido del autor:");
+            String ape = sc.nextLine();
 
-        autorDAO.crearAutor(nombre, ape);
+            autordao.crearAutor(nombre, ape);
+            System.out.println("Autor creado correctamente.");
+        } catch (SQLException e) {
+            throw e;
+        }
     }
 
     public void mostrarAutor() throws SQLException {
-        List<Autor> autores = autorDAO.mostrarAutores();
-        if(autores.isEmpty()){
-            System.out.println("No existen autores registrados en el sistema");
-        }else{
-            for(Autor autor: autores){
-                autor.mostrarInfo();
+        try {
+            List<Autor> autores = autordao.mostrarAutores();
+            if (autores.isEmpty()) {
+                System.out.println("No existen autores registrados en el sistema");
+            } else {
+                for (Autor autor : autores) {
+                    autor.mostrarInfo();
+                    System.out.println("-------------------------------");
+                }
             }
+        } catch (SQLException e) {
+            throw e;
         }
-
     }
 
     public void modificarAutor(Scanner sc) throws SQLException {
         mostrarAutor();
-        System.out.println("Ingrese el id del autor a modificar");
-        int id = sc.nextInt();
+        try {
+            System.out.println("Ingrese el id del autor a modificar:");
+            int id = sc.nextInt();
+            sc.nextLine();
 
-        System.out.println("Ingrese el nuevo nombre del autor");
-        String nombre = sc.next();
+            System.out.println("Ingrese el nuevo nombre del autor:");
+            String nombre = sc.nextLine();
 
-        System.out.println("Ingrese el nuevo apellido del autor");
-        String ape = sc.next();
+            System.out.println("Ingrese el nuevo apellido del autor:");
+            String ape = sc.nextLine();
 
-        autorDAO.modificarAutor(id, nombre, ape);
-
-
+            autordao.modificarAutor(id, nombre, ape);
+            System.out.println("Autor modificado correctamente.");
+        } catch (SQLException e) {
+            throw e;
+        }
     }
 
     public void eliminarAutor(Scanner sc) throws SQLException {
         mostrarAutor();
-        System.out.println("Ingrese el id del autor a eliminar");
-        int id = sc.nextInt();
-        autorDAO.eliminarAutor(id);
+        try {
+            System.out.println("Ingrese el id del autor a eliminar:");
+            int id = sc.nextInt();
+            sc.nextLine();
 
+            autordao.eliminarAutor(id);
+            System.out.println("Autor eliminado correctamente.");
+        } catch (SQLException e) {
+            throw e;
+        }
     }
-
-
-
 }
+

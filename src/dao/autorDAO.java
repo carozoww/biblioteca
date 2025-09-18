@@ -12,77 +12,55 @@ import java.util.List;
 
 public class autorDAO {
 
-
-
-    public static void crearAutor(String nombre, String apellido) throws SQLException {
+    public void crearAutor(String nombre, String apellido) throws SQLException {
         String query = "INSERT INTO autor(nombre,apellido) VALUES (?,?)";
 
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
-            ps.setString(1,nombre);
-            ps.setString(2,apellido);
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
+            ps.setString(1, nombre);
+            ps.setString(2, apellido);
             ps.executeUpdate();
-
-            System.out.println("Autor creado con exito");
-
-
-
-        }catch(Exception e){
-            throw new RuntimeException(e);
+            System.out.println("Autor creado con éxito");
         }
     }
 
-    public static List<Autor> mostrarAutores() throws SQLException{
-        String query1 = "SELECT * FROM autor";
+    public List<Autor> mostrarAutores() throws SQLException {
+        String query = "SELECT * FROM autor";
         List<Autor> listaAutores = new ArrayList<>();
-        try{
-            Statement st =  conexion.getInstancia().getConnection().createStatement();
-            ResultSet rs = st.executeQuery(query1);
 
-            while(rs.next()){
+        try (Statement st = conexion.getInstancia().getConnection().createStatement();
+             ResultSet rs = st.executeQuery(query)) {
+
+            while (rs.next()) {
                 listaAutores.add(
                         new Autor(
                                 rs.getInt("id_autor"),
                                 rs.getString("nombre"),
-                                rs.getString("apellido")));
+                                rs.getString("apellido")
+                        ));
             }
-
-        }catch(SQLException e){
-            throw new RuntimeException(e);
         }
-        return  listaAutores;
+        return listaAutores;
     }
 
-    public static void modificarAutor(int idautor,String nuevoNombre, String nuevoApellido){
-        String queryEd = "UPDATE autor SET nombre = ?, apellido = ? WHERE id_autor = ?";
+    public void modificarAutor(int idAutor, String nuevoNombre, String nuevoApellido) throws SQLException {
+        String query = "UPDATE autor SET nombre = ?, apellido = ? WHERE id_autor = ?";
 
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(queryEd);
-
-            ps.setString(1,nuevoNombre);
-            ps.setString(2,nuevoApellido);
-            ps.setInt(3,idautor);
-
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
+            ps.setString(1, nuevoNombre);
+            ps.setString(2, nuevoApellido);
+            ps.setInt(3, idAutor);
             ps.executeUpdate();
-
-            System.out.println("Autor modificado con exito");
-
-        }catch(SQLException e ){
-            throw new RuntimeException(e);
+            System.out.println("Autor modificado con éxito");
         }
-
     }
 
-    public static void eliminarAutor(int idautor){
+    public void eliminarAutor(int idAutor) throws SQLException {
         String query = "DELETE FROM autor WHERE id_autor = ?";
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
-            ps.setInt(1, idautor);
-            ps.executeUpdate();
 
-            System.out.println("Autor eliminado con exito");
-        }catch(SQLException e){
-            throw new RuntimeException(e);
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
+            ps.setInt(1, idAutor);
+            ps.executeUpdate();
+            System.out.println("Autor eliminado con éxito");
         }
     }
 }

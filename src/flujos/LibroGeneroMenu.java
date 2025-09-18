@@ -130,7 +130,7 @@ public class LibroGeneroMenu {
 
     }
 
-    public void eliminarGeneroDeLibro(Scanner sc){
+    public void eliminarGeneroDeLibro(Scanner sc)throws SQLException{
         System.out.println("Ingrese el id del libro de cual desea eliminar un genero: ");
         listarLibros();
         int id_libro = sc.nextInt();
@@ -141,7 +141,7 @@ public class LibroGeneroMenu {
         librogeneroDAO.eliminarGeneroDeLibro(id_libro, id_genero);
     }
 
-    public void listarLibros() {
+    public void listarLibros() throws SQLException{
         List<Libro> libros = librodao.listarLibros();
 
         if (libros.isEmpty()) {

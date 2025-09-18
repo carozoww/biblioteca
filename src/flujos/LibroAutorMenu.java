@@ -1,7 +1,6 @@
 package flujos;
 
 import dao.LibroAutorDAO;
-import dao.LibroDAO;
 import models.Autor;
 import models.Libro;
 import models.LibroAutor;
@@ -24,31 +23,27 @@ public class LibroAutorMenu {
     }
 
     public void iniciar(Scanner sc) throws SQLException {
-        try{
-            int op;
-            do{
-                System.out.println("\n=== Gestión de autores de libros ===");
-                System.out.println("1. Asignar autor a libro");
-                System.out.println("2. Listar autores asignados a libro");
-                System.out.println("3. Editar autor asignado a libro");
-                System.out.println("4. Eliminar autor asignado a libro");
-                System.out.println("5. Volver");
-                System.out.print("Opción: ");
+        int op;
+        do {
+            System.out.println("\n=== Gestión de autores de libros ===");
+            System.out.println("1. Asignar autor a libro");
+            System.out.println("2. Listar autores asignados a libro");
+            System.out.println("3. Editar autor asignado a libro");
+            System.out.println("4. Eliminar autor asignado a libro");
+            System.out.println("5. Volver");
+            System.out.print("Opción: ");
 
-                op = leerOpcion(sc);
+            op = leerOpcion(sc);
 
-                switch (op) {
-                    case 1: asignarAutorALibro(sc);break;
-                    case 2: mostrarAutoresDeLibros();break;
-                    case 3: modificarAutorDeLibro(sc);break;
-                    case 4: eliminarAutorDeLibro(sc);break;
-                    case 5: {return;}
-                    default:System.out.printf("Opcion no valido");
-                }
-            }while (op != 5);
-        }catch (SQLException ex){
-            System.out.println("Error en la base de datos" + ex.getMessage());
-        }
+            switch (op) {
+                case 1 -> asignarAutorALibro(sc);
+                case 2 -> mostrarAutoresDeLibros();
+                case 3 -> modificarAutorDeLibro(sc);
+                case 4 -> eliminarAutorDeLibro(sc);
+                case 5 -> { return; }
+                default -> System.out.println("Opción no válida.");
+            }
+        } while (op != 5);
     }
 
     private int leerOpcion(Scanner sc) {
@@ -62,78 +57,94 @@ public class LibroAutorMenu {
     }
 
     public void asignarAutorALibro(Scanner sc) throws SQLException {
-        System.out.println("Ingrese el id del libro al cual desea asignar un nuevo autor: ");
-        libromenu.listarLibros();
+        List<Libro> libros = libromenu.obtenerLibros();
+        if(libros.isEmpty()) {
+            System.out.println("No hay libros disponibles.");
+            return;
+        }
+        for(Libro libro : libros) libro.mostrarInformacion();
+
+        System.out.print("Ingrese el id del libro al cual desea asignar un autor: ");
         int id_libro = sc.nextInt();
-        System.out.println("Ingrese un autor: ");
+
         autormenu.mostrarAutor();
+        System.out.print("Ingrese el id del autor a asignar: ");
         int id_autor = sc.nextInt();
 
-        libroautorDAO.asignarAutorALibro(id_autor,id_libro);
-
+        libroautorDAO.asignarAutorALibro(id_autor, id_libro);
     }
 
-    public void mostrarAutoresDeLibros(){
+    public void mostrarAutoresDeLibros() throws SQLException {
         List<LibroAutor> autores = libroautorDAO.listarAutoresDeLibros();
         Map<Integer,String> mapa = new HashMap<>();
         if(autores.isEmpty()){
             System.out.println("No hay autores asignados a libros");
-        }else{
-            for(LibroAutor libroautor : autores){
-                mapa.put(libroautor.getLibro().getIdLibro(),libroautor.getLibro().getTitulo());
+        } else {
+            for(LibroAutor la : autores){
+                mapa.put(la.getLibro().getIdLibro(), la.getLibro().getTitulo());
             }
             for(Map.Entry<Integer, String> entry : mapa.entrySet()){
-                System.out.println("Libro: "+entry.getValue());
-                for(LibroAutor libroautor : autores){
-                    if(entry.getKey() == libroautor.getLibro().getIdLibro()){
-                        libroautor.getAutor().mostrarInfo();
+                System.out.println("Libro: " + entry.getValue());
+                for(LibroAutor la : autores){
+                    if(entry.getKey() == la.getLibro().getIdLibro()){
+                        la.getAutor().mostrarInfo();
                     }
                 }
             }
         }
-
-
     }
 
-    public void mostrarAutoresDeUnLibro(int id_libro){
+    public void mostrarAutoresDeUnLibro(int id_libro) throws SQLException {
         List<Autor> autores = libroautorDAO.listarAutoresDeUnLibro(id_libro);
-
         if(autores.isEmpty()){
             System.out.println("No hay autores asignados a ese libro");
-        }else{
+        } else {
             for(Autor autor: autores){
                 autor.mostrarInfo();
             }
         }
-
     }
 
     public void modificarAutorDeLibro(Scanner sc) throws SQLException {
-        System.out.println("Ingrese el id de un libro que desee modificar su autor: ");
-        libromenu.listarLibros();
+
+        List<Libro> libros = libromenu.obtenerLibros();
+        if(libros.isEmpty()) {
+            System.out.println("No hay libros disponibles.");
+            return;
+        }
+        for(Libro libro : libros) libro.mostrarInformacion();
+
+        System.out.print("Ingrese el id del libro cuyo autor desea modificar: ");
         int id_libro = sc.nextInt();
+
         mostrarAutoresDeUnLibro(id_libro);
-        System.out.println("Ingrese un id de un autor a modificar: ");
+
+        System.out.print("Ingrese el id del autor a reemplazar: ");
         int id_autor_old = sc.nextInt();
+
         autormenu.mostrarAutor();
-        System.out.println("Ingrese un id del nuevo autor del libro: ");
+        System.out.print("Ingrese el id del nuevo autor: ");
         int id_autor_new = sc.nextInt();
 
-        libroautorDAO.modificarAutorDeLibro(id_libro,id_autor_old,id_autor_new);
+        libroautorDAO.modificarAutorDeLibro(id_libro, id_autor_old, id_autor_new);
     }
 
-    public void eliminarAutorDeLibro(Scanner sc){
-        libromenu.listarLibros();
-        System.out.println("Ingrese el id de un libro que desee eliminar un autor: ");
+    public void eliminarAutorDeLibro(Scanner sc) throws SQLException {
+        List<Libro> libros = libromenu.obtenerLibros();
+        if(libros.isEmpty()) {
+            System.out.println("No hay libros disponibles.");
+            return;
+        }
+        for(Libro libro : libros) libro.mostrarInformacion();
+
+        System.out.print("Ingrese el id del libro: ");
         int id_libro = sc.nextInt();
+
         mostrarAutoresDeUnLibro(id_libro);
-        System.out.println("Ingrese un id de un autor a eliminar: ");
+
+        System.out.print("Ingrese el id del autor a eliminar: ");
         int id_autor = sc.nextInt();
 
-        libroautorDAO.eliminarAutorDeLibro(id_libro,id_autor);
+        libroautorDAO.eliminarAutorDeLibro(id_libro, id_autor);
     }
-
-
-
-
 }

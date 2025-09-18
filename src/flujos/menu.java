@@ -131,7 +131,7 @@ public class menu {
     }
 
 
-    public void listarLibrosReservados() {
+    public void listarLibrosReservados() throws SQLException{
         List<Libro> libros = librodao.listarLibrosReservados();
 
         if (libros.isEmpty()) {

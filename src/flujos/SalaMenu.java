@@ -6,9 +6,7 @@ import models.Sala;
 import models.Reserva;
 
 import java.sql.SQLException;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,8 +19,9 @@ public class SalaMenu {
         this.reservaDAO = new ReservaDAO();
     }
 
-    public void iniciar(Scanner sc) throws SQLException{
-        while (true) {
+    public void iniciar(Scanner sc) {
+        int op;
+        do {
             System.out.println("\n=== Gestión de Salas ===");
             System.out.println("1. Registrar Sala");
             System.out.println("2. Listar salas");
@@ -32,72 +31,40 @@ public class SalaMenu {
             System.out.println("6. Volver");
             System.out.print("Opción: ");
 
-            int op = leerEntero(sc);
-            switch (op) {
-                case 1 -> crearSala(sc);
-                case 2 -> listarSalas();
-                case 3 -> editarSala(sc);
-                case 4 -> borrarSala(sc);
-                case 5 -> gestionarReservas(sc);
-                case 6 -> { return; }
-                default -> System.out.println("Opción inválida.");
+            op = leerEntero(sc);
+
+            try {
+                switch (op) {
+                    case 1:
+                        crearSala(sc);
+                        break;
+                    case 2:
+                        listarSalas();
+                        break;
+                    case 3:
+                        editarSala(sc);
+                        break;
+                    case 4:
+                        borrarSala(sc);
+                        break;
+                    case 5:
+                        gestionarReservas(sc);
+                        break;
+                    case 6:
+                        return;
+                    default:
+                        System.out.println("Opción inválida.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Error en la base de datos: " + e.getMessage());
             }
-        }
-    }
 
-    private void crearSala(Scanner sc) throws SQLException{
-
-        System.out.println("Número de sala: ");
-        int numeroSala = leerEntero(sc);
-
-        System.out.println("Ubicacion: ");
-        String ubicacion = sc.nextLine();
-
-        System.out.println("Máximo de Personas: ");
-        int maxPersonas = leerEntero(sc);
-
-        dao.crearSala(numeroSala, ubicacion, maxPersonas);
-
-    }
-
-    private void listarSalas() throws SQLException {
-        List<Sala> salas = dao.listarSalas();
-
-        if (salas.isEmpty()){
-            System.out.println("No hay salas registradas.");
-        }else {
-            for (Sala sala: salas) {
-                sala.mostrarInformacion();
-            }
-        }
-    }
-
-    private void editarSala(Scanner sc) throws SQLException{
-        System.out.println("ID a editar: ");
-        int idEditar = leerEntero(sc);
-
-        System.out.println("Nuevo numero de sala: ");
-        int numeroSala = leerEntero(sc);
-
-        System.out.println("Nueva ubicacion: ");
-        String nuevaUbicacion = sc.nextLine();
-
-        System.out.println("Nuevo Max Personas: ");
-        int nuevaMaxPersonas = leerEntero(sc);
-
-        dao.editarSala(idEditar, numeroSala, nuevaUbicacion, nuevaMaxPersonas);
-    }
-
-    private void borrarSala(Scanner sc) throws SQLException{
-        listarSalas();
-        System.out.println("ID a borrar: ");
-        int idBorrar = leerEntero(sc);
-        dao.borrarSala(idBorrar);
+        } while (op != 6);
     }
 
     private int leerEntero(Scanner sc) {
         while (!sc.hasNextInt()) {
-            System.out.println("Ingrese un número válido: ");
+            System.out.print("Ingrese un número válido: ");
             sc.next();
         }
         int n = sc.nextInt();
@@ -105,28 +72,91 @@ public class SalaMenu {
         return n;
     }
 
-    private void gestionarReservas(Scanner sc) throws SQLException {
-        while (true) {
-            System.out.println("\n=== Reservas por Sala ===");
-            System.out.println("1. Agregar reserva a sala");
-            System.out.println("2. Eliminar reserva de sala");
-            System.out.println("3. Listar reservas de un sala");
-            System.out.println("4. Volver");
-            System.out.print("Opción: ");
+    private void crearSala(Scanner sc) throws SQLException {
+        System.out.println("Número de sala: ");
+        int numeroSala = leerEntero(sc);
 
-            int op = leerEntero(sc);
-            switch (op) {
-                case 1 -> agregarReservaASala(sc);
-                case 2 -> eliminarReservaDeSala(sc);
-                case 3 -> listarReservasDeSala(sc);
-                case 4 -> { return; }
-                default -> System.out.println("Opción inválida.");
+        System.out.println("Ubicación: ");
+        String ubicacion = sc.nextLine();
+
+        System.out.println("Máximo de personas: ");
+        int maxPersonas = leerEntero(sc);
+
+        dao.crearSala(numeroSala, ubicacion, maxPersonas);
+    }
+
+    private void listarSalas() throws SQLException {
+        List<Sala> salas = dao.listarSalas();
+        if (salas.isEmpty()) {
+            System.out.println("No hay salas registradas.");
+        } else {
+            for (Sala sala : salas) {
+                sala.mostrarInformacion();
             }
         }
     }
 
+    private void editarSala(Scanner sc) throws SQLException {
+        System.out.println("ID a editar: ");
+        int idEditar = leerEntero(sc);
+
+        System.out.println("Nuevo número de sala: ");
+        int numeroSala = leerEntero(sc);
+
+        System.out.println("Nueva ubicación: ");
+        String nuevaUbicacion = sc.nextLine();
+
+        System.out.println("Nuevo máximo de personas: ");
+        int nuevaMaxPersonas = leerEntero(sc);
+
+        dao.editarSala(idEditar, numeroSala, nuevaUbicacion, nuevaMaxPersonas);
+    }
+
+    private void borrarSala(Scanner sc) throws SQLException {
+        listarSalas();
+        System.out.println("ID a borrar: ");
+        int idBorrar = leerEntero(sc);
+
+        dao.borrarSala(idBorrar);
+    }
+
+    private void gestionarReservas(Scanner sc) throws SQLException {
+        int op;
+        do {
+            System.out.println("\n=== Reservas por Sala ===");
+            System.out.println("1. Agregar reserva a sala");
+            System.out.println("2. Eliminar reserva de sala");
+            System.out.println("3. Listar reservas de una sala");
+            System.out.println("4. Volver");
+            System.out.print("Opción: ");
+
+            op = leerEntero(sc);
+
+            try {
+                switch (op) {
+                    case 1:
+                        agregarReservaASala(sc);
+                        break;
+                    case 2:
+                        eliminarReservaDeSala(sc);
+                        break;
+                    case 3:
+                        listarReservasDeSala(sc);
+                        break;
+                    case 4:
+                        return;
+                    default:
+                        System.out.println("Opción inválida.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Error en la base de datos: " + e.getMessage());
+            }
+        } while (op != 4);
+    }
+
     private void agregarReservaASala(Scanner sc) throws SQLException {
-        this.listarSalas();
+        listarSalas();
+
         System.out.println("Sala ID: ");
         int salaId = leerEntero(sc);
 
@@ -135,12 +165,9 @@ public class SalaMenu {
 
         System.out.println("Fecha de inicio (YYYY-MM-DD HH:mm:ss): ");
         String fecha = sc.nextLine().trim();
-        Timestamp fechaInicio = null;
-        if (!fecha.isBlank()) {
-            fechaInicio = Timestamp.valueOf(fecha);
-        }
+        Timestamp fechaInicio = fecha.isBlank() ? null : Timestamp.valueOf(fecha);
 
-        System.out.println("Duracion de la reserva (minutos): ");
+        System.out.println("Duración de la reserva (minutos): ");
         int duracion = leerEntero(sc);
 
         reservaDAO.agregarReserva(salaId, userId, fechaInicio, duracion);
@@ -161,7 +188,9 @@ public class SalaMenu {
         if (reservas.isEmpty()) {
             System.out.println("La sala no tiene reservas cargadas.");
         } else {
-            reservas.forEach(Reserva::mostrarInformacion);
+            for (Reserva r : reservas) {
+                r.mostrarInformacion();
+            }
         }
     }
 }

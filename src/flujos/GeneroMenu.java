@@ -10,34 +10,47 @@ import java.util.Scanner;
 public class GeneroMenu {
     private final generoDAO generodao;
 
-    public GeneroMenu(){ this.generodao = new generoDAO();}
+    public GeneroMenu() {
+        this.generodao = new generoDAO();
+    }
 
-    public void iniciar(Scanner sc) throws SQLException {
-        try{
-            int op;
-            do{
-                System.out.println("\n=== Gestión de Autores ===");
-                System.out.println("1. Crear genero");
-                System.out.println("2. Listar generos");
-                System.out.println("3. Editar genero");
-                System.out.println("4. Eliminar genero");
-                System.out.println("5. Volver");
-                System.out.print("Opción: ");
+    public void iniciar(Scanner sc) {
+        int op;
+        do {
+            System.out.println("\n=== Gestión de Géneros ===");
+            System.out.println("1. Crear género");
+            System.out.println("2. Listar géneros");
+            System.out.println("3. Editar género");
+            System.out.println("4. Eliminar género");
+            System.out.println("5. Volver");
+            System.out.print("Opción: ");
 
-                op = leerOpcion(sc);
+            op = leerOpcion(sc);
 
+            try {
                 switch (op) {
-                    case 1: crearGenero(sc);break;
-                    case 2: mostrarGenero();break;
-                    case 3: modificarGenero(sc);break;
-                    case 4: eliminarGenero(sc);break;
-                    case 5: {return;}
-                    default:System.out.printf("Opcion no valido");
+                    case 1:
+                        crearGenero(sc);
+                        break;
+                    case 2:
+                        mostrarGenero();
+                        break;
+                    case 3:
+                        modificarGenero(sc);
+                        break;
+                    case 4:
+                        eliminarGenero(sc);
+                        break;
+                    case 5:
+                        return;
+                    default:
+                        System.out.println("Opción no válida");
                 }
-            }while (op != 5);
-        }catch (SQLException ex){
-            System.out.println("Error en la base de datos" + ex.getMessage());
-        }
+            } catch (SQLException e) {
+                System.out.println("Error en la base de datos: " + e.getMessage());
+            }
+
+        } while (op != 5);
     }
 
     private int leerOpcion(Scanner sc) {
@@ -51,20 +64,17 @@ public class GeneroMenu {
     }
 
     public void crearGenero(Scanner sc) throws SQLException {
-        System.out.println("Ingrese el nombre del nuevo genero");
+        System.out.println("Ingrese el nombre del nuevo género");
         String nombre = sc.next();
-
-        generoDAO.crearGenero(nombre);
-
+        generodao.crearGenero(nombre);
     }
 
-    public void mostrarGenero() throws SQLException{
-        List<Genero> generos = generoDAO.mostrarGeneros();
-
-        if(generos.isEmpty()){
-            System.out.println("No hay generos registrados");
-        }else{
-            for(Genero genero:generos){
+    public void mostrarGenero() throws SQLException {
+        List<Genero> generos = generodao.mostrarGeneros();
+        if (generos.isEmpty()) {
+            System.out.println("No hay géneros registrados");
+        } else {
+            for (Genero genero : generos) {
                 genero.mostrarInfo();
             }
         }
@@ -72,25 +82,17 @@ public class GeneroMenu {
 
     public void modificarGenero(Scanner sc) throws SQLException {
         mostrarGenero();
-
-        System.out.println("Ingrese el id del genero a modificar");
+        System.out.println("Ingrese el id del género a modificar");
         int id = sc.nextInt();
-
-        System.out.println("Ingrese el nuevo nombre del genero");
+        System.out.println("Ingrese el nuevo nombre del género");
         String nombre = sc.next();
-
-        generoDAO.modificarGenero(id, nombre);
-
+        generodao.modificarGenero(id, nombre);
     }
 
     public void eliminarGenero(Scanner sc) throws SQLException {
         mostrarGenero();
-
-        System.out.println("Ingrese el id del genero a eliminar");
+        System.out.println("Ingrese el id del género a eliminar");
         int id = sc.nextInt();
-
-        generoDAO.eliminarGenero(id);
+        generodao.eliminarGenero(id);
     }
-
-
 }

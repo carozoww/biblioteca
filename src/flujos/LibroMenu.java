@@ -7,6 +7,7 @@ import models.Libro;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,17 +22,16 @@ public class LibroMenu {
     }
 
     public void mostrarMenuLibro(Scanner scanner) {
-        try {
-            int opcion = 0;
-            do {
-                System.out.println("\n === Gestion de Libros ===");
+        int opcion = 0;
+        do {
+            try {
+                System.out.println("\n=== Gestión de Libros ===");
                 System.out.println("1. Crear libro");
                 System.out.println("2. Modificar libro");
                 System.out.println("3. Eliminar libro");
                 System.out.println("4. Listar libros");
-                System.out.println("5. Volver al menu principal");
-
-                System.out.println("Ingrese la opcion: ");
+                System.out.println("5. Volver al menú principal");
+                System.out.print("Ingrese la opción: ");
 
                 opcion = scanner.nextInt();
                 scanner.nextLine();
@@ -50,137 +50,166 @@ public class LibroMenu {
                         listarLibros();
                         break;
                     case 5:
-                        {return;}
-                    case 6:
-                        System.exit(0);
-                        break;
+                        return;
                     default:
                         System.out.println("Opción no válida.");
+                        break;
                 }
-            }while (opcion != 6);
-        }catch (SQLException e){
-            System.out.println("Error en la base de datos" + e.getMessage());
-        }
-    }
 
-
-    public void crearLibro(Scanner scanner) throws SQLException {
-        System.out.println("Ingrese el titulo del libro: ");
-        String titulo = scanner.nextLine();
-
-        System.out.println("Ingrese el isbn del libro: ");
-        String isbn = scanner.nextLine();
-
-        List<Libro> libro = librodao.existeISBN(isbn);
-        if(!libro.isEmpty()){
-            System.out.println("Ya existe un libro con ese isbn");
-            return;
-        }
-
-        System.out.println("Ingrese la fecha de publicacion del libro(formato: YYYY-MM-DD): ");
-        Date fechaPublicacion = Date.valueOf(scanner.next());
-
-        List<Editorial> editoriales = editorialdao.listarEditorial();
-        if(editoriales.isEmpty()){
-            System.out.println("No hay editoriales para mostrar");
-        } else {
-            for(Editorial editorial : editoriales){
-                editorial.mostrarInformacion();
+            } catch (InputMismatchException e) {
+                System.out.println("Debe ingresar un número válido.");
+                scanner.nextLine();
+                opcion = 0;
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+                opcion = 0;
             }
-        }
-
-        System.out.println("Ingrese el id de la editorial del libro: ");
-        int idEditorial = scanner.nextInt();
-
-        Editorial editorial = editorialdao.buscarEditorialPorId(idEditorial);
-
-        if(editorial == null){
-            System.out.println("La editorial no existe");
-            return;
-        }
-
-        librodao.crearLibro(titulo, isbn, fechaPublicacion, idEditorial);
+        } while (opcion != 5);
     }
 
-    public void eliminarLibro(Scanner scanner) {
-        listarLibros();
-        System.out.println("\n Ingrese el id del libro a eliminar: ");
-        int idLibro = scanner.nextInt();
+    private void crearLibro(Scanner scanner) {
+        try {
+            System.out.print("Ingrese el título del libro: ");
+            String titulo = scanner.nextLine();
 
-        Libro libro = librodao.buscarPorId(idLibro);
+            System.out.print("Ingrese el ISBN del libro: ");
+            String isbn = scanner.nextLine();
 
-        if(libro == null){
-            System.out.println("Error: no existe un libro con ese id");
-            return;
-        }
-
-        librodao.eliminarLibro(idLibro);
-    }
-
-    public void editarLibro(Scanner scanner) {
-        listarLibros();
-        System.out.println("\n Ingrese el id del libro a modificar: ");
-        int idLibro = scanner.nextInt();
-        scanner.nextLine();
-
-        Libro libro = librodao.buscarPorId(idLibro);
-
-        if(libro == null){
-            System.out.println("Error: no existe un libro con ese id");
-            return;
-        }
-
-        System.out.println("Ingrese el nuevo nombre del libro: ");
-        String nombre = scanner.nextLine();
-
-        System.out.println("Ingrese el nuevo isbn del libro: ");
-        String isbn = scanner.nextLine();
-
-        List<Libro> libro1 = librodao.existeISBNporId(idLibro,isbn);
-        if(!libro1.isEmpty()){
-            System.out.println("Ya existe un libro con ese isbn");
-            return;
-        }
-
-
-        System.out.println("Ingrese la fecha de publicacion del libro(formato: YYYY-MM-DD): ");
-        Date fechaPublicacion = Date.valueOf(scanner.next());
-
-        List<Editorial> editoriales = editorialdao.listarEditorial();
-        if(editoriales.isEmpty()){
-            System.out.println("No hay editoriales para mostrar");
-            return;
-        } else {
-            for(Editorial editorial : editoriales){
-                editorial.mostrarInformacion();
+            if (!librodao.existeISBN(isbn).isEmpty()) {
+                System.out.println("Ya existe un libro con ese ISBN.");
+                return;
             }
+
+            System.out.print("Ingrese la fecha de publicación (YYYY-MM-DD): ");
+            Date fechaPublicacion = Date.valueOf(scanner.nextLine());
+
+            List<Editorial> editoriales = editorialdao.listarEditorial();
+            if (editoriales.isEmpty()) {
+                System.out.println("No hay editoriales para mostrar.");
+                return;
+            }
+            for (Editorial e : editoriales) e.mostrarInformacion();
+
+            System.out.print("Ingrese el id de la editorial del libro: ");
+            int idEditorial = scanner.nextInt();
+            scanner.nextLine();
+
+            Editorial editorial = editorialdao.buscarEditorialPorId(idEditorial);
+            if (editorial == null) {
+                System.out.println("La editorial no existe.");
+                return;
+            }
+
+            librodao.crearLibro(titulo, isbn, fechaPublicacion, idEditorial);
+            System.out.println("Libro creado correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al crear el libro: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Formato de fecha no válido.");
+        } catch (InputMismatchException e) {
+            System.out.println("Debe ingresar un número válido.");
+            scanner.nextLine();
         }
-
-        System.out.println("Ingrese el id de la editorial del libro: ");
-        int idEditorial = scanner.nextInt();
-
-        Editorial editorial = editorialdao.buscarEditorialPorId(idEditorial);
-
-        if(editorial == null){
-            System.out.println("La editorial no existe");
-            return;
-        }
-
-        librodao.editarLibro(idLibro, nombre, isbn, fechaPublicacion, idEditorial);
     }
 
-    public void listarLibros() {
-        List<Libro> libros = librodao.listarLibros();
+    private void eliminarLibro(Scanner scanner) {
+        try {
+            listarLibros();
+            System.out.print("Ingrese el id del libro a eliminar: ");
+            int idLibro = scanner.nextInt();
+            scanner.nextLine();
 
-        if (libros.isEmpty()) {
-            System.out.println("No hay libros para mostrar");
-        } else {
+            Libro libro = librodao.buscarPorId(idLibro);
+            if (libro == null) {
+                System.out.println("No existe un libro con ese id.");
+                return;
+            }
+
+            librodao.eliminarLibro(idLibro);
+            System.out.println("Libro eliminado correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al eliminar el libro: " + e.getMessage());
+        } catch (InputMismatchException e) {
+            System.out.println("Debe ingresar un número válido.");
+            scanner.nextLine();
+        }
+    }
+
+    private void editarLibro(Scanner scanner) {
+        try {
+            listarLibros();
+            System.out.print("Ingrese el id del libro a modificar: ");
+            int idLibro = scanner.nextInt();
+            scanner.nextLine();
+
+            Libro libro = librodao.buscarPorId(idLibro);
+            if (libro == null) {
+                System.out.println("No existe un libro con ese id.");
+                return;
+            }
+
+            System.out.print("Ingrese el nuevo título del libro: ");
+            String titulo = scanner.nextLine();
+
+            System.out.print("Ingrese el nuevo ISBN del libro: ");
+            String isbn = scanner.nextLine();
+
+            if (!librodao.existeISBNporId(idLibro, isbn).isEmpty()) {
+                System.out.println("Ya existe un libro con ese ISBN.");
+                return;
+            }
+
+            System.out.print("Ingrese la fecha de publicación (YYYY-MM-DD): ");
+            Date fechaPublicacion = Date.valueOf(scanner.nextLine());
+
+            List<Editorial> editoriales = editorialdao.listarEditorial();
+            if (editoriales.isEmpty()) {
+                System.out.println("No hay editoriales para mostrar.");
+                return;
+            }
+            for (Editorial e : editoriales) e.mostrarInformacion();
+
+            System.out.print("Ingrese el id de la editorial del libro: ");
+            int idEditorial = scanner.nextInt();
+            scanner.nextLine();
+
+            Editorial editorial = editorialdao.buscarEditorialPorId(idEditorial);
+            if (editorial == null) {
+                System.out.println("La editorial no existe.");
+                return;
+            }
+
+            librodao.editarLibro(idLibro, titulo, isbn, fechaPublicacion, idEditorial);
+            System.out.println("Libro actualizado correctamente.");
+
+        } catch (SQLException e) {
+            System.out.println("Error al editar el libro: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Formato de fecha no válido.");
+        } catch (InputMismatchException e) {
+            System.out.println("Debe ingresar un número válido.");
+            scanner.nextLine();
+        }
+    }
+
+    private void listarLibros() {
+        try {
+            List<Libro> libros = librodao.listarLibros();
+            if (libros.isEmpty()) {
+                System.out.println("No hay libros para mostrar.");
+                return;
+            }
             for (Libro libro : libros) {
                 libro.mostrarInformacion();
             }
+        } catch (SQLException e) {
+            System.out.println("Error al listar libros: " + e.getMessage());
         }
     }
 
+    public List<Libro> obtenerLibros() throws SQLException {
+        return librodao.listarLibros();
+    }
 }
-
-
