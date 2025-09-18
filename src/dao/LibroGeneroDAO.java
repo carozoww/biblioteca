@@ -45,7 +45,8 @@ public class LibroGeneroDAO {
                                 rs.getString("titulo"),
                                 rs.getString("isbn"),
                                 rs.getDate("fecha_publicacion"),
-                                rs.getInt("id_editorial")
+                                rs.getInt("id_editorial"),
+                                rs.getString("nombre")
                         ),
                         new Genero(
                                 rs.getInt("id_genero"),

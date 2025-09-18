@@ -8,13 +8,15 @@ public class Libro {
     private String isbn;
     private Date fechaPublicacion;
     private int idEditorial;
+    private String editorial;
 
-    public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial) {
+    public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial) {
         this.idLibro = idLibro;
         this.titulo = titulo;
         this.isbn = isbn;
         this.fechaPublicacion = fechaPublicacion;
         this.idEditorial = idEditorial;
+        this.editorial = editorial;
     }
     public int getIdLibro() {
         return idLibro;
@@ -38,6 +40,9 @@ public class Libro {
         return fechaPublicacion;
     }
 
+    public String getEditorial() {return editorial;}
+    public void setEditorial(String editorial) {this.editorial = editorial;}
+
     public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
@@ -54,7 +59,11 @@ public class Libro {
         System.out.println("Titulo: " + titulo);
         System.out.println("ISBN: " + isbn);
         System.out.println("Fecha de publicacion: " + fechaPublicacion);
-        System.out.println("Id de la editorial: " + idEditorial);
+        if(getEditorial()==null){
+            System.out.println("Nombre de la editorial: Sin asignar");
+        }else{
+            System.out.println("Nombre de la editorial: " + editorial);
+        }
         System.out.println("\n");
 
     }

@@ -59,7 +59,8 @@ public class LibroDAO {
 
     public List<Libro> listarLibros(){
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT * FROM libro";
+        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre as editorial " +
+                "FROM libro l LEFT JOIN editorial e ON l.id_editorial = e.id_editorial";
 
         try{
             Statement st = conexion.getInstancia().getConnection().createStatement();
@@ -70,7 +71,9 @@ public class LibroDAO {
                         rs.getString("titulo"),
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
-                        rs.getInt("id_editorial")));
+                        rs.getInt("id_editorial"),
+                        rs.getString("editorial")
+                ));
             }
 
         } catch (SQLException e) {
@@ -92,7 +95,9 @@ public class LibroDAO {
                         rs.getString("titulo"),
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
-                        rs.getInt("id_editorial")));
+                        rs.getInt("id_editorial"),
+                        rs.getString("editorial")
+                ));
             }
 
         } catch (SQLException e) {
@@ -114,7 +119,8 @@ public class LibroDAO {
                         rs.getString("titulo"),
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
-                        rs.getInt("id_editorial")
+                        rs.getInt("id_editorial"),
+                        rs.getString("editorial")
                 );
             }
         } catch (SQLException e) {
@@ -138,7 +144,8 @@ public class LibroDAO {
                                 rs.getString("titulo"),
                                 rs.getString("isbn"),
                                 rs.getDate("fecha_publicacion"),
-                                rs.getInt("id_editorial")
+                                rs.getInt("id_editorial"),
+                                rs.getString("editorial")
                         ));
             }
 
@@ -164,7 +171,8 @@ public class LibroDAO {
                                 rs.getString("titulo"),
                                 rs.getString("isbn"),
                                 rs.getDate("fecha_publicacion"),
-                                rs.getInt("id_editorial")
+                                rs.getInt("id_editorial"),
+                                rs.getString("editorial")
                         ));
             }
 

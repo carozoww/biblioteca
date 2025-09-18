@@ -77,7 +77,7 @@ public class LibroMenu {
             return;
         }
 
-        System.out.println("Ingrese la fecha de publicacion del libro: ");
+        System.out.println("Ingrese la fecha de publicacion del libro(formato: YYYY-MM-DD): ");
         Date fechaPublicacion = Date.valueOf(scanner.next());
 
         List<Editorial> editoriales = editorialdao.listarEditorial();
@@ -143,7 +143,7 @@ public class LibroMenu {
         }
 
 
-        System.out.println("Ingrese la fecha de publicacion del libro: ");
+        System.out.println("Ingrese la fecha de publicacion del libro(formato: YYYY-MM-DD): ");
         Date fechaPublicacion = Date.valueOf(scanner.next());
 
         List<Editorial> editoriales = editorialdao.listarEditorial();
