@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LibroDAO {
     public void crearLibro(String titulo, String isbn, Date fechaPublicacion, int idEditorial) {
-        String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial) VALUES (?, ?, ?, ?)";
+        String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial,ed_asignada) VALUES (?, ?, ?, ?,TRUE)";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setString(1, titulo);
@@ -59,7 +59,7 @@ public class LibroDAO {
 
     public List<Libro> listarLibros(){
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre as editorial " +
+        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre " +
                 "FROM libro l LEFT JOIN editorial e ON l.id_editorial = e.id_editorial";
 
         try{
@@ -72,7 +72,7 @@ public class LibroDAO {
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial"),
-                        rs.getString("editorial")
+                        rs.getString("nombre")
                 ));
             }
 
@@ -84,7 +84,9 @@ public class LibroDAO {
 
     public List<Libro> listarLibrosReservados(){
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT * FROM libro, prestamo WHERE estado = 'RESERVADO'";
+        String consulta = "SELECT titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+                "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
+                "JOIN prestamo p ON l.id_libro = p.id_libro WHERE estado = 'RESERVADO'";
 
         try{
             Statement st = conexion.getInstancia().getConnection().createStatement();
@@ -96,7 +98,7 @@ public class LibroDAO {
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial"),
-                        rs.getString("editorial")
+                        rs.getString("nombre")
                 ));
             }
 

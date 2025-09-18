@@ -182,6 +182,23 @@ public class menu {
 
         comentarioDAO.eliminarComentario(id_comentario);
     }
+
+
+
+    public boolean iniciarSesion(Scanner sc){
+        System.out.println("Ingrese correo electronico: ");
+        String correo = sc.nextLine();
+        System.out.println("Ingrese contrasenia: ");
+        String contra = sc.nextLine();
+
+        List<Administrador>listaAdmin =administradorDAO.inicioSesion(correo,contra);
+        if(!listaAdmin.isEmpty()){
+            System.out.println("Inicio de sesion satisfactorio");
+            System.out.println("Bienvenido : " + listaAdmin.get(0).getNombre() +"\n");
+            return true;
+        }else{
+            System.out.println("Correo electronico o contrasenia incorrecta");
+        return false;
+        }
+    }
 }
-
-
