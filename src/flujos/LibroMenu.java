@@ -185,7 +185,7 @@ public class LibroMenu {
         if (libros.isEmpty()) {
             System.out.println("No hay libros para mostrar");
         } else {
-            System.out.printf("%-5s %-50s %-20s %-30s %-30s%n", "ID", "Titulo", "ISBN", "Fecha de Publicacion", "Editorial");
+            System.out.printf("%-5s %-50s %-20s %-30s %-30s %-15s %n", "ID", "Titulo", "ISBN", "Fecha de Publicacion", "Editorial", "Estado-editorial");
             for (Libro libro : libros) {
                 libro.mostrarInformacion();
             }

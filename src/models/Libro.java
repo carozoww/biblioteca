@@ -64,7 +64,7 @@ public class Libro {
         this.idEditorial = idEditorial;
     }
     public void mostrarInformacion(){
-            System.out.printf("%-5d %-50s %-20s %-30s %-30s%n",
+            System.out.printf("%-5d %-50s %-20s %-30s %-30s %-15s %n",
                     getIdLibro(),
                     getTitulo(),
                     getIsbn(),
