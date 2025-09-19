@@ -6,7 +6,6 @@ public class leer {
 
 
     public String leerPalabra(Scanner sc){
-        sc.nextLine();
         String palabra =  sc.nextLine();
         while(palabra.isEmpty() || palabra == " "){
             if(palabra.isEmpty()){
