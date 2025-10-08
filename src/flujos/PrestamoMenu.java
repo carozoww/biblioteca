@@ -37,11 +37,21 @@ public class PrestamoMenu {
             scanner.nextLine();
 
             switch (opcion) {
-                case 1 -> crearPrestamo();
-                case 2 -> finalizarPrestamo();
-                case 3 -> listarPrestamos();
-                case 4 -> System.out.println("Volviendo al menú principal");
-                default -> System.out.println("Opción inválida.");
+                case 1:
+                    crearPrestamo();
+                    break;
+                case 2:
+                    finalizarPrestamo();
+                    break;
+                case 3:
+                    listarPrestamos();
+                    break;
+                case 4:
+                    System.out.println("Volviendo al menú principal");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
             }
 
         } while (opcion != 4);

@@ -43,13 +43,26 @@ public class SalaMenu {
 
             int op = leerEntero(sc);
             switch (op) {
-                case 1 -> crearSala(sc);
-                case 2 -> listarSalas();
-                case 3 -> editarSala(sc);
-                case 4 -> borrarSala(sc);
-                case 5 -> gestionarReservas(sc);
-                case 6 -> { return; }
-                default -> System.out.println("Opción inválida.");
+                case 1:
+                    crearSala(sc);
+                    break;
+                case 2:
+                    listarSalas();
+                    break;
+                case 3:
+                    editarSala(sc);
+                    break;
+                case 4:
+                    borrarSala(sc);
+                    break;
+                case 5:
+                    gestionarReservas(sc);
+                case 6:
+                { return; }
+
+                default:
+                    System.out.println("Opción inválida.");
+                    break;
             }
         }
     }
@@ -150,11 +163,20 @@ public class SalaMenu {
 
                 int op = leerEntero(sc);
                 switch (op) {
-                    case 1 -> agregarReservaASala(sc);
-                    case 2 -> finalizarReserva(sc);
-                    case 3 -> listarReservas(sc);
-                    case 4 -> { return; }
-                    default -> System.out.println("Opción inválida.");
+                    case 1:
+                        agregarReservaASala(sc);
+                        break;
+                    case 2:
+                        finalizarReserva(sc);
+                        break;
+                    case 3:
+                        listarReservas(sc);
+                        break;
+                    case 4:
+                    { return; }
+                    default:
+                        System.out.println("Opción inválida.");
+                        break;
                 }
             }
         } catch (Exception e){
