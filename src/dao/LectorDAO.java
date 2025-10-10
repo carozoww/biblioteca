@@ -121,5 +121,62 @@ public class LectorDAO {
         }
         return lectores;
     }
+
+    public List<Lector> inicioSesion(String correo,String contrasenia){
+        List<Lector> lectores = new ArrayList<>();
+        try{
+            String query = "SELECT * FROM Lector WHERE correo = ? and contrasenia = ?";
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setString(1, correo);
+            ps.setString(2, contrasenia);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                lectores.add(new Lector(
+                        rs.getInt("ID"),
+                        rs.getString("nombre"),
+                        rs.getString("cedula"),
+                        rs.getString("telefono"),
+                        rs.getString("direccion"),
+                        rs.getBoolean("autenticacion"),
+                        rs.getDate("fechaNac")!= null ? rs.getDate("fechaNac").toLocalDate() : null,
+                        rs.getBoolean("membresia"),
+                        rs.getString("correo"),
+                        rs.getString("contrasenia")
+                ));
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return lectores;
+    }
+
+    public List<Lector> existeLector(String cedula){
+        List<Lector> lector = new ArrayList<>();
+        String query = "SELECT * FROM lector WHERE cedula = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setString(1, cedula);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                lector.add(new Lector(
+                        rs.getInt("ID"),
+                        rs.getString("nombre"),
+                        rs.getString("cedula"),
+                        rs.getString("telefono"),
+                        rs.getString("direccion"),
+                        rs.getBoolean("autenticacion"),
+                        rs.getDate("fechaNac")!= null ? rs.getDate("fechaNac").toLocalDate() : null,
+                        rs.getBoolean("membresia"),
+                        rs.getString("correo"),
+                        rs.getString("contrasenia")
+                ));
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return lector;
+    }
 }
 
