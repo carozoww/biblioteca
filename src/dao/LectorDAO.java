@@ -122,12 +122,12 @@ public class LectorDAO {
         return lectores;
     }
 
-    public List<Lector> inicioSesion(String correo,String contrasenia){
+    public List<Lector> inicioSesion(String cedula,String contrasenia){
         List<Lector> lectores = new ArrayList<>();
         try{
-            String query = "SELECT * FROM Lector WHERE correo = ? and contrasenia = ?";
+            String query = "SELECT * FROM Lector WHERE cedula = ? and contrasenia = ?";
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
-            ps.setString(1, correo);
+            ps.setString(1, cedula);
             ps.setString(2, contrasenia);
             ResultSet rs = ps.executeQuery();
 
