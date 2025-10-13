@@ -108,7 +108,7 @@ public class LibroMenu {
             return;
         }
 
-        librodao.crearLibro(titulo, isbn, fechaPublicacion, idEditorial);
+        librodao.crearLibro(titulo, isbn, fechaPublicacion, idEditorial,"",0);
     }
 
     public void eliminarLibro(Scanner scanner) {
@@ -176,7 +176,7 @@ public class LibroMenu {
             return;
         }
 
-        librodao.editarLibro(idLibro, nombre, isbn, fechaPublicacion, idEditorial);
+        librodao.editarLibro(idLibro, nombre, isbn, fechaPublicacion, idEditorial,"",0);
     }
 
     public void listarLibros() {

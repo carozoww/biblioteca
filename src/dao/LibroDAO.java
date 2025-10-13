@@ -8,14 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibroDAO {
-    public void crearLibro(String titulo, String isbn, Date fechaPublicacion, int idEditorial) {
-        String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial,ed_asignada) VALUES (?, ?, ?, ?,TRUE)";
+    public void crearLibro(String titulo, String isbn, Date fechaPublicacion, int idEditorial,String sinopsis, int numpaginas) {
+        String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial,ed_asignada,sinopsis,numpaginas) VALUES (?, ?, ?, ?,TRUE,?,?)";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setString(1, titulo);
             ps.setString(2, isbn);
             ps.setDate(3, fechaPublicacion);
             ps.setInt(4, idEditorial);
+            ps.setString(5, sinopsis);
+            ps.setInt(6, numpaginas);
+
             ps.executeUpdate();
 
             System.out.println("Libro creado correctamente");
@@ -25,8 +28,8 @@ public class LibroDAO {
 
     }
 
-    public void editarLibro(int idLibro, String titulo, String isbn, Date fechaPublicacion, int idEditorial) {
-        String consulta = "UPDATE libro SET titulo = ?, isbn = ?, fecha_publicacion = ?, id_editorial = ? WHERE id_libro = ?";
+    public void editarLibro(int idLibro, String titulo, String isbn, Date fechaPublicacion, int idEditorial,String sinopsis,int numpaginas) {
+        String consulta = "UPDATE libro SET titulo = ?, isbn = ?, fecha_publicacion = ?, id_editorial = ?,sinopsis = ?,numPaginas = ? WHERE id_libro = ?";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setString(1, titulo);
@@ -34,6 +37,8 @@ public class LibroDAO {
             ps.setDate(3, fechaPublicacion);
             ps.setInt(4, idEditorial);
             ps.setInt(5, idLibro);
+            ps.setString(6,sinopsis);
+            ps.setInt(7, numpaginas);
 
             ps.executeUpdate();
 
@@ -72,7 +77,9 @@ public class LibroDAO {
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial"),
-                        rs.getString("nombre")
+                        rs.getString("nombre"),
+                        rs.getString("sinopsis"),
+                        rs.getInt("numpaginas")
                 ));
             }
 
@@ -98,7 +105,9 @@ public class LibroDAO {
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial"),
-                        rs.getString("nombre")
+                        rs.getString("nombre"),
+                        rs.getString("sinopsis"),
+                        rs.getInt("numpaginas")
                 ));
             }
 
@@ -124,7 +133,9 @@ public class LibroDAO {
                         rs.getString("isbn"),
                         rs.getDate("fecha_publicacion"),
                         rs.getInt("id_editorial"),
-                        rs.getString("nombre")
+                        rs.getString("nombre"),
+                        rs.getString("sinopsis"),
+                        rs.getInt("numpaginas")
                 );
             }
         } catch (SQLException e) {
@@ -151,7 +162,9 @@ public class LibroDAO {
                                 rs.getString("isbn"),
                                 rs.getDate("fecha_publicacion"),
                                 rs.getInt("id_editorial"),
-                                rs.getString("nombre")
+                                rs.getString("nombre"),
+                                rs.getString("sinopsis"),
+                                rs.getInt("numpaginas")
                         ));
             }
 
@@ -180,7 +193,9 @@ public class LibroDAO {
                                 rs.getString("isbn"),
                                 rs.getDate("fecha_publicacion"),
                                 rs.getInt("id_editorial"),
-                                rs.getString("nombre")
+                                rs.getString("nombre"),
+                                rs.getString("sinopsis"),
+                                rs.getInt("numpaginas")
                         ));
             }
 
