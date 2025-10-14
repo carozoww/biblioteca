@@ -79,7 +79,7 @@ public class LibroDAO {
                         rs.getInt("id_editorial"),
                         rs.getString("nombre"),
                         rs.getString("sinopsis"),
-                        rs.getInt("numpaginas")
+                        rs.getInt("numPaginas")
                 ));
             }
 
@@ -107,7 +107,7 @@ public class LibroDAO {
                         rs.getInt("id_editorial"),
                         rs.getString("nombre"),
                         rs.getString("sinopsis"),
-                        rs.getInt("numpaginas")
+                        rs.getInt("numPaginas")
                 ));
             }
 
@@ -135,7 +135,7 @@ public class LibroDAO {
                         rs.getInt("id_editorial"),
                         rs.getString("nombre"),
                         rs.getString("sinopsis"),
-                        rs.getInt("numpaginas")
+                        rs.getInt("numPaginas")
                 );
             }
         } catch (SQLException e) {
@@ -164,7 +164,7 @@ public class LibroDAO {
                                 rs.getInt("id_editorial"),
                                 rs.getString("nombre"),
                                 rs.getString("sinopsis"),
-                                rs.getInt("numpaginas")
+                                rs.getInt("numPaginas")
                         ));
             }
 
@@ -195,7 +195,7 @@ public class LibroDAO {
                                 rs.getInt("id_editorial"),
                                 rs.getString("nombre"),
                                 rs.getString("sinopsis"),
-                                rs.getInt("numpaginas")
+                                rs.getInt("numPaginas")
                         ));
             }
 
