@@ -64,7 +64,7 @@ public class LibroDAO {
 
     public List<Libro> listarLibros(){
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre,sinopsis,numPaginas " +
+        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion, sinopsis, numPaginas,e.id_editorial,e.nombre " +
                 "FROM libro l LEFT JOIN editorial e ON l.id_editorial = e.id_editorial";
 
         try{
