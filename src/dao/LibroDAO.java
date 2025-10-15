@@ -64,7 +64,7 @@ public class LibroDAO {
 
     public List<Libro> listarLibros(){
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre " +
+        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre,sinopsis,numPaginas " +
                 "FROM libro l LEFT JOIN editorial e ON l.id_editorial = e.id_editorial";
 
         try{
@@ -91,7 +91,7 @@ public class LibroDAO {
 
     public List<Libro> listarLibrosReservados(){
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+        String consulta = "SELECT titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre,sinopsis,numPaginas\n" +
                 "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
                 "JOIN prestamo p ON l.id_libro = p.id_libro WHERE estado = 'RESERVADO'";
 
@@ -118,7 +118,7 @@ public class LibroDAO {
     }
 
     public Libro buscarPorId(int idLibro) {
-        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre,sinopsis,numPaginas\n" +
                 "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
                 "WHERE id_libro = ?";
         try {
@@ -146,7 +146,7 @@ public class LibroDAO {
 
     public List<Libro> existeISBN(String isbn) {
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre,sinopsis,numPaginas\n" +
                 "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
                 "WHERE isbn = ?";
         try{
@@ -176,7 +176,7 @@ public class LibroDAO {
 
     public List<Libro> existeISBNporId(int id_libro, String isbn) {
         List<Libro> libros = new ArrayList<>();
-        String query = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+        String query = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre,sinopsis,numPaginas\n" +
                 "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
                 "WHERE id_libro != ? and isbn = ?";
         try{

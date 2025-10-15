@@ -32,7 +32,7 @@ public class LibroGeneroDAO {
 
     public List<LibroGenero> listarGenerosDeLibros(){
         List<LibroGenero> lista = new ArrayList<>();
-        String query = "Select l.id_libro,titulo,fecha_publicacion,isbn,id_editorial, g.id_genero,nombre from libro l JOIN libro_genero lg\n" +
+        String query = "Select l.id_libro,titulo,fecha_publicacion,isbn,id_editorial, g.id_genero,nombre,sinopsis,numPaginas from libro l JOIN libro_genero lg\n" +
                 "on l.id_libro = lg.id_libro JOIN genero g ON lg.id_genero = g.id_genero;";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);

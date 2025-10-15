@@ -31,7 +31,7 @@ public class LibroAutorDAO {
 
     public List<LibroAutor> listarAutoresDeLibros(){
         List<LibroAutor>  libroAutores = new ArrayList<>();
-        String query = "SELECT l.id_libro,titulo,fecha_publicacion,isbn,id_editorial,a.id_autor,a.nombre,a.apellido \n" +
+        String query = "SELECT l.id_libro,titulo,fecha_publicacion,isbn,id_editorial,a.id_autor,a.nombre,a.apellido,sinopsis,numPaginas  \n" +
                 "FROM libro l JOIN libro_autor la ON l.id_libro = la.id_libro\n" +
                 "JOIN autor a ON la.id_autor = a.id_autor";
         try{
