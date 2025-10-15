@@ -1,8 +1,8 @@
 package models;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class Reserva {
     private int id_Reserva;
@@ -30,6 +30,10 @@ public class Reserva {
     public LocalDateTime getFecha_in() {return fecha_in;}
 
     public LocalDateTime getFecha_fin() {return fecha_fin;}
+
+    public LocalTime getHora_in() {return fecha_in.toLocalTime();}
+
+    public LocalTime getHora_fin() {return fecha_fin.toLocalTime();}
 
     public int getId_sala() {return id_sala;}
 

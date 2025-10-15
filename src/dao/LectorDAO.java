@@ -63,6 +63,29 @@ public class LectorDAO {
         return null;
     }
 
+    public Lector buscarPorCedula(int cedula) {
+        String consulta = "SELECT * FROM lector WHERE cedula = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
+            ps.setInt(1, cedula);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Lector(
+                        rs.getInt("ID"),
+                        rs.getString("nombre"),
+                        rs.getString("cedula"),
+                        rs.getString("telefono"),
+                        rs.getString("direccion"),
+                        rs.getString("autenticacion"),
+                        rs.getString("fechaNac"),
+                        rs.getString("membresia"),
+                        rs.getString("correo")
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar lector: " + e.getMessage(), e);
+        }
+        return null;
+    }
 
 
     public void editarLector(int ID, String nombre, String cedula, String telefono, String direccion, boolean autenticacion, LocalDate fechaNac, boolean membresia, String correo, String contrasenia) {

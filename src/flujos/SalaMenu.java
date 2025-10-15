@@ -289,7 +289,7 @@ public class SalaMenu {
 
     private void agregarReservaASala(Scanner sc){
         try {
-            List<Sala> salas = dao.listarSalas();
+          /*   List<Sala> salas = dao.listarSalas();
             if (salas.isEmpty()){
                 System.out.println("No hay salas registradas.");
                 return;
@@ -308,7 +308,7 @@ public class SalaMenu {
             System.out.println("Usuario ID: ");
             int userId = leerEntero(sc);
 
-            reservaDAO.agregarReserva(salaId, userId);
+            reservaDAO.agregarReserva(salaId, userId);*/
         } catch (Exception e){
             System.out.println("Error al agregar la reserva: " + e.getMessage());
         }
