@@ -59,7 +59,7 @@ public class LibroDAO {
 
     public List<Libro> listarLibros(){
         List<Libro> libros = new ArrayList<>();
-        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion,e.id_editorial,e.nombre " +
+        String consulta = "SELECT id_libro,titulo,isbn,fecha_publicacion, sinopsis, numPaginas,e.id_editorial,e.nombre " +
                 "FROM libro l LEFT JOIN editorial e ON l.id_editorial = e.id_editorial";
 
         try{
@@ -109,7 +109,7 @@ public class LibroDAO {
     }
 
     public Libro buscarPorId(int idLibro) {
-        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,l.id_editorial,ed_asignada,e.nombre\n" +
+        String consulta = "SELECT l.id_libro,titulo,isbn,fecha_publicacion, sinopsis, numPaginas,l.id_editorial,ed_asignada,e.nombre\n" +
                 "FROM libro l JOIN editorial e ON l.id_editorial = e.id_editorial\n" +
                 "WHERE id_libro = ?";
         try {
