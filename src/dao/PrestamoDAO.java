@@ -47,6 +47,20 @@ public class PrestamoDAO {
         return null;
     }
 
+    public boolean prestamoActivo(int idLibro) {
+        String consulta = "SELECT COUNT(*) FROM prestamo WHERE id_libro = ? AND estado IN ('PENDIENTE','RESERVADO')";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
+            ps.setInt(1, idLibro);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al verificar préstamo activo: " + e.getMessage(), e);
+    }
+    }
+
 
     public List<Prestamo> listarPrestamos() {
         List<Prestamo> prestamos = new ArrayList<>();
@@ -95,6 +109,30 @@ public class PrestamoDAO {
             throw new RuntimeException("Error al verificar disponibilidad: " + e.getMessage(), e);
         }
         return false;
+    }
+
+    public List<Prestamo> listarPrestamosPorLector(int idLector) {
+        List<Prestamo> prestamos = new ArrayList<>();
+        String consulta = "SELECT * FROM prestamo WHERE id_lector = ?";
+        try {
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setInt(1, idLector);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Prestamo p = new Prestamo(
+                        rs.getInt("id_prestamo"),
+                        rs.getInt("id_libro"),
+                        rs.getInt("id_lector"),
+                        rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
+                        rs.getTimestamp("fecha_devolucion") != null ? rs.getTimestamp("fecha_devolucion").toLocalDateTime() : null,
+                        rs.getString("estado")
+                );
+                prestamos.add(p);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar préstamos del usuario: " + e.getMessage(), e);
+        }
+        return prestamos;
     }
 
 
