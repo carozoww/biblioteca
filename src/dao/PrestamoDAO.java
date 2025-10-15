@@ -47,7 +47,7 @@ public class PrestamoDAO {
         return null;
     }
 
-    public boolean prestamoActivo(int idLibro) {
+    public boolean prestamoActivoPorLibro(int idLibro) {
         String consulta = "SELECT COUNT(*) FROM prestamo WHERE id_libro = ? AND estado IN ('PENDIENTE','RESERVADO')";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
             ps.setInt(1, idLibro);
@@ -59,6 +59,20 @@ public class PrestamoDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Error al verificar préstamo activo: " + e.getMessage(), e);
     }
+    }
+
+    public boolean prestamoActivoPorLector(int idLector) {
+        String consulta = "SELECT COUNT(*) FROM prestamo WHERE id_lector = ? AND estado IN ('PENDIENTE','RESERVADO')";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
+            ps.setInt(1, idLector);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) { // si hay resultado (siempre habra una fila con COUNT)
+                return rs.getInt(1) > 0; // devuelve true si hay 1 o más prestamos activos
+            }
+            return false;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al verificar préstamo activo: " + e.getMessage(), e);
+        }
     }
 
 
@@ -118,7 +132,7 @@ public class PrestamoDAO {
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
             ps.setInt(1, idLector);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 Prestamo p = new Prestamo(
                         rs.getInt("id_prestamo"),
                         rs.getInt("id_libro"),
