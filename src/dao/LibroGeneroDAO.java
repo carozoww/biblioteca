@@ -118,4 +118,34 @@ public class LibroGeneroDAO {
         }
     }
 
+    public List<Libro> obtenerLibrosPorGenero(String genero){
+        List<Libro> librosGenero = new ArrayList<>();
+        String query = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,id_editorial,ed_asignada,sinopsis,numPaginas\n" +
+                "FROM libro l JOIN libro_genero lg ON l.id_libro = lg.id_libro JOIN genero g ON lg.id_genero = g.id_genero\n" +
+                "WHERE g.nombre = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setString(1, genero);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                librosGenero.add(
+                        new Libro(
+                                rs.getInt("id_libro"),
+                                rs.getString("titulo"),
+                                rs.getString("isbn"),
+                                rs.getDate("fecha_publicacion"),
+                                rs.getInt("id_editorial"),
+                                rs.getString("ed_asignada"),
+                                rs.getString("sinopsis"),
+                                rs.getInt("numPaginas")
+                ));
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return librosGenero;
+    }
+
 }
