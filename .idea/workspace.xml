@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b0f5ccc-b027-4027-811e-c0a7685b4097" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/ops4j_pax_jdbc_mysql.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/password4j.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/biblioteca_v1.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/db.properties" beforeDir="false" afterPath="$PROJECT_DIR$/resources/db.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/basedatos/conexion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/basedatos/conexion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/flujos/PrestamoMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/flujos/PrestamoMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/flujos/SalaMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/flujos/SalaMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/biblioteca.iml" beforeDir="false" afterPath="$PROJECT_DIR$/biblioteca.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/Libro.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Libro.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +16,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="prueba/usuario" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
@@ -40,6 +37,7 @@
     "Application.Main.executor": "Debug",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
@@ -54,11 +52,25 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="biblioteca_v1" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
-        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
       </set>
     </attachedChunks>
   </component>
@@ -71,6 +83,7 @@
       <updated>1759709813282</updated>
       <workItem from="1759709814838" duration="116000" />
       <workItem from="1759939043547" duration="1127000" />
+      <workItem from="1760624644433" duration="525000" />
     </task>
     <servers />
   </component>

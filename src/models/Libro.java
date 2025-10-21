@@ -25,6 +25,15 @@ public class Libro {
         this.numpaginas = numpaginas;
 
     }
+    public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion, int idEditorial, String editorial) {
+        this.idLibro = idLibro;
+        this.titulo = titulo;
+        this.isbn = isbn;
+        this.fechaPublicacion = fechaPublicacion;
+        this.idEditorial = idEditorial;
+        this.editorial = editorial;
+        this.estado_asignacion = true;
+    }
     public int getIdLibro() {
         return idLibro;
     }
