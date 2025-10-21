@@ -58,7 +58,7 @@ public class EditorialDAO {
             throw new RuntimeException(e);
         }
     }
-    public List<Editorial> listarEditorial() {
+    public static List<Editorial> listarEditorial() {
         List<Editorial> editoriales = new ArrayList<>();
         String consulta = "SELECT  * FROM editorial";
 
@@ -105,6 +105,32 @@ public class EditorialDAO {
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Libro> listarLibroEditorial(int id_editorial) {
+        List<Libro> libros = new ArrayList<>();
+        String query = "SELECT * FROM libro WHERE id_editorial = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1, id_editorial);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                libros.add(
+                        new Libro(
+                                rs.getInt("id_libro"),
+                                rs.getString("titulo"),
+                                rs.getString("isbn"),
+                                rs.getDate("fecha_publicacion"),
+                                rs.getInt("id_editorial"),
+                                rs.getString("ed_asignada"),
+                                rs.getString("sinopsis"),
+                                rs.getInt("numPaginas")
+                ));
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return libros;
     }
 
 }

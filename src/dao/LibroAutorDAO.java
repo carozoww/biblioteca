@@ -122,5 +122,37 @@ public class LibroAutorDAO {
         }
     }
 
+    public List<Libro> listarLibroPorAutor(int id_autor){
+        List<Libro>  librosAutor = new ArrayList<>();
+        String query = "SELECT l.id_libro,titulo,isbn,fecha_publicacion,id_editorial,ed_asignada,sinopsis,numPaginas\n" +
+                "FROM libro l JOIN libro_autor la ON l.id_libro = la.id_libro JOIN autor a ON la.id_autor = a.id_autor\n" +
+                "WHERE a.id_autor = ?";
+
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1,id_autor);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                librosAutor.add(
+                        new Libro(
+                                rs.getInt("id_libro"),
+                                rs.getString("titulo"),
+                                rs.getString("isbn"),
+                                rs.getDate("fecha_publicacion"),
+                                rs.getInt("id_editorial"),
+                                rs.getString("ed_asignada"),
+                                rs.getString("sinopsis"),
+                                rs.getInt("numPaginas")
+                        ));
+            }
+
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return librosAutor;
+    }
+
 
 }
