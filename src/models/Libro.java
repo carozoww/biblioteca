@@ -12,6 +12,7 @@ public class Libro {
     private Boolean estado_asignacion;
     private String sinopsis;
     private int numpaginas;
+    private String nombreAutor;
 
     public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas) {
         this.idLibro = idLibro;
@@ -34,6 +35,20 @@ public class Libro {
         this.editorial = editorial;
         this.estado_asignacion = true;
     }
+
+    public Libro(int idLibro,String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas,String nombreAutor){
+        this.idLibro = idLibro;
+        this.titulo = titulo;
+        this.isbn = isbn;
+        this.fechaPublicacion = fechaPublicacion;
+        this.idEditorial = idEditorial;
+        this.editorial = editorial;
+        this.estado_asignacion = true;
+        this.sinopsis = sinopsis;
+        this.numpaginas = numpaginas;
+        this.nombreAutor = nombreAutor;
+    }
+
     public int getIdLibro() {
         return idLibro;
     }

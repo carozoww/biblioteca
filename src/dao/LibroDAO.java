@@ -206,4 +206,39 @@ public class LibroDAO {
     }
 
 
+    public List<Libro> listarLibrosCompleto(){
+        List<Libro> libros = new ArrayList<>();
+        String query ="SELECT l.id_libro,l.titulo,l.isbn,l.fecha_publicacion,l.sinopsis,l.numPaginas,e.id_editorial,e.nombre as editorial_nombre,\n" +
+                "GROUP_CONCAT(CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ', ') as autores\n" +
+                "FROM libro l \n" +
+                "LEFT JOIN editorial e ON l.id_editorial = e.id_editorial \n" +
+                "LEFT JOIN libro_autor la ON l.id_libro = la.id_libro\n" +
+                "LEFT JOIN autor a ON la.id_autor = a.id_autor\n" +
+                "GROUP BY l.id_libro, l.titulo, l.isbn, l.fecha_publicacion, l.sinopsis, l.numPaginas, e.id_editorial, e.nombre";
+        try{
+            Statement st = conexion.getInstancia().getConnection().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                libros.add(new Libro(
+                        rs.getInt("id_libro"),
+                        rs.getString("titulo"),
+                        rs.getString("isbn"),
+                        rs.getDate("fecha_publicacion"),
+                        rs.getInt("id_editorial"),
+                        rs.getString("editorial_nombre"),
+                        rs.getString("sinopsis"),
+                        rs.getInt("numPaginas"),
+                        rs.getString("autores")
+
+
+                        ));
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return libros;
+    }
+
+
 }
