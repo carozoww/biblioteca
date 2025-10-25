@@ -163,4 +163,20 @@ public class AdministradorDAO {
         }
         return administrador;
     }
+
+    public int obtenerUltimaID(){
+        String consulta = "SELECT max(ID) FROM administrador";
+        int id = 0;
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                id = rs.getInt(1);
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return id;
+    }
 }
