@@ -13,6 +13,7 @@ public class Libro {
     private String sinopsis;
     private int numpaginas;
     private String nombreAutor;
+    private String imagen_url;
 
     public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas) {
         this.idLibro = idLibro;
@@ -27,7 +28,7 @@ public class Libro {
 
     }
 
-    public Libro(int idLibro,String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas,String nombreAutor){
+    public Libro(int idLibro,String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas,String nombreAutor,String imagen_url) {
         this.idLibro = idLibro;
         this.titulo = titulo;
         this.isbn = isbn;
@@ -38,6 +39,7 @@ public class Libro {
         this.sinopsis = sinopsis;
         this.numpaginas = numpaginas;
         this.nombreAutor = nombreAutor;
+        this.imagen_url = imagen_url;
     }
 
     public int getIdLibro() {
