@@ -139,4 +139,44 @@ public class AdministradorDAO {
         return null;
     }
 
+    public Administrador existeAdmin(String correo){
+        String consulta = "SELECT * FROM administrador WHERE correo = ?";
+        Administrador administrador = null;
+
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setString(1,correo);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                administrador = new Administrador(
+                        rs.getInt("ID"),
+                        rs.getString("nombre"),
+                        rs.getString("correo"),
+                        rs.getDate("fechaNac"),
+                        rs.getString("contrasenia")
+                );
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return administrador;
+    }
+
+    public int obtenerUltimaID(){
+        String consulta = "SELECT max(ID) FROM administrador";
+        int id = 0;
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                id = rs.getInt(1);
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return id;
+    }
 }

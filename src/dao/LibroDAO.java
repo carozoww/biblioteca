@@ -208,13 +208,13 @@ public class LibroDAO {
 
     public List<Libro> listarLibrosCompleto(){
         List<Libro> libros = new ArrayList<>();
-        String query ="SELECT l.id_libro,l.titulo,l.isbn,l.fecha_publicacion,l.sinopsis,l.numPaginas,e.id_editorial,e.nombre as editorial_nombre,\n" +
-                "GROUP_CONCAT(CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ', ') as autores\n" +
-                "FROM libro l \n" +
-                "LEFT JOIN editorial e ON l.id_editorial = e.id_editorial \n" +
-                "LEFT JOIN libro_autor la ON l.id_libro = la.id_libro\n" +
-                "LEFT JOIN autor a ON la.id_autor = a.id_autor\n" +
-                "GROUP BY l.id_libro, l.titulo, l.isbn, l.fecha_publicacion, l.sinopsis, l.numPaginas, e.id_editorial, e.nombre";
+        String query ="SELECT l.id_libro,l.titulo,l.isbn,l.fecha_publicacion,l.sinopsis,l.numPaginas,e.id_editorial,imagen_url,e.nombre as editorial_nombre,\n" +
+                "                GROUP_CONCAT(CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ', ') as autores\n" +
+                "                FROM libro l\n" +
+                "                LEFT JOIN editorial e ON l.id_editorial = e.id_editorial \n" +
+                "                LEFT JOIN libro_autor la ON l.id_libro = la.id_libro\n" +
+                "                LEFT JOIN autor a ON la.id_autor = a.id_autor\n" +
+                "                GROUP BY l.id_libro, l.titulo, l.isbn, l.fecha_publicacion, l.sinopsis, l.numPaginas, e.id_editorial, e.nombre;";
         try{
             Statement st = conexion.getInstancia().getConnection().createStatement();
             ResultSet rs = st.executeQuery(query);
@@ -228,7 +228,8 @@ public class LibroDAO {
                         rs.getString("editorial_nombre"),
                         rs.getString("sinopsis"),
                         rs.getInt("numPaginas"),
-                        rs.getString("autores")
+                        rs.getString("autores"),
+                        rs.getString("imagen_url")
 
 
                         ));
@@ -238,6 +239,27 @@ public class LibroDAO {
             throw new RuntimeException(e);
         }
         return libros;
+    }
+
+    public void crearLibroConImagen(String titulo, String isbn, Date fechaPublicacion, int idEditorial,String sinopsis, int numpaginas,String imagen_url) {
+        String consulta = "INSERT INTO libro (titulo, isbn, fecha_publicacion, id_editorial,ed_asignada,sinopsis,numpaginas,imagen_url) VALUES (?, ?, ?, ?,TRUE,?,?,?)";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setString(1, titulo);
+            ps.setString(2, isbn);
+            ps.setDate(3, fechaPublicacion);
+            ps.setInt(4, idEditorial);
+            ps.setString(5, sinopsis);
+            ps.setInt(6, numpaginas);
+            ps.setString(7, imagen_url);
+
+            ps.executeUpdate();
+
+            System.out.println("Libro creado correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 
