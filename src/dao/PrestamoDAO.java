@@ -111,6 +111,18 @@ public class PrestamoDAO {
         }
     }
 
+    public void cancelarPrestamo(int idPrestamo, LocalDateTime fechaDevolucion) {
+        String sql = "UPDATE prestamo SET fecha_devolucion = ?, estado = 'CANCELADO' WHERE id_prestamo = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
+            ps.setTimestamp(1, Timestamp.valueOf(fechaDevolucion));
+            ps.setInt(2, idPrestamo);
+            ps.executeUpdate();
+            System.out.println("Préstamo cancelado correctamente.");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al cancelar préstamo: " + e.getMessage(), e);
+        }
+    }
+
     public boolean isLibroDisponible(int idLibro) {
         String consulta = "SELECT COUNT(*) AS total FROM prestamo WHERE id_libro = ? AND estado != 'DISPONIBLE'";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
