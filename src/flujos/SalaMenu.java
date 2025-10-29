@@ -78,7 +78,10 @@ public class SalaMenu {
         System.out.println("Máximo de Personas: ");
         int maxPersonas = leerEntero(sc);
 
-        dao.crearSala(numeroSala, ubicacion, maxPersonas);
+        System.out.println("URL Imagen: ");
+        String imagen = instancia.leerPalabra(sc);
+
+        dao.crearSala(numeroSala, ubicacion, maxPersonas,imagen);
 
     }
 
@@ -123,7 +126,10 @@ public class SalaMenu {
         System.out.println("Nuevo Max Personas: ");
         int nuevaMaxPersonas = leerEntero(sc);
 
-        dao.editarSala(idEditar, numeroSala, nuevaUbicacion, nuevaMaxPersonas);
+        System.out.println("Nueva Imagen: ");
+        String nuevaImagen = instancia.leerPalabra(sc);
+
+        dao.editarSala(idEditar, numeroSala, nuevaUbicacion, nuevaMaxPersonas,nuevaImagen);
     }
 
     private void borrarSala(Scanner sc) throws SQLException{
