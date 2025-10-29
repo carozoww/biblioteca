@@ -29,10 +29,28 @@ public class ReservaDAO {
         }
     }
 
+    public void editarReserva(int reservaId, int salaId, int userId, LocalDateTime fecha_in, LocalDateTime fecha_fin, String estado) throws SQLException {
+        String sql = "UPDATE reserva SET id_sala = ?, id_lector = ?, fecha_in = ?, fecha_fin = ?, estado = ? WHERE id_reserva = ? ";
+        Timestamp fechaInicio = Timestamp.valueOf(fecha_in);
+        Timestamp fechaFin = Timestamp.valueOf(fecha_fin);
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
+            ps.setInt(1, salaId);
+            ps.setInt(2, userId);
+            ps.setTimestamp(3, fechaInicio);
+            ps.setTimestamp(4, fechaFin);
+            ps.setString(5, estado);
+            ps.setInt(6, reservaId);
+            ps.executeUpdate();
+            int filas = ps.executeUpdate();
+            if (filas > 0) System.out.println("Sala actualizada.");
+            else System.out.println("Sala no encontrada");
+        }
+    }
+
     public void finalizarReserva(int reservaId) {
         String sql = "UPDATE reserva SET fecha_fin = ?, estado = ? WHERE id_reserva = ? AND estado = 'RESERVADA'";
         Timestamp fechaInicio = new Timestamp(System.currentTimeMillis());
-        String estado = "DISPONIBLE";
+        String estado = "CONFIRMADA";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
             ps.setTimestamp(1, fechaInicio);
             ps.setString(2, estado);
@@ -62,7 +80,7 @@ public class ReservaDAO {
     public void finalizarReservaPorLector(int lectorId) {
         String sql = "UPDATE reserva SET fecha_fin = ?, estado = ? WHERE id_lector = ? AND estado = 'RESERVADA'";
         Timestamp fechaInicio = new Timestamp(System.currentTimeMillis());
-        String estado = "DISPONIBLE";
+        String estado = "CONFIRMADA";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
             ps.setTimestamp(1, fechaInicio);
             ps.setString(2, estado);
