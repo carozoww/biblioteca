@@ -26,6 +26,17 @@ public class PrestamoDAO {
         }
     }
 
+    public void eliminarPrestamo(int id) {
+        String sql = "DELETE FROM prestamo WHERE id_prestamo = ?";
+        try(PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            System.out.println("Préstamo eliminado correctamente.");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Prestamo buscarPorId(int idPrestamo) {
         String consulta = "SELECT * FROM prestamo WHERE id_prestamo = ?";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
@@ -58,11 +69,11 @@ public class PrestamoDAO {
             return false;
         } catch (SQLException e) {
             throw new RuntimeException("Error al verificar préstamo activo: " + e.getMessage(), e);
-    }
+        }
     }
 
     public boolean prestamoActivoPorLector(int idLector) {
-        String consulta = "SELECT COUNT(*) FROM prestamo WHERE id_lector = ? AND estado IN ('PENDIENTE','RESERVADO')";
+        String consulta = "SELECT COUNT(*) FROM prestamo WHERE id_lector = ? AND estado IN ('PENDIENTE','RESERVADO', 'ACEPTADO')";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
             ps.setInt(1, idLector);
             ResultSet rs = ps.executeQuery();
@@ -123,6 +134,29 @@ public class PrestamoDAO {
         }
     }
 
+    public List<Prestamo> listarPrestamosPendientes() {
+        List<Prestamo> prestamos = new ArrayList<>();
+        String consulta = "SELECT * FROM prestamo WHERE estado = 'PENDIENTE'";
+        try (Statement st = conexion.getInstancia().getConnection().createStatement();
+             ResultSet rs = st.executeQuery(consulta)) {
+
+            while (rs.next()) {
+                Prestamo p = new Prestamo(
+                        rs.getInt("id_prestamo"),
+                        rs.getInt("id_libro"),
+                        rs.getInt("id_lector"),
+                        rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
+                        rs.getTimestamp("fecha_devolucion") != null ? rs.getTimestamp("fecha_devolucion").toLocalDateTime() : null,
+                        rs.getString("estado")
+                );
+                prestamos.add(p);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar préstamos: " + e.getMessage(), e);
+        }
+        return prestamos;
+    }
+
     public boolean isLibroDisponible(int idLibro) {
         String consulta = "SELECT COUNT(*) AS total FROM prestamo WHERE id_libro = ? AND estado != 'DISPONIBLE'";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
@@ -161,6 +195,27 @@ public class PrestamoDAO {
         return prestamos;
     }
 
+    public void aceptarPrestamo(int idPrestamo) {
+        String sql = "UPDATE prestamo SET estado = 'RESERVADO' WHERE id_prestamo = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
+            ps.setInt(1, idPrestamo);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al aceptar préstamo: " + e.getMessage(), e);
+        }
+    }
+
+    public void rechazarPrestamo(int idPrestamo) {
+        String sql = "UPDATE prestamo SET estado = 'RECHAZADO' WHERE id_prestamo = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
+            ps.setInt(1, idPrestamo);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al rechazar préstamo: " + e.getMessage(), e);
+        }
+    }
 
 }
 
