@@ -148,4 +148,18 @@ public class LibroGeneroDAO {
         return librosGenero;
     }
 
+    public void eliminarGenerosDeLibro(int id_libro){
+        String queryDel = "DELETE FROM libro_genero WHERE id_libro = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(queryDel);
+            ps.setInt(1,id_libro);
+            ps.executeUpdate();
+
+            System.out.println("Generos de libro eliminado correctamente!!!! ");
+
+        }catch(SQLException e){
+            new RuntimeException(e);
+        }
+    }
+
 }

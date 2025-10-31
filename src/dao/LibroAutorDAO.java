@@ -155,4 +155,19 @@ public class LibroAutorDAO {
     }
 
 
+    public void eliminarAutoresDeLibro(int id_libro){
+        String queryDel = "DELETE FROM libro_autor WHERE id_libro = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(queryDel);
+            ps.setInt(1,id_libro);
+            ps.executeUpdate();
+
+            System.out.println("Autores de libro eliminado correctamente");
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
