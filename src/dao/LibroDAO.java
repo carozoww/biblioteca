@@ -48,6 +48,27 @@ public class LibroDAO {
         }
     }
 
+    public void EditarLibroActualizado(String titulo, String isbn, Date fechaPublicacion, int idEditorial,String sinopsis,int numpaginas,String imagen_url,int id_libro){
+        String consulta = "UPDATE libro SET titulo = ?, isbn = ?, fecha_publicacion = ?, id_editorial = ?,sinopsis = ?,numPaginas = ? WHERE id_libro = ?";
+
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setString(1, titulo);
+            ps.setString(2, isbn);
+            ps.setDate(3, fechaPublicacion);
+            ps.setInt(4, idEditorial);
+            ps.setString(5,sinopsis);
+            ps.setInt(6, numpaginas);
+            ps.setInt(7, id_libro);
+
+            ps.executeUpdate();
+
+            System.out.println("Libro modificado correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void eliminarLibro(int idLibro) {
         String consulta = "DELETE FROM libro WHERE id_libro = ?";
 
