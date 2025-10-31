@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class SugerenciaDAO {
 
     public void crearSugerencia(String contenido, int id_lector){
-        String query = "INSERT INTO sugerencia VALUES(?,?)";
+        String query = "INSERT INTO sugerencia(contenido,id_lector) VALUES(?,?)";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
             ps.setString(1, contenido);
