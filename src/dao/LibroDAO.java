@@ -264,7 +264,13 @@ public class LibroDAO {
 
     public Libro buscarLibroPorID(int id_libro){
         Libro lib = null;
-        String query = "SELECT * FROM libro WHERE id_libro = ?";
+        String query = "SELECT l.id_libro,l.titulo,l.isbn,l.fecha_publicacion,l.sinopsis,l.numPaginas,e.id_editorial,imagen_url,e.nombre as editorial_nombre,\n" +
+                "                GROUP_CONCAT(CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ', ') as autores\n" +
+                "                FROM libro l\n" +
+                "                LEFT JOIN editorial e ON l.id_editorial = e.id_editorial \n" +
+                "                LEFT JOIN libro_autor la ON l.id_libro = la.id_libro\n" +
+                "                LEFT JOIN autor a ON la.id_autor = a.id_autor WHERE l.id_libro = ?  \n" +
+                "                GROUP BY l.id_libro, l.titulo, l.isbn, l.fecha_publicacion, l.sinopsis, l.numPaginas, e.id_editorial, e.nombre";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
             ps.setInt(1,id_libro);
