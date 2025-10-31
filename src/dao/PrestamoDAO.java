@@ -122,18 +122,6 @@ public class PrestamoDAO {
         }
     }
 
-    public void cancelarPrestamo(int idPrestamo, LocalDateTime fechaDevolucion) {
-        String sql = "UPDATE prestamo SET fecha_devolucion = ?, estado = 'CANCELADO' WHERE id_prestamo = ?";
-        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
-            ps.setTimestamp(1, Timestamp.valueOf(fechaDevolucion));
-            ps.setInt(2, idPrestamo);
-            ps.executeUpdate();
-            System.out.println("Préstamo cancelado correctamente.");
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al cancelar préstamo: " + e.getMessage(), e);
-        }
-    }
-
     public List<Prestamo> listarPrestamosPendientes() {
         List<Prestamo> prestamos = new ArrayList<>();
         String consulta = "SELECT * FROM prestamo WHERE estado = 'PENDIENTE'";
@@ -195,25 +183,15 @@ public class PrestamoDAO {
         return prestamos;
     }
 
-    public void aceptarPrestamo(int idPrestamo) {
-        String sql = "UPDATE prestamo SET estado = 'RESERVADO' WHERE id_prestamo = ?";
+    public void confirmarPrestamo(int idPrestamo) {
+        String sql = "UPDATE prestamo SET estado = 'CONFIRMADO' WHERE id_prestamo = ?";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
             ps.setInt(1, idPrestamo);
             ps.executeUpdate();
+            System.out.println("Préstamo confirmado correctamente");
         } catch (SQLException e) {
-            throw new RuntimeException("Error al aceptar préstamo: " + e.getMessage(), e);
-        }
-    }
-
-    public void rechazarPrestamo(int idPrestamo) {
-        String sql = "UPDATE prestamo SET estado = 'RECHAZADO' WHERE id_prestamo = ?";
-        try{
-            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
-            ps.setInt(1, idPrestamo);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al rechazar préstamo: " + e.getMessage(), e);
+            throw new RuntimeException("Error al confirmar préstamo: " + e.getMessage(), e);
         }
     }
 
