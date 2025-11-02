@@ -319,5 +319,21 @@ public class LibroDAO {
         return lib;
     }
 
+    public int obtenerId(){
+        int id_libro = 0;
+        String query = "SELECT max(id_libro) from libro";
+        try{
+            Statement st = conexion.getInstancia().getConnection().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                id_libro = rs.getInt("id_libro");
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return id_libro;
+    }
+
 
 }
