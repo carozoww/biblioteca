@@ -326,7 +326,7 @@ public class LibroDAO {
             Statement st = conexion.getInstancia().getConnection().createStatement();
             ResultSet rs = st.executeQuery(query);
             while(rs.next()){
-                id_libro = rs.getInt("id_libro");
+                id_libro = rs.getInt(1);
             }
 
         }catch(SQLException e){
@@ -334,6 +334,8 @@ public class LibroDAO {
         }
         return id_libro;
     }
+
+
 
 
 }
