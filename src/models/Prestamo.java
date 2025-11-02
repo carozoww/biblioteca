@@ -8,21 +8,23 @@ public class Prestamo {
     private int idLector;
     private LocalDateTime fechaPrestamo;
     private LocalDateTime fechaDevolucion;
+    private LocalDateTime fechaDevolucionEsperada;
     private String estado; // "DISPONIBLE", "RESERVADO", "NO_DISPONIBLE"
 
-    public Prestamo(int idLibro, int idLector, LocalDateTime fechaPrestamo, String estado) {
+    public Prestamo(int idLibro, int idLector, LocalDateTime fechaPrestamo, LocalDateTime fechaDevolucionEsperada, String estado) {
         this.idLibro = idLibro;
         this.idLector = idLector;
         this.fechaPrestamo = fechaPrestamo;
         this.estado = estado;
     }
 
-    public Prestamo(int idPrestamo, int idLibro, int idLector, LocalDateTime fechaPrestamo, LocalDateTime fechaDevolucion, String estado) {
+    public Prestamo(int idPrestamo, int idLibro, int idLector, LocalDateTime fechaPrestamo, LocalDateTime fechaDevolucion, LocalDateTime fechaDevolucionEsperada, String estado) {
         this.idPrestamo = idPrestamo;
         this.idLibro = idLibro;
         this.idLector = idLector;
         this.fechaPrestamo = fechaPrestamo;
         this.fechaDevolucion = fechaDevolucion;
+        this.fechaDevolucionEsperada = fechaDevolucionEsperada;
         this.estado = estado;
     }
 
@@ -60,6 +62,13 @@ public class Prestamo {
     public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
+    public LocalDateTime getFechaDevolucionEsperada() {
+        return fechaDevolucionEsperada;
+    }
+    public void setFechaDevolucionEsperada(LocalDateTime fechaDevolucionEsperada) {
+        this.fechaDevolucionEsperada = fechaDevolucionEsperada;
+    }
+
     public void setEstado(String estado) {
         this.estado = estado;
     }
