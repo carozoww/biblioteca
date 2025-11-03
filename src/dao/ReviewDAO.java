@@ -1,6 +1,7 @@
 package dao;
 
 import basedatos.conexion;
+import models.Libro;
 import models.Review;
 
 import java.sql.*;
@@ -186,6 +187,42 @@ public class ReviewDAO {
         }
         return 0;
     }
+
+
+    public Review existeReviewDeLibro(int id_libro){
+        Review review = null;
+        String query = "SELECT r.id_review, r.id_libro, r.id_lector, r.valoracion, r.resenia, r.fecha, \n" +
+                "l.nombre AS nombreLector, b.titulo AS nombreLibro, \n" +
+                "(SELECT COUNT(*) FROM review_like rl WHERE rl.id_review = r.id_review) AS likes \n" +
+                "FROM review r JOIN lector l ON r.id_lector = l.ID \n" +
+                "JOIN libro b ON r.id_libro = b.id_libro \n" +
+                "WHERE r.id_libro = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1, id_libro);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                review = new Review(
+                                rs.getInt("id_review"),
+                                rs.getInt("id_libro"),
+                                rs.getInt("id_lector"),
+                                rs.getInt("valoracion"),
+                                rs.getString("resenia"),
+                                rs.getTimestamp("fecha"),
+                                rs.getString("nombreLector"),
+                                rs.getString("nombreLibro")
+
+                );
+                review.setLikes(rs.getInt("likes"));
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return review;
+    }
+
+
 
 
 }

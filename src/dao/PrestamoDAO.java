@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PrestamoDAO {
 
-    public void crearPrestamo(int idLector, int idLibro, LocalDateTime fechaPrestamo, String estado) {
+    public void crearPrestamo(int idLector, int idLibro, LocalDateTime fechaPrestamo,String estado) {
         String consulta = "INSERT INTO prestamo (id_libro, id_lector, fecha_prestamo, estado) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
@@ -48,7 +48,8 @@ public class PrestamoDAO {
                         rs.getInt("id_lector"),
                         rs.getInt("id_libro"),
                         rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
-                        rs.getTimestamp("fecha_devolucion") != null ? rs.getTimestamp("fecha_devolucion").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_real") != null ? rs.getTimestamp("fecha_devolucion_real").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_esperada") != null ? rs.getTimestamp("fecha_devolucion_esperada").toLocalDateTime() : null,
                         rs.getString("estado")
                 );
             }
@@ -99,7 +100,8 @@ public class PrestamoDAO {
                         rs.getInt("id_libro"),
                         rs.getInt("id_lector"),
                         rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
-                        rs.getTimestamp("fecha_devolucion") != null ? rs.getTimestamp("fecha_devolucion").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_real") != null ? rs.getTimestamp("fecha_devolucion_real").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_esperada") != null ? rs.getTimestamp("fecha_devolucion_esperada").toLocalDateTime() : null,
                         rs.getString("estado")
                 );
                 prestamos.add(p);
@@ -111,7 +113,7 @@ public class PrestamoDAO {
     }
 
     public void finalizarPrestamo(int idPrestamo, LocalDateTime fechaDevolucion) {
-        String sql = "UPDATE prestamo SET fecha_devolucion = ?, estado = 'DISPONIBLE' WHERE id_prestamo = ?";
+        String sql = "UPDATE prestamo SET fecha_devolucion_real = ?, estado = 'DISPONIBLE' WHERE id_prestamo = ?";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
             ps.setTimestamp(1, Timestamp.valueOf(fechaDevolucion));
             ps.setInt(2, idPrestamo);
@@ -119,18 +121,6 @@ public class PrestamoDAO {
             System.out.println("Préstamo finalizado correctamente.");
         } catch (SQLException e) {
             throw new RuntimeException("Error al finalizar préstamo: " + e.getMessage(), e);
-        }
-    }
-
-    public void cancelarPrestamo(int idPrestamo, LocalDateTime fechaDevolucion) {
-        String sql = "UPDATE prestamo SET fecha_devolucion = ?, estado = 'CANCELADO' WHERE id_prestamo = ?";
-        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
-            ps.setTimestamp(1, Timestamp.valueOf(fechaDevolucion));
-            ps.setInt(2, idPrestamo);
-            ps.executeUpdate();
-            System.out.println("Préstamo cancelado correctamente.");
-        } catch (SQLException e) {
-            throw new RuntimeException("Error al cancelar préstamo: " + e.getMessage(), e);
         }
     }
 
@@ -146,7 +136,8 @@ public class PrestamoDAO {
                         rs.getInt("id_libro"),
                         rs.getInt("id_lector"),
                         rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
-                        rs.getTimestamp("fecha_devolucion") != null ? rs.getTimestamp("fecha_devolucion").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_real") != null ? rs.getTimestamp("fecha_devolucion_real").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_esperada") != null ? rs.getTimestamp("fecha_devolucion_esperada").toLocalDateTime() : null,
                         rs.getString("estado")
                 );
                 prestamos.add(p);
@@ -184,7 +175,8 @@ public class PrestamoDAO {
                         rs.getInt("id_libro"),
                         rs.getInt("id_lector"),
                         rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
-                        rs.getTimestamp("fecha_devolucion") != null ? rs.getTimestamp("fecha_devolucion").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_real") != null ? rs.getTimestamp("fecha_devolucion_real").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_esperada") != null ? rs.getTimestamp("fecha_devolucion_esperada").toLocalDateTime() : null,
                         rs.getString("estado")
                 );
                 prestamos.add(p);
@@ -195,27 +187,69 @@ public class PrestamoDAO {
         return prestamos;
     }
 
-    public void aceptarPrestamo(int idPrestamo) {
-        String sql = "UPDATE prestamo SET estado = 'RESERVADO' WHERE id_prestamo = ?";
+    public void confirmarPrestamo(int idPrestamo) {
+        String sql = "UPDATE prestamo SET estado = 'CONFIRMADO' WHERE id_prestamo = ?";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
             ps.setInt(1, idPrestamo);
             ps.executeUpdate();
+            System.out.println("Préstamo confirmado correctamente");
         } catch (SQLException e) {
-            throw new RuntimeException("Error al aceptar préstamo: " + e.getMessage(), e);
+            throw new RuntimeException("Error al confirmar préstamo: " + e.getMessage(), e);
         }
     }
 
-    public void rechazarPrestamo(int idPrestamo) {
-        String sql = "UPDATE prestamo SET estado = 'RECHAZADO' WHERE id_prestamo = ?";
+    public void marcarPrestamoComoReservado(int idPrestamo, LocalDateTime fechaDevolucionEsperada) {
+        String sql = "UPDATE prestamo SET fecha_devolucion_esperada = ?, estado = 'RESERVADO' WHERE id_prestamo = ?";
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
-            ps.setInt(1, idPrestamo);
+            ps.setTimestamp(1, Timestamp.valueOf(fechaDevolucionEsperada));
+            ps.setInt(2, idPrestamo);
             ps.executeUpdate();
+            System.out.println("Préstamo reservado correctamente");
         } catch (SQLException e) {
-            throw new RuntimeException("Error al rechazar préstamo: " + e.getMessage(), e);
+            throw new RuntimeException("Error al reservar préstamo: " + e.getMessage(), e);
         }
     }
+
+    public void prestamoFinalizado(int idPrestamo, LocalDateTime fechaDevolucionReal) {
+        String sql = "UPDATE prestamo SET fecha_devolucion_real = ?, estado = 'FINALIZADO' WHERE id_prestamo = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
+            ps.setTimestamp(1, Timestamp.valueOf(fechaDevolucionReal));
+            ps.setInt(2, idPrestamo);
+            ps.executeUpdate();
+            System.out.println("Préstamo finalizado correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al finalizar préstamo: " + e.getMessage(), e);
+        }
+    }
+
+    public List<Prestamo> existenPrestamosDeLibro(int idLibro) {
+        List<Prestamo> prestamos = new ArrayList<>();
+        String consulta = "SELECT * FROM prestamo WHERE id_libro = ? AND estado IN ('PENDIENTE','RESERVADO','CONFIRMADO','FINALIZADO');";
+        try {
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setInt(1, idLibro);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Prestamo p = new Prestamo(
+                        rs.getInt("id_prestamo"),
+                        rs.getInt("id_libro"),
+                        rs.getInt("id_lector"),
+                        rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
+                        rs.getTimestamp("fecha_devolucion_real") != null ? rs.getTimestamp("fecha_devolucion_real").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_esperada") != null ? rs.getTimestamp("fecha_devolucion_esperada").toLocalDateTime() : null,
+                        rs.getString("estado")
+                );
+                prestamos.add(p);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar préstamos del usuario: " + e.getMessage(), e);
+        }
+        return prestamos;
+    }
+
 
 }
 

@@ -48,6 +48,28 @@ public class LibroDAO {
         }
     }
 
+    public void EditarLibroActualizado(String titulo, String isbn, Date fechaPublicacion, int idEditorial,String sinopsis,int numpaginas,String imagen_url,int id_libro){
+        String consulta = "UPDATE libro SET titulo = ?, isbn = ?, fecha_publicacion = ?, id_editorial = ?,sinopsis = ?,numPaginas = ?, imagen_url = ? WHERE id_libro = ?";
+
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setString(1, titulo);
+            ps.setString(2, isbn);
+            ps.setDate(3, fechaPublicacion);
+            ps.setInt(4, idEditorial);
+            ps.setString(5,sinopsis);
+            ps.setInt(6, numpaginas);
+            ps.setString(7, imagen_url);
+            ps.setInt(8, id_libro);
+
+            ps.executeUpdate();
+
+            System.out.println("Libro modificado correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void eliminarLibro(int idLibro) {
         String consulta = "DELETE FROM libro WHERE id_libro = ?";
 
@@ -261,6 +283,59 @@ public class LibroDAO {
         }
 
     }
+
+    public Libro buscarLibroPorID(int id_libro){
+        Libro lib = null;
+        String query = "SELECT l.id_libro,l.titulo,l.isbn,l.fecha_publicacion,l.sinopsis,l.numPaginas,e.id_editorial,imagen_url,e.nombre as editorial_nombre,\n" +
+                "                GROUP_CONCAT(CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ', ') as autores\n" +
+                "                FROM libro l\n" +
+                "                LEFT JOIN editorial e ON l.id_editorial = e.id_editorial \n" +
+                "                LEFT JOIN libro_autor la ON l.id_libro = la.id_libro\n" +
+                "                LEFT JOIN autor a ON la.id_autor = a.id_autor WHERE l.id_libro = ?  \n" +
+                "                GROUP BY l.id_libro, l.titulo, l.isbn, l.fecha_publicacion, l.sinopsis, l.numPaginas, e.id_editorial, e.nombre";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1,id_libro);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                lib = new Libro(
+                        rs.getInt("id_libro"),
+                        rs.getString("titulo"),
+                        rs.getString("isbn"),
+                        rs.getDate("fecha_publicacion"),
+                        rs.getInt("id_editorial"),
+                        rs.getString("editorial_nombre"),
+                        rs.getString("sinopsis"),
+                        rs.getInt("numPaginas"),
+                        rs.getString("autores"),
+                        rs.getString("imagen_url")
+                );
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return lib;
+    }
+
+    public int obtenerId(){
+        int id_libro = 0;
+        String query = "SELECT max(id_libro) from libro";
+        try{
+            Statement st = conexion.getInstancia().getConnection().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                id_libro = rs.getInt(1);
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return id_libro;
+    }
+
+
 
 
 }

@@ -107,6 +107,14 @@ public class Libro {
         this.numpaginas = numpaginas;
     }
 
+    public String getImagen_url() {
+        return imagen_url;
+    }
+
+    public void setImagen_url(String imagen_url) {
+        this.imagen_url = imagen_url;
+    }
+
     public void setIdEditorial(int idEditorial) {
         this.idEditorial = idEditorial;
     }
