@@ -89,4 +89,25 @@ public class generoDAO {
         }
         return null;
     }
+
+    public List<Genero> obtenerGenerosResenias(int id_lector){
+        List<Genero> generos = new ArrayList<>();
+        String query = "SELECT g.id_genero, g.nombre FROM review r LEFT JOIN libro l ON r.id_libro = l.id_libro\n" +
+                "LEFT JOIN libro_genero lg ON l.id_libro = lg.id_libro LEFT JOIN genero g ON lg.id_genero = g.id_genero\n" +
+                "WHERE r.id_lector = ? and r.valoracion >= 3 GROUP BY g.id_genero,g.nombre";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1,id_lector);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                generos.add(new Genero(rs.getInt("id_genero"),rs.getString("nombre")));
+            }
+
+        }catch(SQLException e ){
+            throw new RuntimeException(e);
+        }
+        return generos;
+
+    }
 }

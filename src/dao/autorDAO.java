@@ -103,4 +103,28 @@ public class autorDAO {
         return null;
     }
 
+    public List<Autor> ObtenerAutoresResenias(int id_lector){
+        List<Autor> autores = new ArrayList<>();
+        String consulta = "SELECT a.id_autor,a.nombre,a.apellido FROM review r LEFT JOIN libro l ON r.id_libro = l.id_libro\n" +
+                "LEFT JOIN libro_autor la ON l.id_libro = la.id_libro LEFT JOIN autor a ON la.id_autor = la.id_autor\n" +
+                "WHERE r.id_lector = ? and r.valoracion >= 3 GROUP BY a.id_autor,a.nombre,a.apellido;";
+        try{
+            PreparedStatement ps =  conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setInt(1, id_lector);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                autores.add(
+                        new Autor(
+                                rs.getInt("id_autor"),
+                                rs.getString("nombre"),
+                                rs.getString("apellido")));
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return autores;
+    }
+
 }
