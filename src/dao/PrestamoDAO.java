@@ -74,7 +74,7 @@ public class PrestamoDAO {
     }
 
     public boolean prestamoActivoPorLector(int idLector) {
-        String consulta = "SELECT COUNT(*) FROM prestamo WHERE id_lector = ? AND estado IN ('PENDIENTE','RESERVADO', 'ACEPTADO')";
+        String consulta = "SELECT COUNT(*) FROM prestamo WHERE id_lector = ? AND estado IN ('PENDIENTE','RESERVADO', 'CONFIRMADO')";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
             ps.setInt(1, idLector);
             ResultSet rs = ps.executeQuery();
