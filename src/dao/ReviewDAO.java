@@ -222,6 +222,7 @@ public class ReviewDAO {
         return review;
     }
 
+
     public boolean eliminarReview(int idReview) {
         String query = "DELETE FROM review WHERE id_review = ?";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
@@ -233,6 +234,26 @@ public class ReviewDAO {
         }
     }
 
+
+    public int obtenerNumReseniasPositivas(int id_lector){
+        int num = 0;
+        String query = "SELECT COUNT(*) FROM review where id_lector = ? and valoracion >= 3";
+
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1, id_lector);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                num = rs.getInt(1);
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return num;
+    }
+    
 
 
 

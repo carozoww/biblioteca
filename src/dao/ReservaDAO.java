@@ -158,6 +158,17 @@ public class ReservaDAO {
         return lista;
     }
 
+    public boolean existeReservaParaSala(int salaId) {
+        String sql = "SELECT * FROM reserva r WHERE r.id_sala = ? LIMIT 1";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
+            ps.setInt(1, salaId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next(); //devuelve true si tiene una fila
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar reservas: " + e.getMessage(), e);
+        }
+    }
 
 
     public Reserva listarReservaActivaDelLector(int idLector) {
