@@ -335,6 +335,46 @@ public class LibroDAO {
         return id_libro;
     }
 
+    public List<Libro> obtenerLibrosRecomendados(String autores,String generos){
+        List<Libro> libros = new ArrayList<>();
+        String query = "SELECT l.id_libro,l.titulo,l.isbn,l.fecha_publicacion,l.sinopsis,l.numPaginas,e.id_editorial,imagen_url," +
+                "e.nombre as editorial_nombre, GROUP_CONCAT(CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ', ') as autores\n" +
+                "FROM libro l LEFT JOIN editorial e ON l.id_editorial = e.id_editorial \n" +
+                "LEFT JOIN libro_autor la ON l.id_libro = la.id_libro LEFT JOIN autor a ON la.id_autor = a.id_autor\n" +
+                "LEFT JOIN libro_genero lg ON l.id_libro = lg.id_libro LEFT JOIN genero g ON lg.id_genero = g.id_genero\n" +
+                "WHERE FIND_IN_SET(a.id_autor, ?) > 0 OR FIND_IN_SET(g.id_genero, ?) > 0\n" +
+                "GROUP BY l.id_libro, l.titulo, l.isbn, l.fecha_publicacion, l.sinopsis, l.numPaginas, e.id_editorial, e.nombre";
+
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setString(1,autores);
+            ps.setString(2,generos);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                libros.add(new Libro(
+                        rs.getInt("id_libro"),
+                        rs.getString("titulo"),
+                        rs.getString("isbn"),
+                        rs.getDate("fecha_publicacion"),
+                        rs.getInt("id_editorial"),
+                        rs.getString("editorial_nombre"),
+                        rs.getString("sinopsis"),
+                        rs.getInt("numPaginas"),
+                        rs.getString("autores"),
+                        rs.getString("imagen_url")
+
+
+                ));
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return libros;
+    }
+
+
+
 
 
 

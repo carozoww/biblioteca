@@ -201,5 +201,21 @@ public class LectorDAO {
         }
         return lector;
     }
+
+    public int obtenerUltimaId(){
+        int num =0;
+        String query = "SELECT MAX(ID) FROM lector";
+        try{
+            Statement st = conexion.getInstancia().getConnection().createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while(rs.next()){
+                num = rs.getInt(1);
+            }
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return num;
+    }
 }
 
