@@ -3,10 +3,7 @@ package dao;
 import basedatos.conexion;
 import models.Autor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +79,13 @@ public class autorDAO {
 
             System.out.println("Autor eliminado con exito");
         }catch(SQLException e){
-            throw new RuntimeException(e);
+            String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+
+            if (e instanceof SQLIntegrityConstraintViolationException || msg.contains("foreign key") || msg.contains("constraint fails")){
+                throw new RuntimeException("No se puede eliminar el autor porque esta asignado a uno o varios libros");
+            } else {
+                throw new RuntimeException("Error al eliminar el autor: " + e.getMessage());
+            }
         }
     }
     public Autor buscarAutorPorId(int id) {

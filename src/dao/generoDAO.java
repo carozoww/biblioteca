@@ -3,10 +3,7 @@ package dao;
 import basedatos.conexion;
 import models.Genero;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +57,6 @@ public class generoDAO {
 
     public static void eliminarGenero(int id_genero){
         String queryDel = "DELETE FROM genero WHERE id_genero = ?";
-
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(queryDel);
             ps.setInt(1,id_genero);
@@ -69,10 +65,16 @@ public class generoDAO {
             System.out.println("Genero eliminado correctamente");
 
         }catch(SQLException e ){
-            throw new RuntimeException(e);
+
+            String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+
+            if (e instanceof SQLIntegrityConstraintViolationException || msg.contains("foreign key") || msg.contains("constraint fails")){
+                throw new RuntimeException("No se puede eliminar el género porque esta asignado a uno o varios libros");
+            } else {
+                throw new RuntimeException("Error al eliminar el género: " + e.getMessage());
+            }
         }
     }
-
     public Genero buscarGeneroPorId(int ID) {
         String consulta = "SELECT * FROM genero WHERE id_genero = ?";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
