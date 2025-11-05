@@ -222,6 +222,17 @@ public class ReviewDAO {
         return review;
     }
 
+    public boolean eliminarReview(int idReview) {
+        String query = "DELETE FROM review WHERE id_review = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
+            ps.setInt(1, idReview);
+            int filas = ps.executeUpdate();
+            return filas > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 
