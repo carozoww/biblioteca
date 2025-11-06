@@ -27,7 +27,7 @@ public class Review {
         this.nombreLibro = nombreLibro;
     }
 
-    // Getters y Setters
+
     public int getIdReview() { return idReview; }
     public void setIdReview(int idReview) { this.idReview = idReview; }
     public int getIdLibro() { return idLibro; }
