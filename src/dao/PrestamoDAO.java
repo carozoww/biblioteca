@@ -225,6 +225,31 @@ public class PrestamoDAO {
         }
     }
 
+    public List<Prestamo> existenPrestamosDeLibro(int idLibro) {
+        List<Prestamo> prestamos = new ArrayList<>();
+        String consulta = "SELECT * FROM prestamo WHERE id_libro = ? AND estado IN ('PENDIENTE','RESERVADO','CONFIRMADO','FINALIZADO');";
+        try {
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setInt(1, idLibro);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Prestamo p = new Prestamo(
+                        rs.getInt("id_prestamo"),
+                        rs.getInt("id_libro"),
+                        rs.getInt("id_lector"),
+                        rs.getTimestamp("fecha_prestamo").toLocalDateTime(),
+                        rs.getTimestamp("fecha_devolucion_real") != null ? rs.getTimestamp("fecha_devolucion_real").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_devolucion_esperada") != null ? rs.getTimestamp("fecha_devolucion_esperada").toLocalDateTime() : null,
+                        rs.getString("estado")
+                );
+                prestamos.add(p);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar préstamos del usuario: " + e.getMessage(), e);
+        }
+        return prestamos;
+    }
+
 
 }
 

@@ -3,10 +3,7 @@ package dao;
 import basedatos.conexion;
 import models.Autor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +79,13 @@ public class autorDAO {
 
             System.out.println("Autor eliminado con exito");
         }catch(SQLException e){
-            throw new RuntimeException(e);
+            String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+
+            if (e instanceof SQLIntegrityConstraintViolationException || msg.contains("foreign key") || msg.contains("constraint fails")){
+                throw new RuntimeException("No se puede eliminar el autor porque esta asignado a uno o varios libros");
+            } else {
+                throw new RuntimeException("Error al eliminar el autor: " + e.getMessage());
+            }
         }
     }
     public Autor buscarAutorPorId(int id) {
@@ -101,6 +104,30 @@ public class autorDAO {
             throw new RuntimeException("Error al buscar autor: " + e.getMessage(), e);
         }
         return null;
+    }
+
+    public List<Autor> ObtenerAutoresResenias(int id_lector){
+        List<Autor> autores = new ArrayList<>();
+        String consulta = "SELECT a.id_autor,a.nombre,a.apellido FROM review r LEFT JOIN libro l ON r.id_libro = l.id_libro\n" +
+                "LEFT JOIN libro_autor la ON l.id_libro = la.id_libro LEFT JOIN autor a ON la.id_autor = la.id_autor\n" +
+                "WHERE r.id_lector = ? and r.valoracion >= 3 GROUP BY a.id_autor,a.nombre,a.apellido;";
+        try{
+            PreparedStatement ps =  conexion.getInstancia().getConnection().prepareStatement(consulta);
+            ps.setInt(1, id_lector);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                autores.add(
+                        new Autor(
+                                rs.getInt("id_autor"),
+                                rs.getString("nombre"),
+                                rs.getString("apellido")));
+            }
+
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+        return autores;
     }
 
 }

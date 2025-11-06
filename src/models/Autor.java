@@ -11,6 +11,10 @@ public class Autor {
         this.apellido = ape;
     }
 
+    public Autor(int id){
+        this.id_autor = id;
+    }
+
     public int getId_autor() {
         return id_autor;
     }

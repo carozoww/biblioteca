@@ -3,10 +3,7 @@ package dao;
 import basedatos.conexion;
 import models.Genero;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +57,6 @@ public class generoDAO {
 
     public static void eliminarGenero(int id_genero){
         String queryDel = "DELETE FROM genero WHERE id_genero = ?";
-
         try{
             PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(queryDel);
             ps.setInt(1,id_genero);
@@ -69,10 +65,16 @@ public class generoDAO {
             System.out.println("Genero eliminado correctamente");
 
         }catch(SQLException e ){
-            throw new RuntimeException(e);
+
+            String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+
+            if (e instanceof SQLIntegrityConstraintViolationException || msg.contains("foreign key") || msg.contains("constraint fails")){
+                throw new RuntimeException("No se puede eliminar el género porque esta asignado a uno o varios libros");
+            } else {
+                throw new RuntimeException("Error al eliminar el género: " + e.getMessage());
+            }
         }
     }
-
     public Genero buscarGeneroPorId(int ID) {
         String consulta = "SELECT * FROM genero WHERE id_genero = ?";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
@@ -88,5 +90,26 @@ public class generoDAO {
             throw new RuntimeException("Error al buscar genero: " + e.getMessage(), e);
         }
         return null;
+    }
+
+    public List<Genero> obtenerGenerosResenias(int id_lector){
+        List<Genero> generos = new ArrayList<>();
+        String query = "SELECT g.id_genero, g.nombre FROM review r LEFT JOIN libro l ON r.id_libro = l.id_libro\n" +
+                "LEFT JOIN libro_genero lg ON l.id_libro = lg.id_libro LEFT JOIN genero g ON lg.id_genero = g.id_genero\n" +
+                "WHERE r.id_lector = ? and r.valoracion >= 3 GROUP BY g.id_genero,g.nombre";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query);
+            ps.setInt(1,id_lector);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                generos.add(new Genero(rs.getInt("id_genero"),rs.getString("nombre")));
+            }
+
+        }catch(SQLException e ){
+            throw new RuntimeException(e);
+        }
+        return generos;
+
     }
 }

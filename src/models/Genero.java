@@ -9,6 +9,12 @@ public class Genero {
         this.nombre = nombre;
     }
 
+    public Genero(int id_genero){
+        this.id_genero = id_genero;
+    }
+
+
+
     public int getId_genero() {
         return id_genero;
     }

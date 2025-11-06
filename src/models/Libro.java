@@ -15,6 +15,7 @@ public class Libro {
     private String nombreAutor;
     private String imagen_url;
 
+    public Libro() {}
     public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas) {
         this.idLibro = idLibro;
         this.titulo = titulo;
@@ -26,6 +27,15 @@ public class Libro {
         this.sinopsis = sinopsis;
         this.numpaginas = numpaginas;
 
+    }
+    public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion, int idEditorial, String editorial) {
+        this.idLibro = idLibro;
+        this.titulo = titulo;
+        this.isbn = isbn;
+        this.fechaPublicacion = fechaPublicacion;
+        this.idEditorial = idEditorial;
+        this.editorial = editorial;
+        this.estado_asignacion = true;
     }
 
     public Libro(int idLibro,String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas,String nombreAutor,String imagen_url) {
@@ -96,6 +106,14 @@ public class Libro {
 
     public void setNumpaginas(int numpaginas) {
         this.numpaginas = numpaginas;
+    }
+
+    public String getImagen_url() {
+        return imagen_url;
+    }
+
+    public void setImagen_url(String imagen_url) {
+        this.imagen_url = imagen_url;
     }
 
     public void setIdEditorial(int idEditorial) {

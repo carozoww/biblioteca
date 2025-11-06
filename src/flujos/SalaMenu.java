@@ -81,7 +81,7 @@ public class SalaMenu {
         System.out.println("URL Imagen: ");
         String imagen = instancia.leerPalabra(sc);
 
-        dao.crearSala(numeroSala, ubicacion, maxPersonas,imagen);
+        dao.crearSala(numeroSala, ubicacion, maxPersonas,imagen, true);
 
     }
 
@@ -129,7 +129,7 @@ public class SalaMenu {
         System.out.println("Nueva Imagen: ");
         String nuevaImagen = instancia.leerPalabra(sc);
 
-        dao.editarSala(idEditar, numeroSala, nuevaUbicacion, nuevaMaxPersonas,nuevaImagen);
+        dao.editarSala(idEditar, numeroSala, nuevaUbicacion, nuevaMaxPersonas,nuevaImagen, true);
     }
 
     private void borrarSala(Scanner sc) throws SQLException{
