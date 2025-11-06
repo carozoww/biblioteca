@@ -15,6 +15,7 @@ public class Libro {
     private String nombreAutor;
     private String imagen_url;
 
+    public Libro() {}
     public Libro(int idLibro, String titulo, String isbn, Date fechaPublicacion,  int idEditorial,String editorial,String sinopsis,int numpaginas) {
         this.idLibro = idLibro;
         this.titulo = titulo;

@@ -1,6 +1,7 @@
 package dao;
 
 import basedatos.conexion;
+import models.Lector;
 import models.Libro;
 import models.Review;
 
@@ -224,15 +225,48 @@ public class ReviewDAO {
 
 
     public boolean eliminarReview(int idReview) {
-        String query = "DELETE FROM review WHERE id_review = ?";
-        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
-            ps.setInt(1, idReview);
-            int filas = ps.executeUpdate();
+        Connection conn = null;
+        try {
+            conn = conexion.getInstancia().getConnection();
+            conn.setAutoCommit(false); // transacción
+
+            //Borra los comentarios que tiene la review
+            String sqlComentarios = "DELETE FROM review_comentario WHERE id_review = ?";
+            try (PreparedStatement psCom = conn.prepareStatement(sqlComentarios)) {
+                psCom.setInt(1, idReview);
+                psCom.executeUpdate();
+            }
+
+            //Borra los likes que tiene
+            String sqlLikes = "DELETE FROM review_like WHERE id_review = ?";
+            try (PreparedStatement psLike = conn.prepareStatement(sqlLikes)) {
+                psLike.setInt(1, idReview);
+                psLike.executeUpdate();
+            }
+
+            //Borra la review
+            String sqlReview = "DELETE FROM review WHERE id_review = ?";
+            int filas;
+            try (PreparedStatement psRev = conn.prepareStatement(sqlReview)) {
+                psRev.setInt(1, idReview);
+                filas = psRev.executeUpdate();
+            }
+
+            conn.commit();
             return filas > 0;
+
         } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
             throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); } catch (SQLException e) { e.printStackTrace(); }
+            }
         }
     }
+
 
 
     public int obtenerNumReseniasPositivas(int id_lector){
@@ -253,7 +287,9 @@ public class ReviewDAO {
         }
         return num;
     }
-    
+
+
+
 
 
 

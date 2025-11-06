@@ -66,4 +66,20 @@ public class ReviewComentarioDAO {
         }
         return 0;
     }
+
+    public boolean eliminarComentario(int idComentario) {
+        String query = "DELETE FROM review_comentario WHERE id_comentario = ?";
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
+            ps.setInt(1, idComentario);
+            int filas = ps.executeUpdate();
+            return filas > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
 }
