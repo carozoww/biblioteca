@@ -101,7 +101,7 @@ public class ReservaDAO {
     }
 
     public void cancelarReservaPorLector(int lectorId) {
-        String sql = "UPDATE reserva SET estado = ? WHERE id_lector = ? AND estado = 'RESERVADA'";
+        String sql = "UPDATE reserva SET estado = ? WHERE id_lector = ? AND estado = 'PENDIENTE'";
         String estado = "CANCELADA";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
             ps.setString(1, estado);
