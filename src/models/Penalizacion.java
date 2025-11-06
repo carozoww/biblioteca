@@ -1,18 +1,26 @@
 package models;
 
+import java.time.LocalDateTime;
+
 public class Penalizacion {
     private int id_pena;
     private int duracion;
     private String motivo;
+    private LocalDateTime fecha_inicio;
+    private LocalDateTime fecha_fin;
+    private boolean activa;
     private int id_lector;
     private int id_admin;
     private String lector;
     private String admin;
 
-    public Penalizacion(int id_pena, int duracion, String motivo, int id_lector, int id_admin,  String lector, String admin) {
+    public Penalizacion(int id_pena, int duracion, String motivo, LocalDateTime fecha_inicio, LocalDateTime fecha_fin, boolean activa,int id_lector,int id_admin,  String lector, String admin) {
         this.id_pena = id_pena;
         this.duracion = duracion;
         this.motivo = motivo;
+        this.fecha_inicio = fecha_inicio;
+        this.fecha_fin = fecha_fin;
+        this.activa = activa;
         this.id_lector = id_lector;
         this.id_admin = id_admin;
         this.lector = lector;
@@ -61,6 +69,14 @@ public class Penalizacion {
     }
     public void setAdmin(String admin) {
         this.admin = admin;
+    }
+
+    public boolean isActiva() {
+        return activa;
+    }
+
+    public void setActiva(boolean activa) {
+        this.activa = activa;
     }
 
     public void mostrarInformacion() {

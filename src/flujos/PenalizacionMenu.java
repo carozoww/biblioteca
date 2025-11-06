@@ -7,6 +7,7 @@ import models.Administrador;
 import models.Lector;
 import models.Penalizacion;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -124,8 +125,10 @@ public class PenalizacionMenu {
 
         System.out.println("Ingrese el id del administrador: ");
         int idAd = scanner.nextInt();
+        LocalDateTime fechaInicio = LocalDateTime.now();
+        LocalDateTime fechaFin = fechaInicio.plusDays(duracion);
 
-        penalizaciondao.crearPenalizacion(duracion, motivo, id, idAd);
+        penalizaciondao.crearPenalizacion(duracion, motivo, fechaInicio, fechaFin,id, idAd);
     }
 
     public void quitarPenalizacion(Scanner scanner) throws SQLException {
