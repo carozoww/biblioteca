@@ -8,16 +8,18 @@ public class Reserva {
     private int id_Reserva;
     private LocalDateTime fecha_in;
     private LocalDateTime fecha_fin;
+    private LocalDateTime fecha_fin_real;
     private int id_sala;
     private int id_usuario;
     private String estado;
     private String lector;
     private int sala;
 
-    public Reserva(int id_Reserva, LocalDateTime fecha_in, LocalDateTime fecha_fin, int id_sala, int id_usuario, String estado,  String lector, int sala) {
+    public Reserva(int id_Reserva, LocalDateTime fecha_in, LocalDateTime fecha_fin, LocalDateTime fecha_fin_real, int id_sala, int id_usuario, String estado, String lector, int sala) {
         this.id_Reserva = id_Reserva;
         this.fecha_in = fecha_in;
         this.fecha_fin = fecha_fin;
+        this.fecha_fin_real = fecha_fin_real;
         this.id_sala = id_sala;
         this.id_usuario = id_usuario;
         this.estado = estado;
@@ -31,9 +33,12 @@ public class Reserva {
 
     public LocalDateTime getFecha_fin() {return fecha_fin;}
 
+    public LocalDateTime getFecha_fin_real() {return fecha_fin_real;}
+
     public LocalTime getHora_in() {return fecha_in.toLocalTime();}
 
     public LocalTime getHora_fin() {return fecha_fin.toLocalTime();}
+
 
     public int getId_sala() {return id_sala;}
 

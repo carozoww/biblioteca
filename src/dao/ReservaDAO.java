@@ -13,7 +13,7 @@ public class ReservaDAO {
 
     public void agregarReserva(int salaId, int userId, LocalDateTime fecha_in, LocalDateTime fecha_fin){
         String sql = "INSERT INTO reserva (id_sala, id_lector, fecha_in, fecha_fin, estado) VALUES (?, ?, ?, ?, ?)";
-        String estado = "RESERVADA";
+        String estado = "PENDIENTE";
         Timestamp fechaInicio = Timestamp.valueOf(fecha_in);
         Timestamp fechaFin = Timestamp.valueOf(fecha_fin);
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
@@ -26,6 +26,43 @@ public class ReservaDAO {
             System.out.println("Reserva agregada al usuario " + userId + ".");
         } catch (SQLException e) {
             throw new RuntimeException("Error al agregar reserva: " + e.getMessage(), e);
+        }
+    }
+
+    public void confirmarReserva(int idReserva) {
+        String sql = "UPDATE reserva SET estado = 'CONFIRMADA' WHERE id_reserva = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
+            ps.setInt(1, idReserva);
+            ps.executeUpdate();
+            System.out.println("Reserva realizada correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al confirmar reserva: " + e.getMessage(), e);
+        }
+    }
+
+    public void marcarReservaComoReservada(int idReserva) {
+        String sql = "UPDATE reserva SET estado = 'RESERVADA' WHERE id_reserva = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
+            ps.setInt(1, idReserva);
+            ps.executeUpdate();
+            System.out.println("Reserva reservada correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al reservar la reserva: " + e.getMessage(), e);
+        }
+    }
+
+    public void reservaFinalizada(int idReserva, LocalDateTime fechaFinalizadaReal) {
+        String sql = "UPDATE reserva SET fecha_fin_real = ?, estado = 'FINALIZADA' WHERE id_reserva = ?";
+        try{
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
+            ps.setTimestamp(1, Timestamp.valueOf(fechaFinalizadaReal));
+            ps.setInt(2, idReserva);
+            ps.executeUpdate();
+            System.out.println("Reserva finalizada correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al finalizar reserva: " + e.getMessage(), e);
         }
     }
 
@@ -95,7 +132,7 @@ public class ReservaDAO {
 
     public List<Reserva> listarReservasSinFinalizar() {
         List<Reserva> lista = new ArrayList<>();
-        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.id_sala, r.id_lector, r.estado, " +
+        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.fecha_fin_real, r.id_sala, r.id_lector, r.estado, " +
                 "l.nombre AS lector, s.numero_sala AS sala " +
                 "FROM reserva r " +
                 "LEFT JOIN lector l ON r.id_lector = l.ID " +
@@ -108,7 +145,8 @@ public class ReservaDAO {
                 lista.add(new Reserva(
                         rs.getInt("id_reserva"),
                         rs.getTimestamp("fecha_in").toLocalDateTime(),
-                        rs.getTimestamp("fecha_fin") != null ? rs.getTimestamp("fecha_fin").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_fin").toLocalDateTime(),
+                        rs.getTimestamp("fecha_fin_real") != null ? rs.getTimestamp("fecha_fin_real").toLocalDateTime() : null,
                         rs.getInt("id_sala"),
                         rs.getInt("id_lector"),
                         rs.getString("estado"),
@@ -128,7 +166,7 @@ public class ReservaDAO {
         LocalDateTime inicio = fecha.atStartOfDay();
         LocalDateTime fin = fecha.plusDays(1).atStartOfDay();
 
-        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.id_sala, r.id_lector, r.estado, " +
+        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.fecha_fin_real, r.id_sala, r.id_lector, r.estado, " +
                 "l.nombre AS lector, s.numero_sala AS sala " +
                 "FROM reserva r " +
                 "LEFT JOIN lector l ON r.id_lector = l.ID " +
@@ -143,7 +181,8 @@ public class ReservaDAO {
                     lista.add(new Reserva(
                             rs.getInt("id_reserva"),
                             rs.getTimestamp("fecha_in").toLocalDateTime(),
-                            rs.getTimestamp("fecha_fin") != null ? rs.getTimestamp("fecha_fin").toLocalDateTime() : null,
+                            rs.getTimestamp("fecha_fin").toLocalDateTime(),
+                            rs.getTimestamp("fecha_fin_real") != null ? rs.getTimestamp("fecha_fin_real").toLocalDateTime() : null,
                             rs.getInt("id_sala"),
                             rs.getInt("id_lector"),
                             rs.getString("estado"),
@@ -171,13 +210,13 @@ public class ReservaDAO {
     }
 
 
-    public Reserva listarReservaActivaDelLector(int idLector) {
-        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.id_sala, r.id_lector, r.estado, " +
+    public Reserva listarReservasActivaDelLector(int idLector) {
+        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.fecha_fin_real, r.id_sala, r.id_lector, r.estado, " +
                 "l.nombre AS lector, s.numero_sala AS sala " +
                 "FROM reserva r " +
                 "LEFT JOIN lector l ON r.id_lector = l.ID " +
                 "LEFT JOIN sala s ON r.id_sala = s.id_sala " +
-                "WHERE r.estado = 'RESERVADA' AND r.id_lector = ? " +
+                "WHERE estado IN ('PENDIENTE', 'RESERVADA', 'CONFIRMADA') AND r.id_lector = ? " +
                 "ORDER BY r.fecha_in ASC";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql)) {
             ps.setInt(1, idLector);
@@ -186,7 +225,8 @@ public class ReservaDAO {
                     return new Reserva(
                             rs.getInt("id_reserva"),
                             rs.getTimestamp("fecha_in").toLocalDateTime(),
-                            rs.getTimestamp("fecha_fin") != null ? rs.getTimestamp("fecha_fin").toLocalDateTime() : null,
+                            rs.getTimestamp("fecha_fin").toLocalDateTime(),
+                            rs.getTimestamp("fecha_fin_real") != null ? rs.getTimestamp("fecha_fin_real").toLocalDateTime() : null,
                             rs.getInt("id_sala"),
                             rs.getInt("id_lector"),
                             rs.getString("estado"),
@@ -215,7 +255,7 @@ public class ReservaDAO {
 
     public List<Reserva> listarReservasDeSala(int salaId) throws SQLException {
         List<Reserva> lista = new ArrayList<>();
-        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.id_sala, r.id_lector, r.estado, " +
+        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.fecha_fin_real, r.id_sala, r.id_lector, r.estado, " +
                 "l.nombre AS lector, s.numero_sala AS sala " +
                 "FROM reserva r " +
                 "LEFT JOIN lector l ON r.id_lector = l.ID " +
@@ -229,7 +269,8 @@ public class ReservaDAO {
                     lista.add(new Reserva(
                             rs.getInt("id_reserva"),
                             rs.getTimestamp("fecha_in").toLocalDateTime(),
-                            rs.getTimestamp("fecha_fin") != null ? rs.getTimestamp("fecha_fin").toLocalDateTime() : null,
+                            rs.getTimestamp("fecha_fin").toLocalDateTime(),
+                            rs.getTimestamp("fecha_fin_real") != null ? rs.getTimestamp("fecha_fin_real").toLocalDateTime() : null,
                             rs.getInt("id_sala"),
                             rs.getInt("id_lector"),
                             rs.getString("estado"),
@@ -244,7 +285,7 @@ public class ReservaDAO {
 
     public List<Reserva> listarReservas() {
         List<Reserva> lista = new ArrayList<>();
-        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.id_sala, r.id_lector, r.estado, " +
+        String sql = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.fecha_fin_real, r.id_sala, r.id_lector, r.estado, " +
                 "l.nombre AS lector, s.numero_sala AS sala " +
                 "FROM reserva r " +
                 "LEFT JOIN lector l ON r.id_lector = l.ID " +
@@ -256,7 +297,8 @@ public class ReservaDAO {
                 lista.add(new Reserva(
                         rs.getInt("id_reserva"),
                         rs.getTimestamp("fecha_in").toLocalDateTime(),
-                        rs.getTimestamp("fecha_fin") != null ? rs.getTimestamp("fecha_fin").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_fin").toLocalDateTime(),
+                        rs.getTimestamp("fecha_fin_real") != null ? rs.getTimestamp("fecha_fin_real").toLocalDateTime() : null,
                         rs.getInt("id_sala"),
                         rs.getInt("id_lector"),
                         rs.getString("estado"),
@@ -271,7 +313,7 @@ public class ReservaDAO {
     }
 
     public Reserva buscarReservaPorId(int id) {
-        String consulta = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.id_sala, r.id_lector, r.estado, " +
+        String consulta = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.fecha_fin_real, r.id_sala, r.id_lector, r.estado, " +
                 "l.nombre AS lector, s.numero_sala AS sala " +
                 "FROM reserva r " +
                 "LEFT JOIN lector l ON r.id_lector = l.ID " +
@@ -284,7 +326,8 @@ public class ReservaDAO {
                 return new Reserva(
                         rs.getInt("id_reserva"),
                         rs.getTimestamp("fecha_in").toLocalDateTime(),
-                        rs.getTimestamp("fecha_fin") != null ? rs.getTimestamp("fecha_fin").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_fin").toLocalDateTime(),
+                        rs.getTimestamp("fecha_fin_real") != null ? rs.getTimestamp("fecha_fin_real").toLocalDateTime() : null,
                         rs.getInt("id_sala"),
                         rs.getInt("id_lector"),
                         rs.getString("estado"),
@@ -300,7 +343,7 @@ public class ReservaDAO {
 
     public List<Reserva> reservasNoTerminadasPorSalaYFecha(int numeroSala, String fecha) {
         List<Reserva> lista = new ArrayList<>();
-        String consulta = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.id_sala, r.id_lector, r.estado, " +
+        String consulta = "SELECT r.id_reserva, r.fecha_in, r.fecha_fin, r.fecha_fin_real, r.id_sala, r.id_lector, r.estado, " +
                 "l.nombre AS lector, s.numero_sala AS sala " +
                 "FROM reserva r " +
                 "LEFT JOIN lector l ON r.id_lector = l.ID " +
@@ -323,7 +366,8 @@ public class ReservaDAO {
                 lista.add(new Reserva(
                         rs.getInt("id_reserva"),
                         rs.getTimestamp("fecha_in").toLocalDateTime(),
-                        rs.getTimestamp("fecha_fin") != null ? rs.getTimestamp("fecha_fin").toLocalDateTime() : null,
+                        rs.getTimestamp("fecha_fin").toLocalDateTime(),
+                        rs.getTimestamp("fecha_fin_real") != null ? rs.getTimestamp("fecha_fin_real").toLocalDateTime() : null,
                         rs.getInt("id_sala"),
                         rs.getInt("id_lector"),
                         rs.getString("estado"),
