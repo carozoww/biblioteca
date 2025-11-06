@@ -6,11 +6,11 @@ public class Review {
     private int idReview;
     private int idLibro;
     private int idLector;
-    private int valoracion; // 1-5
-    private String resenia; // texto opcional
+    private int valoracion;
+    private String resenia;
     private Timestamp fecha;
-    private String nombreLector; // para mostrar en lista
-    private String nombreLibro;  // para mostrar en lista
+    private String nombreLector;
+    private String nombreLibro;
     private int likes;
 
     public Review() {}
