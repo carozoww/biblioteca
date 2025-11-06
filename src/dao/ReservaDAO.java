@@ -382,7 +382,7 @@ public class ReservaDAO {
     }
 
     public boolean reservaActivaPorLector(int idLector) {
-        String consulta = "SELECT COUNT(*) FROM reserva WHERE id_lector = ? AND estado = 'RESERVADA'";
+        String consulta = "SELECT COUNT(*) FROM reserva WHERE id_lector = ? AND estado IN ('PENDIENTE', 'RESERVADA', 'CONFIRMADA');";
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(consulta)) {
             ps.setInt(1, idLector);
             ResultSet rs = ps.executeQuery();
