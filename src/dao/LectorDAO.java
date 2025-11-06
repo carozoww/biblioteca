@@ -201,5 +201,17 @@ public class LectorDAO {
         }
         return lector;
     }
+    public void autenticarLector(int idLector) {
+        String sql = "UPDATE lector SET autenticacion = TRUE WHERE id = ?";
+        try {
+            PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(sql);
+            ps.setInt(1, idLector);
+            ps.executeUpdate();
+            System.out.println("Lector autenticado correctamente");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al autenticar lector: " + idLector + e.getMessage());
+        }
+    }
 }
+
 
