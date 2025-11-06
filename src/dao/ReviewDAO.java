@@ -288,8 +288,41 @@ public class ReviewDAO {
         return num;
     }
 
+    public List<Review> listarReviewsPorLector(int idLector) {
+        List<Review> reviews = new ArrayList<>();
+        String query = "SELECT r.id_review, r.id_libro, r.id_lector, r.valoracion, r.resenia, r.fecha, " +
+                "l.nombre AS nombreLector, b.titulo AS nombreLibro, " +
+                "(SELECT COUNT(*) FROM review_like rl WHERE rl.id_review = r.id_review) AS likes " +
+                "FROM review r " +
+                "JOIN lector l ON r.id_lector = l.ID " +
+                "JOIN libro b ON r.id_libro = b.id_libro " +
+                "WHERE r.id_lector = ? " +
+                "ORDER BY r.fecha DESC";
 
+        try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
+            ps.setInt(1, idLector);
+            ResultSet rs = ps.executeQuery();
 
+            while (rs.next()) {
+                Review review = new Review(
+                        rs.getInt("id_review"),
+                        rs.getInt("id_libro"),
+                        rs.getInt("id_lector"),
+                        rs.getInt("valoracion"),
+                        rs.getString("resenia"),
+                        rs.getTimestamp("fecha"),
+                        rs.getString("nombreLector"),
+                        rs.getString("nombreLibro")
+                );
+                review.setLikes(rs.getInt("likes"));
+                reviews.add(review);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return reviews;
+    }
 
 
 
