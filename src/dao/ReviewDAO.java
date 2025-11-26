@@ -14,14 +14,17 @@ public class ReviewDAO {
     // Lista paginada de reviews
     public List<Review> listarReviews(int offset, int limit) {
         List<Review> reviews = new ArrayList<>();
-        String query = "SELECT r.id_review, r.id_libro, r.id_lector, r.valoracion, r.resenia, r.fecha, " +
-                "l.nombre AS nombreLector, b.titulo AS nombreLibro, " +
-                "(SELECT COUNT(*) FROM review_like rl WHERE rl.id_review = r.id_review) AS likes " +
-                "FROM review r " +
-                "JOIN lector l ON r.id_lector = l.ID " +
-                "JOIN libro b ON r.id_libro = b.id_libro " +
-                "ORDER BY r.fecha DESC " +
-                "LIMIT ? OFFSET ?";
+        String query =
+                "SELECT r.id_review, r.id_libro, r.id_lector, r.valoracion, r.resenia, r.fecha, " +
+                        "l.nombre AS nombreLector, l.imagen_url AS imagenLector, " +
+                        "b.titulo AS nombreLibro, b.imagen_url AS imagenLibro, " +
+                        "(SELECT COUNT(*) FROM review_like rl WHERE rl.id_review = r.id_review) AS likes " +
+                        "FROM review r " +
+                        "JOIN lector l ON r.id_lector = l.ID " +
+                        "JOIN libro b ON r.id_libro = b.id_libro " +
+                        "ORDER BY r.fecha DESC " +
+                        "LIMIT ? OFFSET ?";
+
 
         try (PreparedStatement ps = conexion.getInstancia().getConnection().prepareStatement(query)) {
             ps.setInt(1, limit);
@@ -40,6 +43,8 @@ public class ReviewDAO {
                         rs.getString("nombreLibro")
                 );
                 review.setLikes(rs.getInt("likes"));
+                review.setImagenLibro(rs.getString("imagenLibro"));
+                review.setImagenLector(rs.getString("imagenLector"));
                 reviews.add(review);
             }
 
@@ -53,7 +58,7 @@ public class ReviewDAO {
     // Para tener una review por ID
     public Review obtenerReview(int idReview) {
         String query = "SELECT r.id_review, r.id_libro, r.id_lector, r.valoracion, r.resenia, r.fecha, " +
-                "l.nombre AS nombreLector, b.titulo AS nombreLibro, " +
+                "l.nombre AS nombreLector, b.titulo AS nombreLibro, b.imagen_url AS imagenUrl, " +
                 "(SELECT COUNT(*) FROM review_like rl WHERE rl.id_review = r.id_review) AS likes " +
                 "FROM review r " +
                 "JOIN lector l ON r.id_lector = l.ID " +
@@ -75,7 +80,11 @@ public class ReviewDAO {
                         rs.getString("nombreLector"),
                         rs.getString("nombreLibro")
                 );
+
+                // SETEAMOS imagen y likes
                 review.setLikes(rs.getInt("likes"));
+                review.setImagenLibro(rs.getString("imagenUrl"));
+
                 return review;
             }
 
@@ -84,6 +93,7 @@ public class ReviewDAO {
         }
         return null;
     }
+
 
 
     // Crear review
@@ -291,7 +301,7 @@ public class ReviewDAO {
     public List<Review> listarReviewsPorLector(int idLector) {
         List<Review> reviews = new ArrayList<>();
         String query = "SELECT r.id_review, r.id_libro, r.id_lector, r.valoracion, r.resenia, r.fecha, " +
-                "l.nombre AS nombreLector, b.titulo AS nombreLibro, " +
+                "l.nombre AS nombreLector, b.titulo AS nombreLibro, b.imagen_url AS imagenUrl, " +
                 "(SELECT COUNT(*) FROM review_like rl WHERE rl.id_review = r.id_review) AS likes " +
                 "FROM review r " +
                 "JOIN lector l ON r.id_lector = l.ID " +
@@ -315,6 +325,10 @@ public class ReviewDAO {
                         rs.getString("nombreLibro")
                 );
                 review.setLikes(rs.getInt("likes"));
+
+                // Agregamos imagen del libro
+                review.setImagenLibro(rs.getString("imagenUrl"));
+
                 reviews.add(review);
             }
 
@@ -323,6 +337,7 @@ public class ReviewDAO {
         }
         return reviews;
     }
+
 
 
 

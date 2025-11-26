@@ -12,6 +12,8 @@ public class Review {
     private String nombreLector;
     private String nombreLibro;
     private int likes;
+    private String imagenLibro;
+    private String imagenLector;
 
     public Review() {}
 
@@ -46,4 +48,8 @@ public class Review {
     public void setNombreLibro(String nombreLibro) { this.nombreLibro = nombreLibro; }
     public int getLikes() { return likes; }
     public void setLikes(int likes) { this.likes = likes; }
+    public String getImagenLibro() { return imagenLibro; }
+    public void setImagenLibro(String imagenLibro) { this.imagenLibro = imagenLibro; }
+    public String getImagenLector() { return imagenLector; }
+    public void setImagenLector(String imagenLector) { this.imagenLector = imagenLector; }
 }

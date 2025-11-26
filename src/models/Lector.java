@@ -13,6 +13,7 @@ public class Lector {
     private boolean membresia;
     private String correo;
     private String contrasenia;
+    private String imagenUrl;
 
     public Lector() {
     }
@@ -137,6 +138,14 @@ public class Lector {
 
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 
     public void mostrarInformacion() {

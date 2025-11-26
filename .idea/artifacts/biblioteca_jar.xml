@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact name="biblioteca:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/biblioteca_jar</output-path>
+    <root id="root">
+      <element id="archive" name="biblioteca.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/target/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="biblioteca" />
+        <element id="dir-copy" path="$PROJECT_DIR$/src/dao" />
+        <element id="dir-copy" path="$PROJECT_DIR$/src/models" />
+      </element>
+      <element id="library" level="project" name="Maven: com.mysql:mysql-connector-j:9.4.0" />
+      <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:4.31.1" />
+    </root>
+  </artifact>
+</component>
